@@ -52,9 +52,35 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <header className="w-full border-b bg-card px-4 py-3 shadow-sm">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
-          <Link to="/admin" className="text-lg font-bold tracking-tight sm:text-xl">
-            Painel Admin
-          </Link>
+          <div className="flex items-center gap-6">
+            <Link to="/admin" className="text-lg font-bold tracking-tight sm:text-xl">
+              Painel Admin
+            </Link>
+            <nav className="hidden items-center gap-4 md:flex">
+              <Link 
+                to="/admin" 
+                activeProps={{ className: 'text-foreground font-semibold' }} 
+                activeOptions={{ exact: true }}
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Inscrições
+              </Link>
+              <Link 
+                to="/admin/eventos" 
+                activeProps={{ className: 'text-foreground font-semibold' }} 
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Eventos
+              </Link>
+              <Link 
+                to="/admin/igrejas" 
+                activeProps={{ className: 'text-foreground font-semibold' }} 
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Igrejas
+              </Link>
+            </nav>
+          </div>
           <div className="flex items-center gap-3">
             <span className="hidden text-sm text-muted-foreground sm:inline">
               {user?.email ?? ''}
