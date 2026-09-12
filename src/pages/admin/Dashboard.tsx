@@ -56,10 +56,63 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleExportCSV = () => {
+    const headers = ['ID', 'Nome', 'E-mail', 'Telefone', 'CPF', 'Status', 'Data da Inscrição'];
+    const rows = inscricoes.map((i) => [
+      i.id,
+      i.nome,
+      i.email,
+      i.telefone || '',
+      i.cpf,
+      i.status || 'pendente',
+      new Date(i.created_at).toLocaleString('pt-BR')
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'inscricoes.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const total = inscricoes.length;
+  const pendentes = inscricoes.filter((i) => i.status === 'pendente' || !i.status).length;
+  const aprovadas = inscricoes.filter((i) => i.status === 'aprovada').length;
+
   return (
     <AdminLayout>
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-2xl font-bold">Inscrições</h2>
+        <button
+          onClick={handleExportCSV}
+          disabled={inscricoes.length === 0}
+          className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+        >
+          Exportar CSV
+        </button>
+      </div>
+
+      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+        <div className="rounded-lg border bg-card p-4 shadow-sm">
+          <p className="text-sm font-medium text-muted-foreground">Total de Inscrições</p>
+          <p className="text-2xl font-bold">{total}</p>
+        </div>
+        <div className="rounded-lg border bg-card p-4 shadow-sm">
+          <p className="text-sm font-medium text-muted-foreground">Aprovadas</p>
+          <p className="text-2xl font-bold text-green-600">{aprovadas}</p>
+        </div>
+        <div className="rounded-lg border bg-card p-4 shadow-sm">
+          <p className="text-sm font-medium text-muted-foreground">Pendentes</p>
+          <p className="text-2xl font-bold text-yellow-600">{pendentes}</p>
+        </div>
       </div>
 
       {errorMsg && (
