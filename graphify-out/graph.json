@@ -1,29 +1,53 @@
 {
-  "generated_at": "2026-09-12T00:53:04.886250+00:00",
+  "generated_at": "2026-09-12T00:58:33.853190+00:00",
   "files": [
+    {
+      "path": "vite.config.ts",
+      "bytes": 287
+    },
+    {
+      "path": "package.json",
+      "bytes": 712
+    },
     {
       "path": "index.html",
       "bytes": 301
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 99421
     },
     {
       "path": "README.md",
       "bytes": 25
     },
     {
+      "path": "tsconfig.json",
+      "bytes": 631
+    },
+    {
       "path": ".lovasiri/sync.json",
       "bytes": 80
     },
     {
+      "path": "src/index.css",
+      "bytes": 1180
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "bytes": 38
+    },
+    {
       "path": "src/App.tsx",
-      "bytes": 1413
+      "bytes": 1460
     },
     {
       "path": "src/main.tsx",
-      "bytes": 339
+      "bytes": 384
     },
     {
       "path": "src/lib/supabase.ts",
-      "bytes": 426
+      "bytes": 829
     },
     {
       "path": "src/pages/Index.tsx",
@@ -55,6 +79,18 @@
     }
   ],
   "dependencies": [
+    {
+      "source": "vite.config.ts",
+      "target": "vite"
+    },
+    {
+      "source": "vite.config.ts",
+      "target": "@vitejs/plugin-react"
+    },
+    {
+      "source": "vite.config.ts",
+      "target": "node:path"
+    },
     {
       "source": "src/App.tsx",
       "target": "react"
