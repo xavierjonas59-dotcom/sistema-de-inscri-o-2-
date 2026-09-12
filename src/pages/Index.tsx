@@ -110,7 +110,14 @@ export default function Index() {
       }
       setStep('pix');
     } catch (err: unknown) {
-      setErrorMsg(err instanceof Error ? err.message : 'Erro desconhecido');
+      console.error('Erro ao salvar inscrição:', err);
+      if (err instanceof Error) {
+        setErrorMsg(err.message);
+      } else if (typeof err === 'object' && err !== null && 'message' in err) {
+        setErrorMsg(String((err as any).message));
+      } else {
+        setErrorMsg('Erro desconhecido ao salvar a inscrição.');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -149,7 +156,14 @@ export default function Index() {
 
       setStep('done');
     } catch (err: unknown) {
-      setErrorMsg(err instanceof Error ? err.message : 'Erro ao enviar comprovante');
+      console.error('Erro ao enviar comprovante:', err);
+      if (err instanceof Error) {
+        setErrorMsg(err.message);
+      } else if (typeof err === 'object' && err !== null && 'message' in err) {
+        setErrorMsg(String((err as any).message));
+      } else {
+        setErrorMsg('Erro ao enviar comprovante.');
+      }
     } finally {
       setUploadingReceipt(false);
     }
