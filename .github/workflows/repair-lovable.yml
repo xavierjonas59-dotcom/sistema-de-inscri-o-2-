@@ -1,0 +1,270 @@
+name: Repair Lovable project
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Create package.json
+        shell: bash
+        run: |
+          cat > package.json <<'EOF'
+          {
+            "name": "sistema-de-inscricoes",
+            "private": true,
+            "version": "1.0.0",
+            "type": "module",
+            "scripts": {
+              "dev": "vite --host 0.0.0.0",
+              "build": "vite build",
+              "preview": "vite preview --host 0.0.0.0",
+              "typecheck": "tsc --noEmit"
+            },
+            "dependencies": {
+              "@supabase/supabase-js": "^2.0.0",
+              "@tanstack/react-router": "^1.0.0",
+              "react": "^18.3.1",
+              "react-dom": "^18.3.1"
+            },
+            "devDependencies": {
+              "@types/node": "^22.0.0",
+              "@types/react": "^18.3.0",
+              "@types/react-dom": "^18.3.0",
+              "@vitejs/plugin-react": "^4.3.0",
+              "autoprefixer": "^10.4.20",
+              "postcss": "^8.4.47",
+              "tailwindcss": "^3.4.17",
+              "typescript": "^5.6.0",
+              "vite": "^5.4.0"
+            }
+          }
+          EOF
+
+      - name: Create Vite and TypeScript config
+        shell: bash
+        run: |
+          cat > vite.config.ts <<'EOF'
+          import { defineConfig } from 'vite';
+          import react from '@vitejs/plugin-react';
+          import path from 'node:path';
+
+          export default defineConfig({
+            plugins: [react()],
+            resolve: {
+              alias: {
+                '@': path.resolve(__dirname, './src'),
+              },
+            },
+            server: {
+              host: '0.0.0.0',
+            },
+          });
+          EOF
+
+          cat > tsconfig.json <<'EOF'
+          {
+            "compilerOptions": {
+              "target": "ES2020",
+              "useDefineForClassFields": true,
+              "lib": ["ES2020", "DOM", "DOM.Iterable"],
+              "allowJs": false,
+              "skipLibCheck": true,
+              "esModuleInterop": true,
+              "allowSyntheticDefaultImports": true,
+              "strict": false,
+              "forceConsistentCasingInFileNames": true,
+              "module": "ESNext",
+              "moduleResolution": "Bundler",
+              "resolveJsonModule": true,
+              "isolatedModules": true,
+              "noEmit": true,
+              "jsx": "react-jsx",
+              "baseUrl": ".",
+              "paths": {
+                "@/*": ["./src/*"]
+              },
+              "types": ["vite/client", "node"]
+            },
+            "include": ["src", "vite.config.ts"]
+          }
+          EOF
+
+          cat > src/vite-env.d.ts <<'EOF'
+          /// <reference types="vite/client" />
+          EOF
+
+      - name: Create Tailwind and PostCSS config
+        shell: bash
+        run: |
+          cat > tailwind.config.cjs <<'EOF'
+          /** @type {import('tailwindcss').Config} */
+          module.exports = {
+            content: [
+              "./index.html",
+              "./src/**/*.{js,ts,jsx,tsx}"
+            ],
+            theme: {
+              extend: {
+                colors: {
+                  border: "hsl(var(--border))",
+                  input: "hsl(var(--input))",
+                  ring: "hsl(var(--ring))",
+                  background: "hsl(var(--background))",
+                  foreground: "hsl(var(--foreground))",
+                  primary: {
+                    DEFAULT: "hsl(var(--primary))",
+                    foreground: "hsl(var(--primary-foreground))"
+                  },
+                  secondary: {
+                    DEFAULT: "hsl(var(--secondary))",
+                    foreground: "hsl(var(--secondary-foreground))"
+                  },
+                  destructive: {
+                    DEFAULT: "hsl(var(--destructive))",
+                    foreground: "hsl(var(--destructive-foreground))"
+                  },
+                  muted: {
+                    DEFAULT: "hsl(var(--muted))",
+                    foreground: "hsl(var(--muted-foreground))"
+                  },
+                  accent: {
+                    DEFAULT: "hsl(var(--accent))",
+                    foreground: "hsl(var(--accent-foreground))"
+                  },
+                  card: {
+                    DEFAULT: "hsl(var(--card))",
+                    foreground: "hsl(var(--card-foreground))"
+                  }
+                }
+              }
+            },
+            plugins: []
+          };
+          EOF
+
+          cat > postcss.config.cjs <<'EOF'
+          module.exports = {
+            plugins: {
+              tailwindcss: {},
+              autoprefixer: {},
+            },
+          };
+          EOF
+
+      - name: Create base CSS
+        shell: bash
+        run: |
+          cat > src/index.css <<'EOF'
+          @tailwind base;
+          @tailwind components;
+          @tailwind utilities;
+
+          @layer base {
+            :root {
+              --background: 0 0% 100%;
+              --foreground: 222.2 84% 4.9%;
+              --card: 0 0% 100%;
+              --card-foreground: 222.2 84% 4.9%;
+              --primary: 221.2 83.2% 53.3%;
+              --primary-foreground: 210 40% 98%;
+              --secondary: 210 40% 96.1%;
+              --secondary-foreground: 222.2 47.4% 11.2%;
+              --muted: 210 40% 96.1%;
+              --muted-foreground: 215.4 16.3% 46.9%;
+              --accent: 210 40% 96.1%;
+              --accent-foreground: 222.2 47.4% 11.2%;
+              --destructive: 0 84.2% 60.2%;
+              --destructive-foreground: 210 40% 98%;
+              --border: 214.3 31.8% 91.4%;
+              --input: 214.3 31.8% 91.4%;
+              --ring: 221.2 83.2% 53.3%;
+            }
+
+            * {
+              @apply border-border;
+            }
+
+            html {
+              min-height: 100%;
+              background: hsl(var(--background));
+            }
+
+            body {
+              min-height: 100vh;
+              margin: 0;
+              background: hsl(var(--background));
+              color: hsl(var(--foreground));
+              font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+              -webkit-font-smoothing: antialiased;
+              text-rendering: optimizeLegibility;
+            }
+
+            button,
+            input,
+            textarea,
+            select {
+              font: inherit;
+            }
+          }
+          EOF
+
+      - name: Make Supabase initialization safe
+        shell: bash
+        run: |
+          cat > src/lib/supabase.ts <<'EOF'
+          import { createClient } from '@supabase/supabase-js';
+
+          const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+          const supabaseKey = (
+            import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ??
+            import.meta.env.VITE_SUPABASE_ANON_KEY
+          ) as string | undefined;
+
+          export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseKey);
+
+          // The preview must render even before Lovable Cloud / Supabase variables exist.
+          // When the real variables are available, this automatically uses them.
+          const safeUrl = supabaseUrl || 'https://placeholder.supabase.co';
+          const safeKey = supabaseKey || 'placeholder-public-key';
+
+          export const supabase = createClient(safeUrl, safeKey, {
+            auth: {
+              persistSession: isSupabaseConfigured,
+              autoRefreshToken: isSupabaseConfigured,
+              detectSessionInUrl: isSupabaseConfigured
+            }
+          });
+          EOF
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Verify build
+        run: npm run build
+
+      - name: Commit repair
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json vite.config.ts tsconfig.json tailwind.config.cjs postcss.config.cjs src/index.css src/vite-env.d.ts src/lib/supabase.ts
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "fix: repair Lovable Vite project structure"
+            git push
+          fi
