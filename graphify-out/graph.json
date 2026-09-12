@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-12T00:17:49.988378+00:00",
+  "generated_at": "2026-09-12T00:19:49.760900+00:00",
   "files": [
     {
       "path": "README.md",
@@ -18,8 +18,16 @@
       "bytes": 16460
     },
     {
+      "path": "src/pages/admin/Eventos.tsx",
+      "bytes": 5777
+    },
+    {
       "path": "src/pages/admin/Dashboard.tsx",
       "bytes": 7851
+    },
+    {
+      "path": "src/pages/admin/Igrejas.tsx",
+      "bytes": 5661
     },
     {
       "path": "src/pages/admin/Login.tsx",
@@ -27,7 +35,7 @@
     },
     {
       "path": "src/components/layout/AdminLayout.tsx",
-      "bytes": 2367
+      "bytes": 3494
     },
     {
       "path": "src/components/layout/PublicLayout.tsx",
@@ -52,6 +60,18 @@
       "target": "@/lib/supabase"
     },
     {
+      "source": "src/pages/admin/Eventos.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/admin/Eventos.tsx",
+      "target": "@/components/layout/AdminLayout"
+    },
+    {
+      "source": "src/pages/admin/Eventos.tsx",
+      "target": "@/lib/supabase"
+    },
+    {
       "source": "src/pages/admin/Dashboard.tsx",
       "target": "react"
     },
@@ -61,6 +81,18 @@
     },
     {
       "source": "src/pages/admin/Dashboard.tsx",
+      "target": "@/lib/supabase"
+    },
+    {
+      "source": "src/pages/admin/Igrejas.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/admin/Igrejas.tsx",
+      "target": "@/components/layout/AdminLayout"
+    },
+    {
+      "source": "src/pages/admin/Igrejas.tsx",
       "target": "@/lib/supabase"
     },
     {
