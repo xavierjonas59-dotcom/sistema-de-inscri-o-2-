@@ -42,6 +42,7 @@ export default function Index() {
   const [errorMsg, setErrorMsg] = useState('');
   const [copied, setCopied] = useState(false);
   const [uploadingReceipt, setUploadingReceipt] = useState(false);
+  const [insertedId, setInsertedId] = useState<string | null>(null);
 
   const totalCents = (BASE_PRICE + (wantsCertificate ? CERTIFICATE_PRICE : 0)) * 100;
 
@@ -55,8 +56,21 @@ export default function Index() {
     'inline-flex h-10 w-full items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50';
 
   const validateCPF = (raw: string): boolean => {
-    const digits = raw.replace(/\D/g, '');
-    return digits.length === 11;
+    const cleanCpf = raw.replace(/\D/g, '');
+    if (cleanCpf.length !== 11) return false;
+    if (/^(\d)\1{10}$/.test(cleanCpf)) return false;
+    let sum = 0;
+    let remainder;
+    for (let i = 1; i <= 9; i++) sum += parseInt(cleanCpf.substring(i - 1, i)) * (11 - i);
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cleanCpf.substring(9, 10))) return false;
+    sum = 0;
+    for (let i = 1; i <= 10; i++) sum += parseInt(cleanCpf.substring(i - 1, i)) * (12 - i);
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cleanCpf.substring(10, 11))) return false;
+    return true;
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
@@ -68,7 +82,7 @@ export default function Index() {
       return;
     }
     if (!validateCPF(cpf)) {
-      setErrorMsg('CPF inválido. Informe 11 dígitos.');
+      setErrorMsg('CPF inválido. Informe um CPF válido.');
       return;
     }
     if (!church.trim()) {
@@ -78,7 +92,7 @@ export default function Index() {
 
     setSubmitting(true);
     try {
-      const { error } = await supabase.from('inscricoes').insert([
+      const { data, error } = await supabase.from('inscricoes').insert([
         {
           nome: name.trim(),
           email: email.trim(),
@@ -87,9 +101,13 @@ export default function Index() {
           igreja_oficina: church.trim(),
           certificado: wantsCertificate,
           valor_centavos: totalCents,
+          status: 'pendente'
         },
-      ]);
+      ]).select().single();
       if (error) throw error;
+      if (data) {
+        setInsertedId(data.id);
+      }
       setStep('pix');
     } catch (err: unknown) {
       setErrorMsg(err instanceof Error ? err.message : 'Erro desconhecido');
@@ -116,10 +134,19 @@ export default function Index() {
     try {
       const cpfDigits = cpf.replace(/\D/g, '');
       const fileName = `${cpfDigits}_${Date.now()}_${file.name}`;
-      const { error } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('comprovantes')
         .upload(fileName, file, { upsert: false });
-      if (error) throw error;
+      if (uploadError) throw uploadError;
+
+      if (insertedId) {
+        const { error: updateError } = await supabase
+          .from('inscricoes')
+          .update({ comprovante_url: fileName })
+          .eq('id', insertedId);
+        if (updateError) throw updateError;
+      }
+
       setStep('done');
     } catch (err: unknown) {
       setErrorMsg(err instanceof Error ? err.message : 'Erro ao enviar comprovante');
