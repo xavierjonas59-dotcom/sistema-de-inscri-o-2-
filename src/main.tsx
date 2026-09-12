@@ -5,10 +5,17 @@ import './index.css';
 
 // Ponto de entrada principal da aplicação
 const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
 
-ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+if (!rootElement) {
+  throw new Error('Failed to find the root element');
+}
+
+// Verifica se já foi renderizado (previne crash no Vite HMR)
+if (!rootElement.innerHTML) {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+}
