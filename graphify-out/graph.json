@@ -1,10 +1,99 @@
 {
-  "generated_at": "2026-09-11T23:57:40.013124+00:00",
+  "generated_at": "2026-09-12T00:03:53.962293+00:00",
   "files": [
     {
       "path": "README.md",
       "bytes": 25
+    },
+    {
+      "path": ".lovasiri/sync.json",
+      "bytes": 80
+    },
+    {
+      "path": "src/lib/supabase.ts",
+      "bytes": 426
+    },
+    {
+      "path": "src/pages/Index.tsx",
+      "bytes": 4773
+    },
+    {
+      "path": "src/pages/admin/Dashboard.tsx",
+      "bytes": 2730
+    },
+    {
+      "path": "src/pages/admin/Login.tsx",
+      "bytes": 3818
+    },
+    {
+      "path": "src/components/layout/AdminLayout.tsx",
+      "bytes": 2367
+    },
+    {
+      "path": "src/components/layout/PublicLayout.tsx",
+      "bytes": 870
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "source": "src/lib/supabase.ts",
+      "target": "@supabase/supabase-js"
+    },
+    {
+      "source": "src/pages/Index.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/Index.tsx",
+      "target": "@/components/layout/PublicLayout"
+    },
+    {
+      "source": "src/pages/Index.tsx",
+      "target": "@/lib/supabase"
+    },
+    {
+      "source": "src/pages/admin/Dashboard.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/admin/Dashboard.tsx",
+      "target": "@/components/layout/AdminLayout"
+    },
+    {
+      "source": "src/pages/admin/Dashboard.tsx",
+      "target": "@/lib/supabase"
+    },
+    {
+      "source": "src/pages/admin/Login.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/admin/Login.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/pages/admin/Login.tsx",
+      "target": "@/lib/supabase"
+    },
+    {
+      "source": "src/components/layout/AdminLayout.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/layout/AdminLayout.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/components/layout/AdminLayout.tsx",
+      "target": "@/lib/supabase"
+    },
+    {
+      "source": "src/components/layout/AdminLayout.tsx",
+      "target": "@supabase/supabase-js"
+    },
+    {
+      "source": "src/components/layout/PublicLayout.tsx",
+      "target": "react"
+    }
+  ]
 }

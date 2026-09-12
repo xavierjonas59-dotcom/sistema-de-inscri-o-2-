@@ -1,6 +1,6 @@
 # Design system
 
-Generated: 2026-09-11T23:57:40.013124+00:00
+Generated: 2026-09-12T00:03:53.962293+00:00
 
 ## Tokens
 - No CSS custom properties found.
@@ -9,4 +9,5 @@ Generated: 2026-09-11T23:57:40.013124+00:00
 - No shadcn/ui components found.
 
 ## Project components
-- No project components found.
+- src/components/layout/AdminLayout.tsx
+- src/components/layout/PublicLayout.tsx
