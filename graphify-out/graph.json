@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-12T00:09:09.154265+00:00",
+  "generated_at": "2026-09-12T00:16:02.603152+00:00",
   "files": [
     {
       "path": "README.md",
@@ -15,11 +15,11 @@
     },
     {
       "path": "src/pages/Index.tsx",
-      "bytes": 15356
+      "bytes": 16460
     },
     {
       "path": "src/pages/admin/Dashboard.tsx",
-      "bytes": 2730
+      "bytes": 5672
     },
     {
       "path": "src/pages/admin/Login.tsx",
