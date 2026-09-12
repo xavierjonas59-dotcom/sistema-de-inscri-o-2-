@@ -8,7 +8,7 @@ import AdminEventos from '@/pages/admin/Eventos';
 import AdminIgrejas from '@/pages/admin/Igrejas';
 
 const rootRoute = createRootRoute({
-  component: () => <Outlet />,
+  component: Outlet,
 });
 
 const indexRoute = createRoute({
