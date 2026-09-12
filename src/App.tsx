@@ -41,6 +41,7 @@ const adminIgrejasRoute = createRoute({
   component: AdminIgrejas,
 });
 
+// Estrutura principal de rotas da aplicação
 const routeTree = rootRoute.addChildren([
   indexRoute,
   adminLoginRoute,
