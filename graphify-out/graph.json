@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-12T00:19:49.760900+00:00",
+  "generated_at": "2026-09-12T00:20:36.967893+00:00",
   "files": [
     {
       "path": "README.md",
@@ -8,6 +8,10 @@
     {
       "path": ".lovasiri/sync.json",
       "bytes": 80
+    },
+    {
+      "path": "src/App.tsx",
+      "bytes": 1423
     },
     {
       "path": "src/lib/supabase.ts",
@@ -43,6 +47,34 @@
     }
   ],
   "dependencies": [
+    {
+      "source": "src/App.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/pages/Index"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/pages/admin/Login"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/pages/admin/Dashboard"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/pages/admin/Eventos"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/pages/admin/Igrejas"
+    },
     {
       "source": "src/lib/supabase.ts",
       "target": "@supabase/supabase-js"
