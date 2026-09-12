@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-12T00:20:36.967893+00:00",
+  "generated_at": "2026-09-12T00:25:43.842522+00:00",
   "files": [
     {
       "path": "README.md",
@@ -12,6 +12,10 @@
     {
       "path": "src/App.tsx",
       "bytes": 1423
+    },
+    {
+      "path": "src/main.tsx",
+      "bytes": 339
     },
     {
       "path": "src/lib/supabase.ts",
@@ -74,6 +78,18 @@
     {
       "source": "src/App.tsx",
       "target": "@/pages/admin/Igrejas"
+    },
+    {
+      "source": "src/main.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/main.tsx",
+      "target": "react-dom/client"
+    },
+    {
+      "source": "src/main.tsx",
+      "target": "./App"
     },
     {
       "source": "src/lib/supabase.ts",
