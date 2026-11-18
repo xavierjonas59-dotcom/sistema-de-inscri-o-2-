@@ -1,37 +1,37 @@
 {
-  "generated_at": "2026-09-12T01:29:25.526517+00:00",
+  "generated_at": "2026-11-18T21:58:26.282942+00:00",
   "files": [
     {
-      "path": "vite.config.ts",
-      "bytes": 287
+      "path": "index.html",
+      "bytes": 502
     },
     {
       "path": "package.json",
-      "bytes": 712
+      "bytes": 746
     },
     {
-      "path": "index.html",
-      "bytes": 301
-    },
-    {
-      "path": "package-lock.json",
-      "bytes": 99421
-    },
-    {
-      "path": "README.md",
-      "bytes": 25
+      "path": "vite.config.ts",
+      "bytes": 287
     },
     {
       "path": "tsconfig.json",
       "bytes": 631
     },
     {
-      "path": ".lovasiri/sync.json",
-      "bytes": 80
+      "path": "README.md",
+      "bytes": 2424
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 134236
+    },
+    {
+      "path": "src/main.tsx",
+      "bytes": 339
     },
     {
       "path": "src/index.css",
-      "bytes": 1180
+      "bytes": 1032
     },
     {
       "path": "src/vite-env.d.ts",
@@ -39,43 +39,147 @@
     },
     {
       "path": "src/App.tsx",
-      "bytes": 1470
+      "bytes": 2364
     },
     {
-      "path": "src/main.tsx",
-      "bytes": 517
+      "path": ".lovasiri/sync.json",
+      "bytes": 80
+    },
+    {
+      "path": "docs/ARQUITETURA.md",
+      "bytes": 3676
+    },
+    {
+      "path": "supabase/migrations/20261118000000_mksal_schema.sql",
+      "bytes": 21903
     },
     {
       "path": "src/lib/supabase.ts",
       "bytes": 829
     },
     {
-      "path": "src/pages/Index.tsx",
-      "bytes": 16974
+      "path": "src/services/api.ts",
+      "bytes": 711
     },
     {
-      "path": "src/pages/admin/Eventos.tsx",
-      "bytes": 5777
+      "path": "src/services/DataService.ts",
+      "bytes": 3655
     },
     {
-      "path": "src/pages/admin/Dashboard.tsx",
-      "bytes": 7851
+      "path": "src/services/seed.ts",
+      "bytes": 10955
     },
     {
-      "path": "src/pages/admin/Igrejas.tsx",
-      "bytes": 5661
+      "path": "src/services/LocalDataService.test.ts",
+      "bytes": 6498
     },
     {
-      "path": "src/pages/admin/Login.tsx",
-      "bytes": 3818
+      "path": "src/services/LocalDataService.ts",
+      "bytes": 20024
     },
     {
-      "path": "src/components/layout/AdminLayout.tsx",
-      "bytes": 3494
+      "path": "src/domain/format.ts",
+      "bytes": 1685
     },
     {
-      "path": "src/components/layout/PublicLayout.tsx",
-      "bytes": 870
+      "path": "src/domain/types.ts",
+      "bytes": 3100
+    },
+    {
+      "path": "src/domain/csv.ts",
+      "bytes": 845
+    },
+    {
+      "path": "src/domain/budget.ts",
+      "bytes": 2852
+    },
+    {
+      "path": "src/domain/labels.ts",
+      "bytes": 1297
+    },
+    {
+      "path": "src/domain/budget.test.ts",
+      "bytes": 773
+    },
+    {
+      "path": "src/app/session.tsx",
+      "bytes": 3142
+    },
+    {
+      "path": "src/pages/Login.tsx",
+      "bytes": 4042
+    },
+    {
+      "path": "src/pages/shared/ExpensesPage.tsx",
+      "bytes": 3530
+    },
+    {
+      "path": "src/pages/shared/TransfersPage.tsx",
+      "bytes": 3811
+    },
+    {
+      "path": "src/pages/shared/expenses.tsx",
+      "bytes": 13150
+    },
+    {
+      "path": "src/pages/shared/transfers.tsx",
+      "bytes": 12494
+    },
+    {
+      "path": "src/pages/shared/History.tsx",
+      "bytes": 1045
+    },
+    {
+      "path": "src/pages/shared/lookups.ts",
+      "bytes": 951
+    },
+    {
+      "path": "src/pages/diretoria/Dashboard.tsx",
+      "bytes": 6845
+    },
+    {
+      "path": "src/pages/diretoria/Reports.tsx",
+      "bytes": 6852
+    },
+    {
+      "path": "src/pages/diretoria/Approvals.tsx",
+      "bytes": 3683
+    },
+    {
+      "path": "src/pages/gestor/Dashboard.tsx",
+      "bytes": 5400
+    },
+    {
+      "path": "src/pages/admin/Users.tsx",
+      "bytes": 4296
+    },
+    {
+      "path": "src/pages/admin/Sectors.tsx",
+      "bytes": 5395
+    },
+    {
+      "path": "src/pages/admin/Categories.tsx",
+      "bytes": 3169
+    },
+    {
+      "path": "src/components/ui/primitives.tsx",
+      "bytes": 10430
+    },
+    {
+      "path": "src/components/ui/icons.tsx",
+      "bytes": 2691
+    },
+    {
+      "path": "src/components/ui/overlay.tsx",
+      "bytes": 3215
+    },
+    {
+      "path": "src/components/charts/BarList.tsx",
+      "bytes": 2670
+    },
+    {
+      "path": "src/components/layout/AppShell.tsx",
+      "bytes": 7075
     }
   ],
   "dependencies": [
@@ -92,34 +196,6 @@
       "target": "node:path"
     },
     {
-      "source": "src/App.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/App.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/App.tsx",
-      "target": "@/pages/Index"
-    },
-    {
-      "source": "src/App.tsx",
-      "target": "@/pages/admin/Login"
-    },
-    {
-      "source": "src/App.tsx",
-      "target": "@/pages/admin/Dashboard"
-    },
-    {
-      "source": "src/App.tsx",
-      "target": "@/pages/admin/Eventos"
-    },
-    {
-      "source": "src/App.tsx",
-      "target": "@/pages/admin/Igrejas"
-    },
-    {
       "source": "src/main.tsx",
       "target": "react"
     },
@@ -132,88 +208,688 @@
       "target": "./App"
     },
     {
+      "source": "src/App.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/components/layout/AppShell"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/components/ui/overlay"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/pages/admin/Categories"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/pages/admin/Sectors"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/pages/admin/Users"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/pages/diretoria/Approvals"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/pages/diretoria/Dashboard"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/pages/diretoria/Reports"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/pages/gestor/Dashboard"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/pages/Login"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/pages/shared/ExpensesPage"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "@/pages/shared/TransfersPage"
+    },
+    {
       "source": "src/lib/supabase.ts",
       "target": "@supabase/supabase-js"
     },
     {
-      "source": "src/pages/Index.tsx",
+      "source": "src/services/api.ts",
       "target": "react"
     },
     {
-      "source": "src/pages/Index.tsx",
-      "target": "@/components/layout/PublicLayout"
+      "source": "src/services/api.ts",
+      "target": "./DataService"
     },
     {
-      "source": "src/pages/Index.tsx",
-      "target": "@/lib/supabase"
+      "source": "src/services/api.ts",
+      "target": "./LocalDataService"
     },
     {
-      "source": "src/pages/admin/Eventos.tsx",
+      "source": "src/services/DataService.ts",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/services/seed.ts",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/services/seed.ts",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/services/seed.ts",
+      "target": "./LocalDataService"
+    },
+    {
+      "source": "src/services/LocalDataService.test.ts",
+      "target": "vitest"
+    },
+    {
+      "source": "src/services/LocalDataService.test.ts",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/services/LocalDataService.test.ts",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/services/LocalDataService.test.ts",
+      "target": "./LocalDataService"
+    },
+    {
+      "source": "src/services/LocalDataService.test.ts",
+      "target": "./seed"
+    },
+    {
+      "source": "src/services/LocalDataService.ts",
+      "target": "@/domain/budget"
+    },
+    {
+      "source": "src/services/LocalDataService.ts",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/services/LocalDataService.ts",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/services/LocalDataService.ts",
+      "target": "./DataService"
+    },
+    {
+      "source": "src/services/LocalDataService.ts",
+      "target": "./seed"
+    },
+    {
+      "source": "src/domain/format.ts",
+      "target": "./types"
+    },
+    {
+      "source": "src/domain/budget.ts",
+      "target": "./types"
+    },
+    {
+      "source": "src/domain/labels.ts",
+      "target": "./types"
+    },
+    {
+      "source": "src/domain/budget.test.ts",
+      "target": "vitest"
+    },
+    {
+      "source": "src/domain/budget.test.ts",
+      "target": "./budget"
+    },
+    {
+      "source": "src/domain/budget.test.ts",
+      "target": "./format"
+    },
+    {
+      "source": "src/app/session.tsx",
       "target": "react"
     },
     {
-      "source": "src/pages/admin/Eventos.tsx",
-      "target": "@/components/layout/AdminLayout"
+      "source": "src/app/session.tsx",
+      "target": "@/domain/format"
     },
     {
-      "source": "src/pages/admin/Eventos.tsx",
-      "target": "@/lib/supabase"
+      "source": "src/app/session.tsx",
+      "target": "@/domain/types"
     },
     {
-      "source": "src/pages/admin/Dashboard.tsx",
+      "source": "src/app/session.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/Login.tsx",
       "target": "react"
     },
     {
-      "source": "src/pages/admin/Dashboard.tsx",
-      "target": "@/components/layout/AdminLayout"
+      "source": "src/pages/Login.tsx",
+      "target": "@/app/session"
     },
     {
-      "source": "src/pages/admin/Dashboard.tsx",
-      "target": "@/lib/supabase"
+      "source": "src/pages/Login.tsx",
+      "target": "@/components/ui/primitives"
     },
     {
-      "source": "src/pages/admin/Igrejas.tsx",
+      "source": "src/pages/Login.tsx",
+      "target": "@/services/seed"
+    },
+    {
+      "source": "src/pages/shared/ExpensesPage.tsx",
       "target": "react"
     },
     {
-      "source": "src/pages/admin/Igrejas.tsx",
-      "target": "@/components/layout/AdminLayout"
+      "source": "src/pages/shared/ExpensesPage.tsx",
+      "target": "@/app/session"
     },
     {
-      "source": "src/pages/admin/Igrejas.tsx",
-      "target": "@/lib/supabase"
+      "source": "src/pages/shared/ExpensesPage.tsx",
+      "target": "@/domain/csv"
     },
     {
-      "source": "src/pages/admin/Login.tsx",
+      "source": "src/pages/shared/ExpensesPage.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/pages/shared/ExpensesPage.tsx",
+      "target": "@/domain/labels"
+    },
+    {
+      "source": "src/pages/shared/ExpensesPage.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/pages/shared/ExpensesPage.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/shared/ExpensesPage.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/shared/ExpensesPage.tsx",
+      "target": "./expenses"
+    },
+    {
+      "source": "src/pages/shared/ExpensesPage.tsx",
+      "target": "./lookups"
+    },
+    {
+      "source": "src/pages/shared/TransfersPage.tsx",
       "target": "react"
     },
     {
-      "source": "src/pages/admin/Login.tsx",
-      "target": "@tanstack/react-router"
+      "source": "src/pages/shared/TransfersPage.tsx",
+      "target": "@/app/session"
     },
     {
-      "source": "src/pages/admin/Login.tsx",
-      "target": "@/lib/supabase"
+      "source": "src/pages/shared/TransfersPage.tsx",
+      "target": "@/domain/format"
     },
     {
-      "source": "src/components/layout/AdminLayout.tsx",
+      "source": "src/pages/shared/TransfersPage.tsx",
+      "target": "@/domain/labels"
+    },
+    {
+      "source": "src/pages/shared/TransfersPage.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/pages/shared/TransfersPage.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/shared/TransfersPage.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/shared/TransfersPage.tsx",
+      "target": "./lookups"
+    },
+    {
+      "source": "src/pages/shared/TransfersPage.tsx",
+      "target": "./transfers"
+    },
+    {
+      "source": "src/pages/shared/expenses.tsx",
       "target": "react"
     },
     {
-      "source": "src/components/layout/AdminLayout.tsx",
-      "target": "@tanstack/react-router"
+      "source": "src/pages/shared/expenses.tsx",
+      "target": "@/app/session"
     },
     {
-      "source": "src/components/layout/AdminLayout.tsx",
-      "target": "@/lib/supabase"
+      "source": "src/pages/shared/expenses.tsx",
+      "target": "@/domain/format"
     },
     {
-      "source": "src/components/layout/AdminLayout.tsx",
-      "target": "@supabase/supabase-js"
+      "source": "src/pages/shared/expenses.tsx",
+      "target": "@/domain/labels"
     },
     {
-      "source": "src/components/layout/PublicLayout.tsx",
+      "source": "src/pages/shared/expenses.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/pages/shared/expenses.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/shared/expenses.tsx",
+      "target": "@/services/LocalDataService"
+    },
+    {
+      "source": "src/pages/shared/expenses.tsx",
+      "target": "@/components/ui/icons"
+    },
+    {
+      "source": "src/pages/shared/expenses.tsx",
+      "target": "@/components/ui/overlay"
+    },
+    {
+      "source": "src/pages/shared/expenses.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/shared/expenses.tsx",
+      "target": "./History"
+    },
+    {
+      "source": "src/pages/shared/expenses.tsx",
+      "target": "./lookups"
+    },
+    {
+      "source": "src/pages/shared/transfers.tsx",
       "target": "react"
+    },
+    {
+      "source": "src/pages/shared/transfers.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/pages/shared/transfers.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/pages/shared/transfers.tsx",
+      "target": "@/domain/labels"
+    },
+    {
+      "source": "src/pages/shared/transfers.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/pages/shared/transfers.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/shared/transfers.tsx",
+      "target": "@/components/ui/icons"
+    },
+    {
+      "source": "src/pages/shared/transfers.tsx",
+      "target": "@/components/ui/overlay"
+    },
+    {
+      "source": "src/pages/shared/transfers.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/shared/transfers.tsx",
+      "target": "./History"
+    },
+    {
+      "source": "src/pages/shared/transfers.tsx",
+      "target": "./lookups"
+    },
+    {
+      "source": "src/pages/shared/History.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/pages/shared/History.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/pages/shared/lookups.ts",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/shared/lookups.ts",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/pages/shared/lookups.ts",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/diretoria/Dashboard.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/diretoria/Dashboard.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/pages/diretoria/Dashboard.tsx",
+      "target": "@/domain/budget"
+    },
+    {
+      "source": "src/pages/diretoria/Dashboard.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/pages/diretoria/Dashboard.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/diretoria/Dashboard.tsx",
+      "target": "@/components/charts/BarList"
+    },
+    {
+      "source": "src/pages/diretoria/Dashboard.tsx",
+      "target": "@/components/ui/icons"
+    },
+    {
+      "source": "src/pages/diretoria/Dashboard.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/diretoria/Dashboard.tsx",
+      "target": "../shared/lookups"
+    },
+    {
+      "source": "src/pages/diretoria/Reports.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/diretoria/Reports.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/pages/diretoria/Reports.tsx",
+      "target": "@/domain/csv"
+    },
+    {
+      "source": "src/pages/diretoria/Reports.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/pages/diretoria/Reports.tsx",
+      "target": "@/domain/labels"
+    },
+    {
+      "source": "src/pages/diretoria/Reports.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/diretoria/Reports.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/diretoria/Reports.tsx",
+      "target": "../shared/lookups"
+    },
+    {
+      "source": "src/pages/diretoria/Approvals.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/diretoria/Approvals.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/pages/diretoria/Approvals.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/pages/diretoria/Approvals.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/pages/diretoria/Approvals.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/diretoria/Approvals.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/diretoria/Approvals.tsx",
+      "target": "../shared/expenses"
+    },
+    {
+      "source": "src/pages/diretoria/Approvals.tsx",
+      "target": "../shared/lookups"
+    },
+    {
+      "source": "src/pages/diretoria/Approvals.tsx",
+      "target": "../shared/transfers"
+    },
+    {
+      "source": "src/pages/gestor/Dashboard.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/gestor/Dashboard.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/pages/gestor/Dashboard.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/pages/gestor/Dashboard.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/pages/gestor/Dashboard.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/gestor/Dashboard.tsx",
+      "target": "@/components/charts/BarList"
+    },
+    {
+      "source": "src/pages/gestor/Dashboard.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/gestor/Dashboard.tsx",
+      "target": "../shared/expenses"
+    },
+    {
+      "source": "src/pages/gestor/Dashboard.tsx",
+      "target": "../shared/lookups"
+    },
+    {
+      "source": "src/pages/gestor/Dashboard.tsx",
+      "target": "../shared/transfers"
+    },
+    {
+      "source": "src/pages/admin/Users.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/admin/Users.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/pages/admin/Users.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/pages/admin/Users.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/admin/Users.tsx",
+      "target": "@/services/DataService"
+    },
+    {
+      "source": "src/pages/admin/Users.tsx",
+      "target": "@/components/ui/overlay"
+    },
+    {
+      "source": "src/pages/admin/Users.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/admin/Users.tsx",
+      "target": "../shared/lookups"
+    },
+    {
+      "source": "src/pages/admin/Sectors.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/admin/Sectors.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/pages/admin/Sectors.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/pages/admin/Sectors.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/pages/admin/Sectors.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/admin/Sectors.tsx",
+      "target": "@/components/ui/overlay"
+    },
+    {
+      "source": "src/pages/admin/Sectors.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/admin/Sectors.tsx",
+      "target": "../shared/lookups"
+    },
+    {
+      "source": "src/pages/admin/Categories.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/admin/Categories.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/pages/admin/Categories.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/pages/admin/Categories.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/admin/Categories.tsx",
+      "target": "@/components/ui/overlay"
+    },
+    {
+      "source": "src/pages/admin/Categories.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/admin/Categories.tsx",
+      "target": "../shared/lookups"
+    },
+    {
+      "source": "src/components/ui/primitives.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/primitives.tsx",
+      "target": "@/domain/labels"
+    },
+    {
+      "source": "src/components/ui/primitives.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/components/ui/primitives.tsx",
+      "target": "./icons"
+    },
+    {
+      "source": "src/components/ui/icons.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/overlay.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/overlay.tsx",
+      "target": "./icons"
+    },
+    {
+      "source": "src/components/ui/overlay.tsx",
+      "target": "./primitives"
+    },
+    {
+      "source": "src/components/charts/BarList.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/charts/BarList.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/components/charts/BarList.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/components/layout/AppShell.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/layout/AppShell.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/components/layout/AppShell.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/components/layout/AppShell.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/components/layout/AppShell.tsx",
+      "target": "@/components/ui/icons"
+    },
+    {
+      "source": "src/components/layout/AppShell.tsx",
+      "target": "@/components/ui/primitives"
     }
   ]
 }
