@@ -1,23 +1,26 @@
 import { useMemo } from 'react';
 import { useQuery, useUser } from '@/app/session';
+import type { PdfNames } from '@/pdf/scPdf';
+import type { PurchaseRequest } from '@/domain/types';
 import { api } from '@/services/api';
 
-/** Mapas id → nome de setores e naturezas, para exibição. */
+/** Cadastros de apoio e funções id → nome para exibição. */
 export function useLookups() {
   const user = useUser();
   const { data: sectors = [] } = useQuery(() => api.sectorDirectory(user), [user.id]);
-  const { data: categories = [] } = useQuery(() => api.listCategories(user, true), [user.id]);
+  const { data: costCenters = [] } = useQuery(() => api.listCostCenters(user, true), [user.id]);
+  const { data: natures = [] } = useQuery(() => api.listNatures(user, true), [user.id]);
+  const { data: suppliers = [] } = useQuery(() => api.listSuppliers(user), [user.id]);
   return useMemo(() => {
-    const sectorName = new Map(sectors.map((s) => [s.id, s.name]));
-    const categoryName = new Map(categories.map((c) => [c.id, c.name]));
-    return {
-      sectors,
-      categories,
-      sector: (id: string) => sectorName.get(id) ?? '—',
-      category: (id: string) => categoryName.get(id) ?? '—',
-    };
-  }, [sectors, categories]);
+    const s = new Map(sectors.map((x) => [x.id, x.name]));
+    const c = new Map(costCenters.map((x) => [x.id, `${x.code} - ${x.name}`]));
+    const n = new Map(natures.map((x) => [x.id, `${x.code} - ${x.name}`]));
+    const sector = (id: string) => s.get(id) ?? '—';
+    const costCenter = (id: string) => c.get(id) ?? '—';
+    const nature = (id: string | null) => (id && n.get(id)) || '—';
+    const pdfNames = (sc: PurchaseRequest): PdfNames => ({ sector: sector(sc.sectorId), nature: nature(sc.natureId), costCenter });
+    return { sectors, costCenters, natures, suppliers, sector, costCenter, nature, pdfNames };
+  }, [sectors, costCenters, natures, suppliers]);
 }
 
-/** Lê erros de regra de negócio de forma uniforme. */
 export const errMsg = (e: unknown) => (e instanceof Error ? e.message : 'Erro inesperado.');

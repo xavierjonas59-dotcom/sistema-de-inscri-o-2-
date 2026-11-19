@@ -27,13 +27,13 @@ export function Modal({
   }, [open, onClose]);
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/40 p-0 backdrop-blur-[1px] sm:items-center sm:p-4" onMouseDown={onClose}>
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/40 p-0 sm:items-center sm:p-4" onMouseDown={onClose}>
       <div
         role="dialog"
         aria-modal="true"
         aria-label={title}
         onMouseDown={(e) => e.stopPropagation()}
-        className={cx('flex max-h-[92vh] w-full flex-col rounded-t-2xl bg-white shadow-xl sm:rounded-2xl', wide ? 'sm:max-w-3xl' : 'sm:max-w-lg')}
+        className={cx('flex max-h-[92vh] w-full flex-col rounded-t-md bg-white shadow-lg sm:rounded-md', wide ? 'sm:max-w-3xl' : 'sm:max-w-lg')}
       >
         <div className="flex items-start justify-between gap-4 border-b px-6 py-4">
           <div>
@@ -69,7 +69,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           <div
             key={t.id}
             className={cx(
-              'flex items-start gap-3 rounded-lg border bg-white px-4 py-3 text-sm shadow-lg',
+              'flex items-start gap-3 rounded border bg-white px-4 py-3 text-sm shadow-md',
               t.kind === 'error' ? 'border-red-200' : 'border-green-200',
             )}
           >

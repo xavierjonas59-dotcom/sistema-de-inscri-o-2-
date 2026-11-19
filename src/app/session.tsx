@@ -3,7 +3,12 @@ import { currentMonth } from '@/domain/format';
 import type { Month, User } from '@/domain/types';
 import { api, useDataVersion } from '@/services/api';
 
-const SESSION_KEY = 'mksal:session';
+const SESSION_KEY = 'amc:session';
+const store = {
+  get: () => { try { return sessionStorage.getItem(SESSION_KEY); } catch { return null; } },
+  set: (v: string) => { try { sessionStorage.setItem(SESSION_KEY, v); } catch { /* sem storage */ } },
+  clear: () => { try { sessionStorage.removeItem(SESSION_KEY); } catch { /* sem storage */ } },
+};
 
 interface SessionCtx {
   user: User | null;
@@ -14,6 +19,7 @@ interface SessionCtx {
   setMonth: (m: Month) => void;
 }
 
+let sessionId: string | null = null;
 const Ctx = createContext<SessionCtx | null>(null);
 
 export function SessionProvider({ children }: { children: ReactNode }) {
@@ -24,24 +30,26 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   // Restaura e revalida a sessão (usuário pode ter sido desativado/alterado).
   useEffect(() => {
-    const id = sessionStorage.getItem(SESSION_KEY);
+    const id = store.get() ?? sessionId;
     if (!id) return setLoading(false);
     api.getUser(id).then((u) => {
       setUser(u);
-      if (!u) sessionStorage.removeItem(SESSION_KEY);
+      if (!u) store.clear();
       setLoading(false);
     });
   }, [version]);
 
   const login = useCallback(async (email: string, password: string) => {
     const u = await api.login(email, password);
-    sessionStorage.setItem(SESSION_KEY, u.id);
+    store.set(u.id);
+    sessionId = u.id;
     setUser(u);
     window.location.hash = '#/';
   }, []);
 
   const logout = useCallback(() => {
-    sessionStorage.removeItem(SESSION_KEY);
+    store.clear();
+    sessionId = null;
     setUser(null);
     window.location.hash = '#/';
   }, []);

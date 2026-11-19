@@ -1,92 +1,100 @@
 import type {
   Attachment,
-  BudgetOverride,
+  AttachmentKind,
   BudgetSummary,
-  Category,
-  Expense,
-  ExpenseStatus,
+  CostCenter,
+  LimitOverride,
   Month,
+  Nature,
+  Notification,
+  PurchaseRequest,
   Role,
+  ScContent,
+  ScStatus,
   Sector,
+  Supplier,
   Transfer,
   TransferStatus,
   User,
 } from '@/domain/types';
 
+/** Dados da requisição usados na trilha de auditoria da assinatura. */
+export interface RequestContext {
+  ip: string;
+}
+
+export type NewFile = Pick<Attachment, 'name' | 'mimeType' | 'size' | 'url'>;
+
 /**
  * Contrato da camada de dados. A UI depende APENAS desta interface.
- *
- * Toda operação recebe o usuário autenticado (`actor`) e é responsável por
- * aplicar o RBAC: um GESTOR nunca recebe dados de outro setor. No backend
- * Supabase a mesma garantia é dada por Row Level Security (ver supabase/migrations).
+ * Toda operação recebe o usuário autenticado (`actor`) e a implementação revalida
+ * perfil, setor e estado — esconder botões na tela nunca é a única barreira.
  */
 export interface DataService {
-  // Autenticação
   login(email: string, password: string): Promise<User>;
   getUser(id: string): Promise<User | null>;
 
-  // Diretório público mínimo (apenas id/nome) — usado para escolher o setor cedente.
+  // Cadastros de apoio (leitura para todos os autenticados)
   sectorDirectory(actor: User): Promise<Pick<Sector, 'id' | 'name'>[]>;
-  listCategories(actor: User, includeInactive?: boolean): Promise<Category[]>;
+  listCostCenters(actor: User, includeInactive?: boolean): Promise<CostCenter[]>;
+  listNatures(actor: User, includeInactive?: boolean): Promise<Nature[]>;
+  listSuppliers(actor: User, includeInactive?: boolean): Promise<Supplier[]>;
+  saveSupplier(actor: User, input: Partial<Supplier> & Pick<Supplier, 'name'>): Promise<Supplier>;
 
-  // Orçamento
+  // Saldo do setor
   getBudget(actor: User, sectorId: string, month: Month): Promise<BudgetSummary>;
   getAllBudgets(actor: User, month: Month): Promise<BudgetSummary[]>;
 
-  // Despesas
-  listExpenses(actor: User, filter?: ExpenseFilter): Promise<Expense[]>;
-  createExpense(actor: User, input: NewExpense): Promise<Expense>;
-  decideExpense(actor: User, id: string, approve: boolean, reason?: string): Promise<Expense>;
-  cancelExpense(actor: User, id: string): Promise<Expense>;
+  // Solicitação de Compras
+  listRequests(actor: User, filter?: RequestFilter): Promise<PurchaseRequest[]>;
+  getRequest(actor: User, id: string): Promise<PurchaseRequest>;
+  saveDraft(actor: User, id: string | null, content: ScContent): Promise<PurchaseRequest>;
+  submit(actor: User, id: string, password: string | null, ctx: RequestContext): Promise<PurchaseRequest>;
+  managerEdit(actor: User, id: string, content: ScContent): Promise<PurchaseRequest>;
+  managerApprove(actor: User, id: string, password: string, ctx: RequestContext): Promise<PurchaseRequest>;
+  returnForAdjustment(actor: User, id: string, reason: string): Promise<PurchaseRequest>;
+  reject(actor: User, id: string, reason: string): Promise<PurchaseRequest>;
+  directorApprove(actor: User, id: string, password: string, ctx: RequestContext): Promise<PurchaseRequest>;
+  cancel(actor: User, id: string): Promise<PurchaseRequest>;
+  addAttachment(actor: User, id: string, kind: AttachmentKind, file: NewFile): Promise<PurchaseRequest>;
+  removeAttachment(actor: User, id: string, attachmentId: string): Promise<PurchaseRequest>;
+  sendToFinance(actor: User, id: string): Promise<PurchaseRequest>;
+  markPaid(actor: User, id: string, paidAt: string, proof: NewFile): Promise<PurchaseRequest>;
+  /** Página pública de validação (QR code): não exige login. */
+  validate(number: string): Promise<ValidationResult | null>;
 
-  // Transferências de limite
-  listTransfers(actor: User, filter?: TransferFilter): Promise<Transfer[]>;
-  createTransfer(actor: User, input: NewTransfer): Promise<Transfer>;
-  grantorDecide(actor: User, id: string, approve: boolean, note?: string): Promise<Transfer>;
-  directorDecide(actor: User, id: string, approve: boolean, note?: string): Promise<Transfer>;
-  cancelTransfer(actor: User, id: string): Promise<Transfer>;
-
-  // Administração (somente DIRETORIA)
+  // Usuários e assinatura
   listUsers(actor: User): Promise<User[]>;
   saveUser(actor: User, input: UserInput): Promise<User>;
-  listSectors(actor: User): Promise<Sector[]>;
-  saveSector(actor: User, input: Partial<Sector> & Pick<Sector, 'name' | 'defaultCeiling'>): Promise<Sector>;
-  listOverrides(actor: User, month: Month): Promise<BudgetOverride[]>;
-  setOverride(actor: User, sectorId: string, month: Month, ceiling: number | null): Promise<void>;
-  saveCategory(actor: User, input: Partial<Category> & Pick<Category, 'name'>): Promise<Category>;
+  setMySignature(actor: User, dataUrl: string | null): Promise<User>;
 
-  /** Notifica a UI sobre qualquer alteração (para re-renderizar). */
+  // Administração
+  listSectors(actor: User): Promise<Sector[]>;
+  saveSector(actor: User, input: Partial<Sector> & Pick<Sector, 'name' | 'monthlyLimit'>): Promise<Sector>;
+  listOverrides(actor: User, month: Month): Promise<LimitOverride[]>;
+  setOverride(actor: User, sectorId: string, month: Month, limit: number | null): Promise<void>;
+  saveCostCenter(actor: User, input: Partial<CostCenter> & Pick<CostCenter, 'code' | 'name'>): Promise<CostCenter>;
+  saveNature(actor: User, input: Partial<Nature> & Pick<Nature, 'code' | 'name'>): Promise<Nature>;
+
+  // Transferência temporária de limite entre setores
+  listTransfers(actor: User, filter?: { status?: TransferStatus; month?: Month }): Promise<Transfer[]>;
+  createTransfer(actor: User, input: { grantingSectorId: string; amount: number; justification: string; month: Month }): Promise<Transfer>;
+  grantorDecide(actor: User, id: string, approve: boolean, note?: string): Promise<Transfer>;
+  directorDecideTransfer(actor: User, id: string, approve: boolean, note?: string): Promise<Transfer>;
+  cancelTransfer(actor: User, id: string): Promise<Transfer>;
+
+  // Notificações
+  listNotifications(actor: User): Promise<Notification[]>;
+  markNotificationsRead(actor: User, ids: string[]): Promise<void>;
+
   subscribe(listener: () => void): () => void;
 }
 
-export interface ExpenseFilter {
+export interface RequestFilter {
   month?: Month;
+  status?: ScStatus | ScStatus[];
   sectorId?: string;
-  requesterId?: string;
-  status?: ExpenseStatus;
-  categoryId?: string;
-}
-
-export interface TransferFilter {
-  month?: Month;
-  sectorId?: string;
-  status?: TransferStatus;
-}
-
-export interface NewExpense {
-  description: string;
-  amount: number;
-  categoryId: string;
-  justification: string;
-  attachment: Attachment | null;
-  month: Month;
-}
-
-export interface NewTransfer {
-  grantingSectorId: string;
-  amount: number;
-  justification: string;
-  month: Month;
+  mine?: boolean;
 }
 
 export interface UserInput {
@@ -95,12 +103,21 @@ export interface UserInput {
   email: string;
   role: Role;
   sectorId: string | null;
+  cargo: string;
   active: boolean;
-  /** Obrigatória na criação; opcional na edição (mantém a atual). */
   password?: string;
 }
 
-/** Erro de regra de negócio, exibido ao usuário. */
+export interface ValidationResult {
+  number: string;
+  status: ScStatus;
+  sectorName: string;
+  requesterName: string;
+  date: string;
+  total: number;
+  signatures: { slot: string; name: string; cargo: string; signedAt: string; code: string; valid: boolean }[];
+}
+
 export class BusinessError extends Error {
   constructor(message: string) {
     super(message);

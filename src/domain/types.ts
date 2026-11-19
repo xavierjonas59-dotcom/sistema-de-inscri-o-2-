@@ -1,58 +1,172 @@
 /**
- * Modelo de domínio do Sistema de Controle de Despesas e Orçamentos MKSAL.
- * Estes tipos espelham as tabelas definidas em supabase/migrations.
+ * Modelo de domínio — AM Comercial · Gestão de Despesas.
+ * Valores monetários sempre em centavos (inteiros).
  */
 
-export type Role = 'DIRETORIA' | 'GESTOR';
+export type Role = 'FUNCIONARIO' | 'GESTOR' | 'DIRETORIA' | 'FINANCEIRO' | 'ADMIN';
 
-/** Competência no formato YYYY-MM (ex.: "2026-11"). */
+/** Competência no formato YYYY-MM. */
 export type Month = string;
+
+export interface SignatureImage {
+  /** PNG com fundo transparente (data URL). */
+  dataUrl: string;
+  updatedAt: string;
+}
 
 export interface User {
   id: string;
   name: string;
   email: string;
   role: Role;
-  /** Obrigatório para GESTOR; nulo para DIRETORIA. */
+  /** Obrigatório para FUNCIONARIO e GESTOR. */
   sectorId: string | null;
+  /** Cargo impresso abaixo da assinatura (ex.: "Diretora"). */
+  cargo: string;
   active: boolean;
+  signature: SignatureImage | null;
 }
 
-/** Registro interno com credencial (apenas no modo demonstração local). */
 export interface UserRecord extends User {
-  password: string;
+  passwordHash: string;
 }
 
 export interface Sector {
   id: string;
   name: string;
-  /** Teto mensal padrão em centavos. */
-  defaultCeiling: number;
+  /** Limite mensal padrão (centavos). */
+  monthlyLimit: number;
   active: boolean;
 }
 
-/** Teto específico de um setor em uma competência (sobrepõe o padrão). */
-export interface BudgetOverride {
+export interface LimitOverride {
   sectorId: string;
   month: Month;
-  ceiling: number;
+  limit: number;
 }
 
-export interface Category {
+export interface CostCenter {
   id: string;
+  code: string;
   name: string;
   active: boolean;
 }
 
+export interface Nature {
+  id: string;
+  code: string;
+  name: string;
+  active: boolean;
+}
+
+export interface BankData {
+  bank: string;
+  agency: string;
+  account: string;
+  pix: string;
+}
+
+export interface Supplier {
+  id: string;
+  code: string;
+  name: string;
+  contact: string;
+  bankData: BankData;
+  active: boolean;
+}
+
+export type PaymentMethod = 'BOLETO' | 'BOLETO_PARCELADO' | 'PIX' | 'TRANSFERENCIA' | 'DINHEIRO' | 'OUTROS';
+
+export interface Installment {
+  /** Data de vencimento YYYY-MM-DD. */
+  dueDate: string;
+}
+
+export interface Apportionment {
+  costCenterId: string;
+  /** Percentual com até 2 casas (ex.: 33.33). */
+  percent: number;
+}
+
+export interface Item {
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  discount: number;
+  surcharge: number;
+}
+
+/** Campos editáveis da Solicitação de Compras (o "conteúdo" que é assinado). */
+export interface ScContent {
+  supplierId: string | null;
+  supplierName: string;
+  supplierCode: string;
+  contact: string;
+  paymentMethod: PaymentMethod;
+  installments: Installment[];
+  apportionment: Apportionment[];
+  invoiceInfo: string;
+  natureId: string | null;
+  items: Item[];
+  bankData: BankData;
+  notes: string;
+}
+
+export type ScStatus =
+  | 'RASCUNHO'
+  | 'AGUARDANDO_GESTOR'
+  | 'DEVOLVIDA'
+  | 'AGUARDANDO_DIRETORIA'
+  | 'AGUARDANDO_NF'
+  | 'ENVIADA_FINANCEIRO'
+  | 'PAGA'
+  | 'REPROVADA'
+  | 'CANCELADA';
+
+export type SignatureSlot = 'COMPRA' | 'PAGAMENTO';
+
+export interface AppliedSignature {
+  slot: SignatureSlot;
+  userId: string;
+  name: string;
+  cargo: string;
+  imageDataUrl: string;
+  signedAt: string;
+  ip: string;
+  /** SHA-256 do conteúdo da SC no momento da assinatura. */
+  contentHash: string;
+  /** Código curto de verificação impresso no PDF. */
+  code: string;
+  /** Fase 2: método (interno, gov.br, provedor externo). */
+  method: 'INTERNA' | 'GOVBR' | 'PROVEDOR';
+  invalidatedAt?: string;
+}
+
+export type AttachmentKind = 'NF' | 'BOLETO' | 'COMPROVANTE' | 'ORCAMENTO' | 'COMPROVANTE_PAGAMENTO' | 'PDF_ASSINADO';
+
 export interface Attachment {
+  id: string;
+  kind: AttachmentKind;
   name: string;
   mimeType: string;
   size: number;
-  /** data URL no modo local; caminho do Storage no Supabase. */
+  /** data URL no modo demonstração; caminho do Storage em produção. */
   url: string;
+  uploadedBy: string;
+  uploadedByName: string;
+  uploadedAt: string;
 }
 
-export interface HistoryEntry {
+export interface FieldChange {
+  field: string;
+  before: string;
+  after: string;
+  userId: string;
+  userName: string;
+  at: string;
+}
+
+export interface TimelineEntry {
   at: string;
   userId: string;
   userName: string;
@@ -60,27 +174,26 @@ export interface HistoryEntry {
   note?: string;
 }
 
-export type ExpenseStatus = 'PENDENTE_DIRETORIA' | 'APROVADA' | 'REJEITADA' | 'CANCELADA';
-
-export interface Expense {
+export interface PurchaseRequest extends ScContent {
   id: string;
+  /** SC-2026-0001 */
+  number: string;
   sectorId: string;
   requesterId: string;
-  /** Nome do solicitante (desnormalizado para exibição). */
   requesterName: string;
+  /** Data da solicitação (YYYY-MM-DD) e competência derivada. */
+  date: string;
   month: Month;
-  description: string;
-  /** Valor em centavos. */
-  amount: number;
-  categoryId: string;
-  justification: string;
-  attachment: Attachment | null;
-  status: ExpenseStatus;
-  decisionReason?: string;
   createdAt: string;
-  decidedAt?: string;
-  decidedBy?: string;
-  history: HistoryEntry[];
+  submittedAt?: string;
+  status: ScStatus;
+  signatures: Partial<Record<SignatureSlot, AppliedSignature>>;
+  attachments: Attachment[];
+  changes: FieldChange[];
+  timeline: TimelineEntry[];
+  returnReason?: string;
+  rejectReason?: string;
+  paidAt?: string;
 }
 
 export type TransferStatus =
@@ -93,9 +206,7 @@ export type TransferStatus =
 
 export interface Transfer {
   id: string;
-  /** Setor que pede o limite emprestado. */
   requestingSectorId: string;
-  /** Setor que cede parte do seu teto. */
   grantingSectorId: string;
   requesterId: string;
   requesterName: string;
@@ -103,14 +214,17 @@ export interface Transfer {
   amount: number;
   justification: string;
   status: TransferStatus;
-  grantorDecisionBy?: string;
-  grantorDecisionAt?: string;
-  grantorNote?: string;
-  directorDecisionBy?: string;
-  directorDecisionAt?: string;
-  directorNote?: string;
   createdAt: string;
-  history: HistoryEntry[];
+  history: TimelineEntry[];
+}
+
+export interface Notification {
+  id: string;
+  userId: string;
+  text: string;
+  scId?: string;
+  at: string;
+  read: boolean;
 }
 
 export type AlertLevel = 'ok' | 'attention' | 'critical' | 'over';
@@ -118,16 +232,16 @@ export type AlertLevel = 'ok' | 'attention' | 'critical' | 'over';
 export interface BudgetSummary {
   sectorId: string;
   month: Month;
-  /** Teto base (padrão ou específico da competência). */
-  baseCeiling: number;
+  baseLimit: number;
   transfersIn: number;
   transfersOut: number;
-  /** Teto efetivo = base + recebido − cedido (transferências aprovadas). */
-  ceiling: number;
-  approved: number;
-  pending: number;
+  /** Limite total = base + recebido − cedido. */
+  limit: number;
+  /** Aprovado pelo gestor, aguardando a Diretoria. */
+  reserved: number;
+  /** Aprovado pela Diretoria (inclui aguardando NF, financeiro e pagas). */
+  consumed: number;
   available: number;
-  /** (aprovado + pendente) / teto, de 0 a ∞. */
   usage: number;
   alert: AlertLevel;
 }

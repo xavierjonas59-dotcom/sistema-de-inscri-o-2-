@@ -17,9 +17,11 @@ module.exports = {
         /* Paleta de status (fixa): sempre acompanhada de ícone + texto */
         status: { good: '#0ca30c', warning: '#fab219', serious: '#ec835a', critical: '#d03b3b' },
         /* Série de dados (magnitude, matiz único) */
-        series: { DEFAULT: '#2a78d6', soft: '#cfe1f7' },
+        series: { DEFAULT: '#282C8D', soft: '#cfd1ec' },
+        brand: '#282C8D',
       },
-      boxShadow: { card: '0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06)' },
+      boxShadow: { card: '0 1px 2px rgba(16,24,40,.04)' },
+      borderRadius: { DEFAULT: '4px', md: '5px', lg: '6px' },
     },
   },
   plugins: [],

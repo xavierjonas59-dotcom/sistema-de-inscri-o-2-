@@ -1,56 +1,60 @@
 # Arquitetura
 
 ## Stack
-- **Frontend:** React 18 + TypeScript + Vite + Tailwind CSS (sem bibliotecas de UI/gráficos: componentes próprios em `src/components`).
-- **Backend de produção:** Supabase (Auth + PostgreSQL + Storage), com RLS e RPCs em `supabase/migrations`.
-- **Testes:** Vitest (`*.test.ts`).
+React 18 + TypeScript + Vite + Tailwind. PDF com `jspdf` (SC), `pdf-lib` (pacote para o financeiro) e `qrcode`.
+Testes com Vitest.
 
 ## Camadas
-
 ```
-src/
-  domain/      Regras puras, sem React: tipos, cálculo de orçamento, formatação, rótulos, CSV
-  services/    Contrato DataService + implementação LocalDataService (demo) + seed
-  app/         Sessão, competência (mês) selecionada, hooks de consulta e roteamento por hash
-  components/  UI kit (primitives, modal, toast, ícones), gráficos e layout
-  pages/       Telas por perfil (gestor/, diretoria/, admin/) e componentes compartilhados (shared/)
-supabase/      Migrations SQL: schema, RLS, RPCs de fluxo e bucket de comprovantes
+src/domain/     Regras puras: tipos, totais, validação, hash do conteúdo, diferenças campo a campo, saldo do setor
+src/services/   DataService (contrato) + LocalDataService (todas as regras e permissões) + dados de exemplo
+src/pdf/        Solicitação de Compras em A4 e pacote (SC + NF + boletos + comprovantes)
+src/pages/      Telas por perfil
+src/components/ UI (sem bibliotecas de componentes)
 ```
+A UI só conversa com a interface `DataService`. Toda operação recebe o usuário e o serviço **recarrega o perfil do
+banco** e confere perfil, setor e status. Esconder botão nunca é a única barreira. Os testes chamam o serviço direto
+(sem tela), por exemplo para provar que o gestor não consegue assinar a Autorização de Pagamento.
 
-A UI depende apenas da interface `DataService` (`src/services/DataService.ts`). Para ligar o Supabase,
-basta criar um `SupabaseDataService` que chame as RPCs da migration e trocar a instância em `src/services/api.ts`.
+## Perfis
+| Perfil | Pode |
+|---|---|
+| Funcionário | Criar SC, ver o painel do setor, acompanhar as próprias SCs, anexar NF/comprovantes após aprovação |
+| Gestor | Tudo do funcionário + usuários do próprio setor (sempre como Funcionário), editar/devolver/reprovar/aprovar SCs do setor, assinar **só** a Autorização de Compra |
+| Diretoria | Aprovar/reprovar SCs vindas do gestor, assinar **só** a Autorização de Pagamento |
+| Financeiro | Fila de Contas a Pagar, imprimir pacote, marcar como paga (data + comprovante) |
+| Admin | Setores, limites, usuários de qualquer perfil, centros de custo, naturezas, fornecedores |
 
-## Regras de orçamento (`src/domain/budget.ts` ≡ função SQL `_budget`)
-- **Teto efetivo** = teto base (padrão do setor ou específico da competência) + transferências **aprovadas** recebidas − cedidas.
-- **Gasto** = despesas `APROVADA`. **Em análise** = despesas `PENDENTE_DIRETORIA`.
-- **Saldo disponível** = teto efetivo − gasto − em análise. O pendente fica reservado para que o mesmo saldo não seja comprometido duas vezes.
-- **Alertas:** ≥ 80% atenção · ≥ 95% crítico · > 100% estourado. A cor vem sempre acompanhada de ícone e texto.
-
-## Fluxos (máquinas de estado)
-
-**Despesa:** `PENDENTE_DIRETORIA → APROVADA | REJEITADA` (motivo obrigatório) · `→ CANCELADA` (pelo gestor, enquanto pendente).
-
-**Transferência de limite:**
+## Fluxo da SC
 ```
-PENDENTE_CEDENTE ──(gestor cedente aceita)──▶ PENDENTE_DIRETORIA ──(Diretoria aprova)──▶ APROVADA (limite transferido)
-       │                                              │
-       └─▶ RECUSADA_CEDENTE                           └─▶ REJEITADA_DIRETORIA
-(solicitante pode cancelar enquanto estiver em andamento → CANCELADA)
+Rascunho → Aguardando gestor → Aguardando diretoria → Aprovada · aguardando NF → Enviada ao financeiro → Paga
+              │  └─ Devolvida para ajuste (motivo) → volta ao solicitante
+              └─ Reprovada (motivo; encerra)            Reprovada pela diretoria (motivo)
 ```
-- A transferência vale apenas para a competência (mês) informada.
-- O cedente só aceita se o seu saldo livre (já descontadas as outras cessões aguardando a Diretoria) cobrir o valor.
-- A Diretoria revalida o saldo do cedente no momento da aprovação final.
+SC criada pelo gestor entra direto em "Aguardando diretoria", já com a Autorização de Compra dele.
 
-## Segurança (RBAC)
-- **Produção (Supabase):**
-  - RLS em todas as tabelas: o gestor só lê linhas do próprio setor; transferências só quando o setor dele é parte.
-  - Os clientes não têm policy de escrita em `expenses`/`transfers`. Toda mudança de status passa por RPCs `security definer`, que validam o perfil, o estado e o saldo (com advisory lock contra condição de corrida).
-  - Os tetos de outros setores não ficam visíveis: a lista de setores para o gestor vem de `sector_directory()`, que retorna apenas id e nome.
-  - Os comprovantes ficam no bucket privado `comprovantes/<setor>/…`, e cada gestor só lê e grava a pasta do próprio setor.
-- **Demo local:** o `LocalDataService` aplica as mesmas regras e sempre relê o perfil do "banco", sem confiar no objeto vindo da UI. Ainda assim, roda no navegador e serve apenas para demonstração.
+## Limite do setor (por mês)
+- **Reservado:** SCs aprovadas pelo gestor que aguardam a diretoria (valor atual da SC).
+- **Consumido:** SCs aprovadas pela diretoria (aguardando NF, no financeiro ou pagas).
+- **Disponível:** limite − reservado − consumido. A aprovação do gestor é bloqueada quando passa do disponível, e a mensagem diz quanto falta.
+- Reprovada ou cancelada devolve a reserva. Se o gestor alterar uma SC que já estava na diretoria, a assinatura dele
+  perde a validade, a SC volta para ele e a reserva é recalculada na nova aprovação.
+- Transferência temporária de limite entre setores: aceite do gestor cedente + aprovação da diretoria.
 
-## Próximos passos sugeridos
-1. Implementar `SupabaseDataService` e a tela de login com Supabase Auth.
-2. Notificações por e-mail ou in-app quando houver itens aguardando decisão.
-3. Exportação `.xlsx` nativa e PDF gerado no servidor.
-4. Histórico mensal (tendência de gastos dos últimos 12 meses).
+## Assinatura eletrônica (fase 1)
+- O gestor e o diretor cadastram a própria imagem em *Meu perfil*. Pode ser foto da assinatura em papel (o fundo é
+  removido) ou desenho na tela.
+- A assinatura só é aplicada ao aprovar, depois de confirmar a senha. O sistema registra data, hora, IP, usuário,
+  SHA-256 do conteúdo da SC e um código curto de verificação.
+- Se o conteúdo mudar, o hash deixa de bater e a assinatura aparece como **invalidada** (na tela, no PDF e na página de validação).
+- Texto impresso: "Assinado eletronicamente em …". O texto "assinatura digital" fica reservado para certificado ICP-Brasil.
+- **Fase 2 (preparada, não implementada):** o campo `method` da assinatura (`INTERNA | GOVBR | PROVEDOR`) e o tipo de
+  anexo `PDF_ASSINADO` (PDF assinado no gov.br e anexado de volta). A integração com ZapSign, Clicksign ou D4Sign entra
+  como novo `method`.
+
+## O que falta para produção
+1. **Servidor:** rodar as regras do `LocalDataService` no servidor (ex.: Supabase Edge Function + PostgreSQL com RLS),
+   trocando só o `KeyValueStore` por tabelas. Hoje, no modo demonstração, as regras rodam no navegador.
+2. **IP real** na assinatura (só o servidor conhece; na demonstração aparece "não registrado").
+3. **E-mail:** as notificações estão só dentro do sistema; o envio por e-mail entra quando houver serviço configurado.
+4. Anexos no Storage em vez de dentro do registro da SC.

@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import logo from '@/assets/logo-am-comercial.jpg';
 import { useSession } from '@/app/session';
 import { Button, Field, Input } from '@/components/ui/primitives';
 import { DEMO_PASSWORD, DEMO_USERS } from '@/services/seed';
@@ -24,61 +25,40 @@ export default function Login() {
   };
 
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
-      <div className="relative hidden flex-col justify-between bg-sidebar p-12 text-white lg:flex">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <div className="w-full max-w-sm">
         <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-lg bg-primary font-bold">MK</div>
-          <span className="text-lg font-semibold">MKSAL</span>
+          <img src={logo} alt="AM Comercial" className="h-14 w-14 rounded-sm" />
+          <div>
+            <div className="text-lg font-semibold text-brand">AM Comercial</div>
+            <div className="text-sm text-muted-foreground">Gestão de Despesas</div>
+          </div>
         </div>
-        <div className="max-w-md">
-          <h1 className="text-3xl font-semibold leading-tight">Controle de despesas e orçamentos por setor</h1>
-          <p className="mt-4 text-sidebar-foreground">
-            Tetos mensais, solicitações com aprovação da Diretoria e transferência temporária de limite entre setores com
-            dupla aprovação — tudo em tempo real.
-          </p>
-          <ul className="mt-8 space-y-3 text-sm text-sidebar-foreground">
-            <li>✓ Isolamento total de dados entre setores</li>
-            <li>✓ Alertas automáticos a partir de 80% do teto</li>
-            <li>✓ Relatórios exportáveis para Excel e PDF</li>
-          </ul>
-        </div>
-        <p className="text-xs text-sidebar-foreground/60">© {new Date().getFullYear()} MKSAL</p>
-      </div>
+        <form onSubmit={submit} className="mt-6 space-y-3 rounded border bg-white p-5">
+          <Field label="E-mail">
+            <Input id="login-email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          </Field>
+          <Field label="Senha">
+            <Input id="login-password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          </Field>
+          {error && <p className="rounded bg-[#fbeeee] px-3 py-2 text-sm text-[#a12626]">{error}</p>}
+          <Button type="submit" className="w-full" disabled={busy}>{busy ? 'Entrando…' : 'Entrar'}</Button>
+        </form>
 
-      <div className="flex items-center justify-center p-6">
-        <div className="w-full max-w-sm">
-          <h2 className="text-2xl font-semibold tracking-tight">Entrar</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Use seu e-mail corporativo.</p>
-          <form onSubmit={submit} className="mt-8 space-y-4">
-            <Field label="E-mail">
-              <Input type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            </Field>
-            <Field label="Senha">
-              <Input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-            </Field>
-            {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">{error}</p>}
-            <Button type="submit" className="w-full" disabled={busy}>
-              {busy ? 'Entrando…' : 'Entrar'}
-            </Button>
-          </form>
-
-          <div className="mt-10 rounded-xl border bg-white p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Acesso de demonstração</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Senha de todos: <code className="rounded bg-muted px-1">{DEMO_PASSWORD}</code>
-            </p>
-            <div className="mt-3 grid gap-2">
-              {DEMO_USERS.map((u) => (
-                <button
-                  key={u.email}
-                  onClick={() => submit(undefined, { email: u.email, password: DEMO_PASSWORD })}
-                  className="flex items-center justify-between rounded-lg border px-3 py-2 text-left text-sm hover:border-primary hover:bg-primary/5"
-                >
-                  <span className="font-medium">{u.label}</span>
-                  <span className="text-xs text-muted-foreground">{u.email}</span>
-                </button>
-              ))}
-            </div>
+        <div className="mt-5 rounded border bg-white p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Usuários de demonstração</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">Senha de todos: <code className="rounded-sm bg-muted px-1">{DEMO_PASSWORD}</code> (também usada para assinar)</p>
+          <div className="mt-2 divide-y rounded border">
+            {DEMO_USERS.map((u) => (
+              <button
+                key={u.email}
+                onClick={() => submit(undefined, { email: u.email, password: DEMO_PASSWORD })}
+                className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm hover:bg-muted"
+              >
+                <span className="font-medium">{u.label}</span>
+                <span className="text-xs text-primary">Entrar</span>
+              </button>
+            ))}
           </div>
         </div>
       </div>
