@@ -1,10 +1,26 @@
 import type { NewFile } from '@/services/DataService';
 
-/** Entrega um arquivo ao usuário (download). Usa o recurso de downloads do visualizador quando existir. */
+type DownloadsApi = { save: (o: { filename: string; data: Blob }) => Promise<unknown> };
+let downloadsApi: Promise<DownloadsApi | null> | null = null;
+
+/** No visualizador de demonstração (claude.ai) os downloads passam pelo recurso "downloads"; fora dele, download normal. */
+function viewerDownloads(): Promise<DownloadsApi | null> {
+  const c = (window as unknown as { claude?: { use?: (n: string) => Promise<unknown> } }).claude;
+  if (!c?.use) return Promise.resolve(null);
+  return (downloadsApi ??= c.use('downloads').then((d) => (d as DownloadsApi | null) ?? null, () => null));
+}
+
+/** Entrega um arquivo ao usuário (download). */
 export async function saveBlob(blob: Blob, filename: string) {
-  const w = window as unknown as { claude?: { downloads?: { save: (o: { data: Blob; filename: string; mimeType: string }) => Promise<unknown> } } };
-  if (w.claude?.downloads?.save) {
-    await w.claude.downloads.save({ data: blob, filename, mimeType: blob.type || 'application/octet-stream' });
+  const d = await viewerDownloads();
+  if (d) {
+    try {
+      await d.save({ filename, data: blob });
+    } catch (e) {
+      const code = (e as { code?: string }).code;
+      if (code === 'declined') return;
+      throw new Error(code === 'rejected_extension' ? 'Formato de arquivo não permitido para download aqui.' : 'Não foi possível baixar o arquivo neste visualizador.');
+    }
     return;
   }
   const url = URL.createObjectURL(blob);
