@@ -162,3 +162,10 @@ export function diffContent(
 }
 
 export const scNumber = (year: number, seq: number) => `SC-${year}-${String(seq).padStart(4, '0')}`;
+
+/** "1 solicitação, R$ 120,00" / "3 solicitações, R$ 4.500,00 no total" */
+export function scSummary(items: Pick<ScContent, 'items'>[]): string {
+  const total = items.reduce((s, r) => s + scTotal(r), 0);
+  if (!items.length) return 'Nenhuma solicitação';
+  return items.length === 1 ? `1 solicitação, ${money(total)}` : `${items.length} solicitações, ${money(total)} no total`;
+}

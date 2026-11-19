@@ -115,14 +115,50 @@ export function AlertBadge({ level }: { level: AlertLevel }) {
   return <Badge tone={ALERT[level].tone}>{ALERT[level].label}</Badge>;
 }
 
-/** Número de resumo, sem ícone decorativo. */
-export function StatCard({ label, value, hint, emphasis }: { label: string; value: ReactNode; hint?: ReactNode; emphasis?: Tone }) {
-  return (
-    <div className="rounded border bg-card px-4 py-3">
-      <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{label}</div>
-      <div className={cx('tabular mt-1 text-xl font-semibold', emphasis === 'critical' && 'text-[#a12626]', emphasis === 'warning' && 'text-[#8a5a00]')}>{value}</div>
-      {hint && <div className="mt-0.5 text-xs text-muted-foreground">{hint}</div>}
+/**
+ * Linha de saldo no formato de razão contábil: Limite − Reservado − Consumido = Disponível.
+ * Mostra a conta que gera o saldo; o disponível é o único número em destaque.
+ */
+export function Ledger({
+  limit,
+  reserved,
+  consumed,
+  available,
+  limitNote,
+  children,
+}: {
+  limit: number;
+  reserved: number;
+  consumed: number;
+  available: number;
+  limitNote?: ReactNode;
+  children?: ReactNode;
+}) {
+  const fmt = (c: number) => (c / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const term = (label: string, value: number, note?: ReactNode) => (
+    <div className="min-w-0">
+      <div className="text-xs text-muted-foreground">{label}</div>
+      <div className="tabular text-base font-medium sm:text-lg">{fmt(value)}</div>
+      {note && <div className="text-xs text-muted-foreground">{note}</div>}
     </div>
+  );
+  const op = (sign: string) => <div className="hidden self-center pt-3 text-lg text-muted-foreground sm:block" aria-hidden="true">{sign}</div>;
+  return (
+    <section className="rounded border bg-card px-5 py-4" aria-label="Saldo do setor">
+      <div className="grid grid-cols-2 items-start gap-x-4 gap-y-3 sm:grid-cols-[auto_auto_auto_auto_auto_auto_1fr] sm:gap-x-5">
+        {term('Limite do mês', limit, limitNote)}
+        {op('−')}
+        {term('Reservado', reserved, 'aguardando diretoria')}
+        {op('−')}
+        {term('Consumido', consumed, 'liberado pela diretoria')}
+        {op('=')}
+        <div className="col-span-2 border-t pt-3 sm:col-span-1 sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0">
+          <div className="text-xs text-muted-foreground">Disponível</div>
+          <div className={cx('tabular text-[28px] font-semibold leading-tight tracking-tight', available < 0 ? 'text-[#a12626]' : 'text-brand')}>{fmt(available)}</div>
+        </div>
+      </div>
+      {children && <div className="mt-4">{children}</div>}
+    </section>
   );
 }
 
@@ -130,7 +166,7 @@ export function PageHeader({ title, description, actions }: { title: string; des
   return (
     <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h1 className="text-xl font-semibold">{title}</h1>
+        <h1 className="text-[22px] font-semibold leading-tight">{title}</h1>
         {description && <p className="mt-0.5 text-sm text-muted-foreground">{description}</p>}
       </div>
       {actions && <div className="no-print flex flex-wrap gap-2">{actions}</div>}
@@ -140,7 +176,7 @@ export function PageHeader({ title, description, actions }: { title: string; des
 
 export function EmptyState({ title, children }: { icon?: IconName; title: string; children?: ReactNode }) {
   return (
-    <div className="px-4 py-10 text-center">
+    <div className="px-4 py-6 text-center">
       <p className="text-sm font-medium text-muted-foreground">{title}</p>
       {children && <p className="mt-1 text-sm text-muted-foreground">{children}</p>}
     </div>
@@ -197,7 +233,7 @@ export function Table({ children, min = 640 }: { children: ReactNode; min?: numb
   );
 }
 export const Th = ({ children, right, className }: { children?: ReactNode; right?: boolean; className?: string }) => (
-  <th className={cx('whitespace-nowrap border-b bg-muted/60 px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground', right && 'text-right', className)}>
+  <th className={cx('whitespace-nowrap border-b bg-muted/60 px-3 py-2 text-xs font-semibold text-muted-foreground', right && 'text-right', className)}>
     {children}
   </th>
 );

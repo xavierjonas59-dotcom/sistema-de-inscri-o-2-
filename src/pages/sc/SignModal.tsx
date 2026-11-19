@@ -72,7 +72,7 @@ export function SignModal({
       open={open}
       onClose={onClose}
       title={`Assinar ${slotLabel}`}
-      description={`${number} · ${money(total)}`}
+      description={`${number}, no valor de ${money(total)}`}
       footer={
         <>
           <Button variant="secondary" onClick={onClose}>Cancelar</Button>
@@ -85,7 +85,7 @@ export function SignModal({
           <Field label="Diretor que vai liberar o pagamento" hint={`Aparecem os diretores que podem liberar ${money(total)}.`}>
             <Select id="sign-director" value={directorId} onChange={(e) => setDirectorId(e.target.value)}>
               <option value="">Selecione…</option>
-              {eligible.map((d) => <option key={d.id} value={d.id}>{d.name} · {d.cargo} ({limitLabel(d.paymentLimit)})</option>)}
+              {eligible.map((d) => <option key={d.id} value={d.id}>{d.name}, {d.cargo.toLowerCase()} ({limitLabel(d.paymentLimit)})</option>)}
             </Select>
           </Field>
         )}
@@ -104,7 +104,8 @@ export function SignModal({
             <img src={user.signature!.dataUrl} alt="Sua assinatura" className="mx-auto h-14 object-contain" />
             <div className="mx-auto mt-1 w-56 border-t border-foreground/60" />
             <div className="py-2 text-xs">
-              <div className="font-semibold">{user.name} · {user.cargo}</div>
+              <div className="font-semibold">{user.name}</div>
+              <div className="text-muted-foreground">{user.cargo}</div>
               <div className="text-muted-foreground">Assinado eletronicamente</div>
             </div>
           </div>

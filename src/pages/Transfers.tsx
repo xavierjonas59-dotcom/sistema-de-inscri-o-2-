@@ -89,7 +89,7 @@ export default function Transfers() {
         )}
       </Card>
 
-      <Modal open={creating} onClose={() => setCreating(false)} title="Pedir limite emprestado" description={`Válido para ${monthLabel(month)}`}
+      <Modal open={creating} onClose={() => setCreating(false)} title="Pedir limite emprestado" description={`Válido para ${monthLabel(month).toLowerCase()}`}
         footer={<><Button variant="secondary" onClick={() => setCreating(false)}>Cancelar</Button><Button onClick={create}>Enviar pedido</Button></>}>
         <div className="space-y-3">
           <Field label="Setor cedente">

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useSession, useUser } from '@/app/session';
 import { money, monthLabel } from '@/domain/format';
-import { SC_STATUS, scTotal } from '@/domain/sc';
+import { SC_STATUS, scSummary, scTotal } from '@/domain/sc';
 import type { ScStatus } from '@/domain/types';
 import { api } from '@/services/api';
 import { Button, Card, PageHeader, Select, Tabs } from '@/components/ui/primitives';
@@ -48,7 +48,7 @@ export default function ScList({ approvals = false }: { approvals?: boolean }) {
     <>
       <PageHeader
         title={title}
-        description={`${items.length} SC · ${money(total)}`}
+        description={scSummary(items)}
         actions={user.role === 'FUNCIONARIO' || user.role === 'GESTOR' || (isDir && user.sectorId) ? <Button icon="plus" onClick={() => navigate('/sc/nova')}>Nova SC</Button> : undefined}
       />
       <div className="no-print mb-3 flex flex-wrap items-end justify-between gap-3">

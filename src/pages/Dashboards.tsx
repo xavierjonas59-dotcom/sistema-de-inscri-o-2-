@@ -1,34 +1,25 @@
 import { navigate, useQuery, useSession, useUser } from '@/app/session';
 import { alertLevel } from '@/domain/budget';
 import { money, monthLabel, pct } from '@/domain/format';
-import { scTotal } from '@/domain/sc';
+import { scSummary, scTotal } from '@/domain/sc';
 import type { BudgetSummary } from '@/domain/types';
 import { api } from '@/services/api';
-import { AlertBadge, BudgetBar, Button, Card, CardHeader, PageHeader, StatCard, Table, Td, Th } from '@/components/ui/primitives';
+import { AlertBadge, BudgetBar, Button, Card, CardHeader, PageHeader, Ledger, Table, Td, Th } from '@/components/ui/primitives';
 import { useLookups } from './shared/lookups';
 import { ScTable } from './sc/ScTable';
 
 function LimitNumbers({ b }: { b: BudgetSummary }) {
+  const note = b.transfersIn || b.transfersOut
+    ? `base ${money(b.baseLimit)}${b.transfersIn ? `, +${money(b.transfersIn)} recebido` : ''}${b.transfersOut ? `, −${money(b.transfersOut)} cedido` : ''}`
+    : undefined;
   return (
-    <>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          label="Limite total"
-          value={money(b.limit)}
-          hint={b.transfersIn || b.transfersOut ? `Base ${money(b.baseLimit)}${b.transfersIn ? ` +${money(b.transfersIn)}` : ''}${b.transfersOut ? ` −${money(b.transfersOut)}` : ''}` : 'Limite mensal do setor'}
-        />
-        <StatCard label="Reservado" value={money(b.reserved)} hint="Aprovado pelo gestor, aguardando diretoria" />
-        <StatCard label="Consumido" value={money(b.consumed)} hint="Aprovado pela diretoria" />
-        <StatCard label="Disponível" value={money(b.available)} emphasis={b.available < 0 ? 'critical' : b.alert !== 'ok' ? 'warning' : undefined} hint={`${pct(Math.min(b.usage, 9.99))} do limite em uso`} />
+    <Ledger limit={b.limit} reserved={b.reserved} consumed={b.consumed} available={b.available} limitNote={note}>
+      <div className="mb-1.5 flex items-center justify-between gap-2 text-xs text-muted-foreground">
+        <span className="tabular">{pct(Math.min(b.usage, 9.99))} do limite em uso</span>
+        {b.alert !== 'ok' && <AlertBadge level={b.alert} />}
       </div>
-      <div className="mt-3 rounded border bg-white p-4">
-        <div className="mb-2 flex items-center justify-between gap-2 text-sm">
-          <span className="font-medium">Uso do limite</span>
-          <AlertBadge level={b.alert} />
-        </div>
-        <BudgetBar consumed={b.consumed} reserved={b.reserved} limit={b.limit} alert={b.alert} showLegend />
-      </div>
-    </>
+      <BudgetBar consumed={b.consumed} reserved={b.reserved} limit={b.limit} alert={b.alert} showLegend />
+    </Ledger>
   );
 }
 
@@ -46,12 +37,12 @@ export function SectorDashboard() {
 
   return (
     <>
-      <PageHeader title={`Setor ${lk.sector(user.sectorId!)}`} description={`Limite de ${monthLabel(month)}`} actions={<Button icon="plus" onClick={() => navigate('/sc/nova')}>Nova SC</Button>} />
+      <PageHeader title={`Setor ${lk.sector(user.sectorId!)}`} description={`Limite de ${monthLabel(month).toLowerCase()}`} actions={<Button icon="plus" onClick={() => navigate('/sc/nova')}>Nova SC</Button>} />
       {b && <LimitNumbers b={b} />}
       <div className="mt-5 space-y-4">
         {isManager && (
           <Card>
-            <CardHeader title="Aguardando a sua aprovação" subtitle={`${waiting.length} SC · ${money(waiting.reduce((s, r) => s + scTotal(r), 0))}`} />
+            <CardHeader title="Aguardando a sua aprovação" subtitle={scSummary(waiting)} />
             <ScTable items={waiting} empty="Nenhuma SC aguardando você." />
           </Card>
         )}
@@ -61,10 +52,12 @@ export function SectorDashboard() {
             <ScTable items={needsNf} />
           </Card>
         )}
-        <Card>
-          <CardHeader title="Minhas solicitações em andamento" action={<a className="text-sm text-primary hover:underline" href="#/sc">Ver todas</a>} />
-          <ScTable items={mine} empty="Nenhuma solicitação em andamento." />
-        </Card>
+        {(!isManager || mine.length > 0) && (
+          <Card>
+            <CardHeader title="Minhas solicitações em andamento" action={<a className="text-sm text-primary hover:underline" href="#/sc">Ver todas</a>} />
+            <ScTable items={mine} empty="Você não tem solicitações em andamento. Use “Nova SC” para começar." />
+          </Card>
+        )}
       </div>
     </>
   );
@@ -93,16 +86,10 @@ export function DirectorDashboard() {
 
   return (
     <>
-      <PageHeader title="Visão geral" description={`Todos os setores · ${monthLabel(month)}`} />
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Limite total" value={money(g.limit)} hint={`${budgets.length} setores`} />
-        <StatCard label="Reservado" value={money(g.reserved)} hint={`${waiting.length} SC na diretoria`} />
-        <StatCard label="Consumido" value={money(g.consumed)} />
-        <StatCard label="Disponível" value={money(g.available)} emphasis={gAlert !== 'ok' ? 'warning' : undefined} />
-      </div>
-      <div className="mt-3 rounded border bg-white p-4">
+      <PageHeader title="Visão geral" description={`Todos os setores em ${monthLabel(month).toLowerCase()}`} />
+      <Ledger limit={g.limit} reserved={g.reserved} consumed={g.consumed} available={g.available} limitNote={`soma de ${budgets.length} setores`}>
         <BudgetBar consumed={g.consumed} reserved={g.reserved} limit={g.limit} alert={gAlert} showLegend />
-      </div>
+      </Ledger>
 
       <Card className="mt-5">
         <CardHeader

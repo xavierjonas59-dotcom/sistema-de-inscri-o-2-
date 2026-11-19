@@ -71,7 +71,7 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
     <nav className="flex h-full flex-col">
       <div className="px-4 pb-4 pt-5">
         <img src={logo} alt="AM Comercial" className="h-16 w-16" />
-        <div className="mt-2 text-xs font-medium uppercase tracking-wider text-sidebar-foreground/80">Gestão de Despesas</div>
+        <div className="mt-2 text-sm text-sidebar-foreground">Gestão de Despesas</div>
       </div>
       <ul className="flex-1 space-y-0.5 overflow-y-auto px-2">
         {items.map((it) => (
@@ -93,8 +93,7 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
       <div className="border-t border-white/15 px-4 py-3 text-sm">
         <div className="truncate font-medium text-white">{user.name}</div>
         <div className="truncate text-xs text-sidebar-foreground">
-          {user.role === 'DIRETORIA' ? user.cargo : ROLE_LABEL[user.role]}
-          {sectorName && user.role !== 'DIRETORIA' ? ` · ${sectorName}` : ''}
+          {user.role === 'DIRETORIA' ? user.cargo : sectorName ? `${ROLE_LABEL[user.role]} de ${sectorName}` : ROLE_LABEL[user.role]}
         </div>
         <button onClick={logout} className="mt-2 text-xs text-sidebar-foreground underline hover:text-white">Sair</button>
       </div>

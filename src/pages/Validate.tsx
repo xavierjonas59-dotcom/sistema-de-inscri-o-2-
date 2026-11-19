@@ -48,7 +48,7 @@ export default function Validate({ query }: { query: URLSearchParams }) {
                   <span className="font-medium">{s.slot}</span>
                   {s.valid ? <Badge tone="good">Válida</Badge> : <Badge tone="critical">Inválida: conteúdo alterado</Badge>}
                 </div>
-                <div className="text-muted-foreground">{s.name} · {s.cargo} · {dateTime(s.signedAt)} · Cód. {s.code}</div>
+                <div className="text-muted-foreground">{s.name}, {s.cargo.toLowerCase()}. Assinado em {dateTime(s.signedAt)}, código {s.code}.</div>
               </li>
             ))}
             {!result.signatures.length && <li className="px-4 py-3 text-sm text-muted-foreground">Ainda sem assinaturas.</li>}

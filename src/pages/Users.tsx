@@ -96,7 +96,7 @@ export default function Users() {
                 )}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">Perfil: Funcionário · Setor: {lk.sector(user.sectorId!)}</p>
+              <p className="text-sm text-muted-foreground">Quem você cadastra entra como funcionário do setor {lk.sector(user.sectorId!)}.</p>
             )}
             {isAdmin && form.role === 'DIRETORIA' && (
               <Field label="Limite para liberar pagamentos (R$)" hint="Deixe vazio para liberar qualquer valor.">

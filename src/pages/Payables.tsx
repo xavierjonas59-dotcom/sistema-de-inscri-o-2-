@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useUser } from '@/app/session';
 import { money } from '@/domain/format';
-import { scTotal } from '@/domain/sc';
+import { scSummary } from '@/domain/sc';
 import { api } from '@/services/api';
 import { Card, Input, PageHeader, Select, Tabs, Field } from '@/components/ui/primitives';
 import { useLookups } from './shared/lookups';
@@ -25,7 +25,7 @@ export default function Payables() {
 
   return (
     <>
-      <PageHeader title="Contas a Pagar" description={`${items.length} SC · ${money(items.reduce((s, r) => s + scTotal(r), 0))}`} />
+      <PageHeader title="Contas a Pagar" description={scSummary(items)} />
       <div className="no-print mb-3 flex flex-wrap items-end justify-between gap-3">
         <Tabs<Tab> value={tab} onChange={setTab} items={[{ value: 'pagar', label: 'A pagar', count: toPay.length }, { value: 'pagas', label: 'Pagas', count: paid.length }]} />
         <div className="flex flex-wrap items-end gap-2">

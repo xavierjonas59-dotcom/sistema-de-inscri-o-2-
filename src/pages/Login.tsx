@@ -46,7 +46,7 @@ export default function Login() {
         </form>
 
         <div className="mt-5 rounded border bg-white p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Usuários de demonstração</p>
+          <h2 className="text-sm font-semibold">Usuários de demonstração</h2>
           <p className="mt-0.5 text-xs text-muted-foreground">Senha de todos: <code className="rounded-sm bg-muted px-1">{DEMO_PASSWORD}</code> (também usada para assinar)</p>
           <div className="mt-2 divide-y rounded border">
             {DEMO_USERS.map((u) => (

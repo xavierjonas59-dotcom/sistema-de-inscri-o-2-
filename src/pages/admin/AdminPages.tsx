@@ -44,7 +44,7 @@ export function SectorsAdmin() {
       />
       <Card>
         <Table>
-          <thead><tr><Th>Setor</Th><Th right>Limite mensal padrão</Th><Th right>Limite em {monthLabel(month)}</Th><Th>Status</Th><Th /></tr></thead>
+          <thead><tr><Th>Setor</Th><Th right>Limite mensal padrão</Th><Th right>Limite em {monthLabel(month).toLowerCase()}</Th><Th>Status</Th><Th /></tr></thead>
           <tbody>
             {sectors.map((s) => {
               const o = overrides.find((x) => x.sectorId === s.id);
@@ -76,7 +76,7 @@ export function SectorsAdmin() {
           </div>
         )}
       </Modal>
-      <Modal open={!!monthEdit} onClose={() => setMonthEdit(null)} title={`Limite de ${monthEdit?.sector.name} em ${monthLabel(month)}`} description="Vale só para esta competência."
+      <Modal open={!!monthEdit} onClose={() => setMonthEdit(null)} title={`Limite de ${monthEdit?.sector.name} em ${monthLabel(month).toLowerCase()}`} description="Vale só para esta competência."
         footer={<><Button variant="ghost" onClick={() => saveMonth(true)}>Voltar ao padrão</Button><Button onClick={() => saveMonth(false)}>Salvar</Button></>}>
         <Field label="Limite (R$)"><Input id="sec-month" inputMode="decimal" value={monthEdit?.value ?? ''} onChange={(e) => monthEdit && setMonthEdit({ ...monthEdit, value: e.target.value })} /></Field>
       </Modal>
@@ -93,8 +93,8 @@ export function CodesAdmin() {
     <>
       <PageHeader title="Centros de custo e naturezas" description="Códigos usados no rateio e na natureza da compra. Desative em vez de excluir para manter o histórico." />
       <div className="grid gap-4 lg:grid-cols-2">
-        <CodedList title="Centros de custo" example="220101 · ADMINISTRATIVO" items={cc} onSave={(x) => api.saveCostCenter(user, x)} />
-        <CodedList title="Naturezas (código contábil)" example="51105007 · Alimentação" items={nat} onSave={(x) => api.saveNature(user, x)} />
+        <CodedList title="Centros de custo" example="220101, ADMINISTRATIVO" items={cc} onSave={(x) => api.saveCostCenter(user, x)} />
+        <CodedList title="Naturezas (código contábil)" example="51105007, Alimentação" items={nat} onSave={(x) => api.saveNature(user, x)} />
       </div>
     </>
   );
@@ -167,7 +167,7 @@ export function SuppliersAdmin() {
                 <Td className="tabular">{s.code}</Td>
                 <Td className="font-medium">{s.name}</Td>
                 <Td>{s.contact || '—'}</Td>
-                <Td className="text-xs">{[s.bankData.bank, s.bankData.agency, s.bankData.account].filter(Boolean).join(' · ') || (s.bankData.pix ? `PIX ${s.bankData.pix}` : '—')}</Td>
+                <Td className="text-xs">{[s.bankData.bank, s.bankData.agency, s.bankData.account].filter(Boolean).join(', ') || (s.bankData.pix ? `PIX ${s.bankData.pix}` : '—')}</Td>
                 <Td right><Button size="sm" variant="ghost" onClick={() => setForm(JSON.parse(JSON.stringify(s)))}>Editar</Button></Td>
               </tr>
             ))}

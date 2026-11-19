@@ -101,12 +101,15 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
       <div className="mb-1 text-sm"><a href="#/sc" className="text-primary hover:underline">Solicitações</a> / {sc.number}</div>
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="flex flex-wrap items-center gap-2 text-xl font-semibold">
+          <h1 className="flex flex-wrap items-center gap-2 text-[22px] font-semibold leading-tight">
             {sc.number} <ScStatusTag sc={sc} />
           </h1>
-          <p className="mt-0.5 text-sm text-muted-foreground">
-            {lk.sector(sc.sectorId)} · {sc.requesterName} · {date(sc.date + 'T12:00')} · <strong className="tabular text-foreground">{money(total)}</strong>
-          </p>
+          <dl className="mt-2 grid grid-cols-2 gap-x-8 gap-y-1 text-sm sm:flex">
+            <div><dt className="text-xs text-muted-foreground">Setor</dt><dd>{lk.sector(sc.sectorId)}</dd></div>
+            <div><dt className="text-xs text-muted-foreground">Solicitante</dt><dd>{sc.requesterName}</dd></div>
+            <div><dt className="text-xs text-muted-foreground">Data</dt><dd className="tabular">{date(sc.date + 'T12:00')}</dd></div>
+            <div><dt className="text-xs text-muted-foreground">Total</dt><dd className="tabular font-semibold">{money(total)}</dd></div>
+          </dl>
         </div>
         <div className="no-print flex flex-wrap gap-2">
           <Button variant="secondary" icon="printer" onClick={printSc} disabled={busy}>Imprimir / Baixar PDF</Button>
@@ -151,7 +154,7 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
             {[...sc.timeline].reverse().map((t, i) => (
               <li key={i} className="border-l-2 border-[#d5d7ee] pl-3">
                 <div className="text-sm font-medium">{t.action}</div>
-                <div className="text-xs text-muted-foreground">{t.userName} · {dateTime(t.at)}</div>
+                <div className="text-xs text-muted-foreground">{t.userName}, {dateTime(t.at)}</div>
                 {t.note && <div className="mt-0.5 text-xs text-muted-foreground">{t.note}</div>}
               </li>
             ))}
@@ -196,7 +199,7 @@ function Notice({ tone, children }: { tone: 'critical' | 'info' | 'good'; childr
 }
 
 const Band = ({ children, tall }: { children: React.ReactNode; tall?: boolean }) => (
-  <div className={cx('flex items-center bg-brand px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white', tall && 'min-h-[38px] leading-tight')}>{children}</div>
+  <div className={cx('flex items-center bg-sheet px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white', tall && 'min-h-[38px] leading-tight')}>{children}</div>
 );
 
 /** Visualização da SC na mesma ordem de blocos do modelo impresso. */
@@ -237,7 +240,7 @@ function ScView({ sc }: { sc: PurchaseRequest }) {
       <div className="p-3">{lk.nature(sc.natureId)}</div>
       <Table min={620}>
         <thead>
-          <tr className="[&>th]:bg-brand [&>th]:text-white">
+          <tr className="[&>th]:bg-sheet [&>th]:text-white">
             <Th>Descrição</Th><Th right>Quantidade</Th><Th right>Valor und</Th><Th right>Descontos</Th><Th right>Acréscimos</Th><Th right>Valor total</Th>
           </tr>
         </thead>
@@ -261,7 +264,7 @@ function ScView({ sc }: { sc: PurchaseRequest }) {
         <span><span className="text-xs font-semibold text-muted-foreground">Conta/DV: </span>{sc.bankData.account || '—'}</span>
         <span className="break-all"><span className="text-xs font-semibold text-muted-foreground">PIX: </span>{sc.bankData.pix || '—'}</span>
       </div>
-      <div className="flex justify-between bg-brand px-3 py-2 font-semibold text-white">
+      <div className="flex justify-between bg-sheet px-3 py-2 font-semibold text-white">
         <span className="text-xs uppercase tracking-wide">Total geral</span>
         <span className="tabular">{money(scTotal(sc))}</span>
       </div>
@@ -379,9 +382,9 @@ function Attachments({ sc, canEdit }: { sc: PurchaseRequest; canEdit: boolean })
         <ul className="divide-y">
           {sc.attachments.map((a) => (
             <li key={a.id} className="flex flex-wrap items-center gap-3 px-4 py-2 text-sm">
-              <span className="w-40 shrink-0 text-xs font-medium uppercase text-muted-foreground">{ATTACHMENT_LABEL[a.kind]}</span>
+              <span className="w-44 shrink-0 text-sm text-muted-foreground first-letter:uppercase">{ATTACHMENT_LABEL[a.kind]}</span>
               <button className="min-w-0 flex-1 truncate text-left text-primary hover:underline" onClick={() => saveDataUrl(a.url, a.name)}>{a.name}</button>
-              <span className="text-xs text-muted-foreground">{a.uploadedByName} · {dateTime(a.uploadedAt)}</span>
+              <span className="text-xs text-muted-foreground">Enviado por {a.uploadedByName} em {dateTime(a.uploadedAt)}</span>
               {canEdit && (a.kind === 'ORCAMENTO' ? quotePhase : docsPhase) && (
                 <button className="text-muted-foreground hover:text-[#a12626]" aria-label={`Remover ${a.name}`} onClick={() => api.removeAttachment(user, sc.id, a.id).catch((e) => toast('error', errMsg(e)))}>
                   <Icon name="trash" size={15} />
@@ -540,7 +543,7 @@ function ForwardModal({ open, sc, onClose }: { open: boolean; sc: PurchaseReques
         <Field label="Diretor">
           <Select id="fw-director" value={directorId} onChange={(e) => setDirectorId(e.target.value)}>
             <option value="">Selecione…</option>
-            {options.map((d) => <option key={d.id} value={d.id}>{d.name} · {d.cargo} ({limitLabel(d.paymentLimit)})</option>)}
+            {options.map((d) => <option key={d.id} value={d.id}>{d.name}, {d.cargo.toLowerCase()} ({limitLabel(d.paymentLimit)})</option>)}
           </Select>
         </Field>
         <Field label="Observação (opcional)"><Input id="fw-note" value={note} onChange={(e) => setNote(e.target.value)} /></Field>

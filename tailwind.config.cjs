@@ -19,6 +19,8 @@ module.exports = {
         /* Série de dados (magnitude, matiz único) */
         series: { DEFAULT: '#282C8D', soft: '#cfd1ec' },
         brand: '#282C8D',
+        /* Azul-marinho da planilha: só nas partes que reproduzem o documento em papel */
+        sheet: '#002060',
       },
       boxShadow: { card: '0 1px 2px rgba(16,24,40,.04)' },
       borderRadius: { DEFAULT: '4px', md: '5px', lg: '6px' },

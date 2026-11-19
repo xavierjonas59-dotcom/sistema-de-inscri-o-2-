@@ -11,7 +11,7 @@ import { DrawPad, photoToSignature } from './shared/signature';
 function SignaturePreview({ src, name, cargo }: { src: string | null; name: string; cargo: string }) {
   return (
     <div className="rounded border bg-white">
-      <div className="bg-brand px-3 py-1 text-center text-[11px] font-semibold uppercase tracking-wide text-white">Autorização de pagamento</div>
+      <div className="bg-sheet px-3 py-1 text-center text-[11px] font-semibold uppercase tracking-wide text-white">Autorização de pagamento</div>
       <div className="flex flex-col items-center px-4 pb-3 pt-4 text-center text-xs">
         <div className="flex h-16 items-end">{src ? <img src={src} alt="Prévia da assinatura" className="max-h-16 max-w-[260px] object-contain" /> : <span className="text-muted-foreground">Sem assinatura</span>}</div>
         <div className="mt-1 w-64 border-t border-foreground/60" />
@@ -48,7 +48,7 @@ export default function Profile() {
 
   return (
     <>
-      <PageHeader title="Meu perfil" description={`${user.name} · ${ROLE_LABEL[user.role]} · ${user.cargo || 'sem cargo'} · ${user.email}`} />
+      <PageHeader title="Meu perfil" description={`${user.name}, ${(user.cargo || ROLE_LABEL[user.role]).toLowerCase()} (${user.email})`} />
       {!canSign ? (
         <p className="text-sm text-muted-foreground">O seu perfil não assina solicitações.</p>
       ) : (
@@ -85,7 +85,7 @@ export default function Profile() {
             </div>
           </Card>
           <div className="space-y-3">
-            <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{draft ? 'Prévia da nova assinatura' : 'Assinatura atual'}</div>
+            <h2 className="text-sm font-semibold">{draft ? 'Prévia da nova assinatura' : 'Como sai no documento'}</h2>
             <SignaturePreview src={draft ?? user.signature?.dataUrl ?? null} name={user.name} cargo={user.cargo} />
             {user.signature && !draft && <p className="text-xs text-muted-foreground">Atualizada em {dateTime(user.signature.updatedAt)}.</p>}
             <div className={cx('rounded border bg-white p-3 text-xs text-muted-foreground')}>

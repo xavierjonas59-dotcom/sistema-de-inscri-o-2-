@@ -39,7 +39,7 @@ function MoneyInput({ value, onChange, id, className }: { value: number; onChang
 function Section({ title, children, aside }: { title: string; children: React.ReactNode; aside?: React.ReactNode }) {
   return (
     <section className="border-b last:border-b-0">
-      <div className="flex items-center justify-between bg-brand px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white">
+      <div className="flex items-center justify-between bg-sheet px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white">
         {title}
         {aside}
       </div>
@@ -173,7 +173,7 @@ function Editor({ existing }: { existing: PurchaseRequest | null }) {
 
         <div className="grid border-b md:grid-cols-[200px_1fr_1fr] md:divide-x">
           <div>
-            <div className="bg-brand px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white">Forma de pagamento</div>
+            <div className="bg-sheet px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white">Forma de pagamento</div>
             <div className="space-y-1.5 p-4">
               {PAYMENT_METHODS.map((m) => (
                 <label key={m.value} className="flex items-center gap-2 text-sm">
@@ -184,7 +184,7 @@ function Editor({ existing }: { existing: PurchaseRequest | null }) {
             </div>
           </div>
           <div className="border-t md:border-t-0">
-            <div className="flex items-center justify-between bg-brand px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white">
+            <div className="flex items-center justify-between bg-sheet px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white">
               Rateio C. C.
               <span className={cx('tabular normal-case', rateioSum !== 100 && c.apportionment.length ? 'text-[#ffd59a]' : '')}>Soma: {rateioSum.toLocaleString('pt-BR')}%</span>
             </div>
@@ -224,7 +224,7 @@ function Editor({ existing }: { existing: PurchaseRequest | null }) {
             </div>
           </div>
           <div className="border-t md:border-t-0">
-            <div className="bg-brand px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white">Parcelas</div>
+            <div className="bg-sheet px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white">Parcelas</div>
             <div className="p-4">
               <Field label="Quantidade de parcelas">
                 <Select
@@ -262,7 +262,7 @@ function Editor({ existing }: { existing: PurchaseRequest | null }) {
         </Section>
 
         <section className="border-b">
-          <div className="bg-brand px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white">Itens</div>
+          <div className="bg-sheet px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white">Itens</div>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[760px] text-sm">
               <thead>
@@ -321,7 +321,7 @@ function Editor({ existing }: { existing: PurchaseRequest | null }) {
           <Textarea id="sc-notes" value={c.notes} onChange={(e) => set('notes', e.target.value)} placeholder="Para que serve a compra (não sai no impresso)" />
         </Section>
 
-        <div className="flex items-center justify-between bg-brand px-4 py-2.5 text-white">
+        <div className="flex items-center justify-between bg-sheet px-4 py-2.5 text-white">
           <span className="text-sm font-semibold uppercase tracking-wide">Total geral</span>
           <span className="tabular text-lg font-semibold">{money(total)}</span>
         </div>
@@ -332,7 +332,7 @@ function Editor({ existing }: { existing: PurchaseRequest | null }) {
           {budget && (
             <>
               Saldo disponível do setor: <strong className={cx('tabular', budget.available < total ? 'text-[#a12626]' : 'text-foreground')}>{money(budget.available)}</strong>
-              {budget.available < total && <span className="text-[#a12626]"> · faltam {money(total - Math.max(0, budget.available))}</span>}
+              {budget.available < total && <span className="text-[#a12626]">, faltam {money(total - Math.max(0, budget.available))}</span>}
             </>
           )}
         </div>
