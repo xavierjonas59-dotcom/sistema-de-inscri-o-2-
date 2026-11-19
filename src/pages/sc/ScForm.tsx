@@ -62,7 +62,8 @@ function Editor({ existing }: { existing: PurchaseRequest | null }) {
   const toast = useToast();
   const lk = useLookups();
   // Gestor editando SC já enviada (fica registrada no histórico); senão é o solicitante editando o rascunho.
-  const managerMode = !!existing && user.role === 'GESTOR' && (existing.status === 'AGUARDANDO_GESTOR' || existing.status === 'AGUARDANDO_DIRETORIA');
+  const isSectorApprover = (user.role === 'GESTOR' || user.role === 'DIRETORIA') && !!user.sectorId && (!existing || existing.sectorId === user.sectorId);
+  const managerMode = !!existing && isSectorApprover && (existing.status === 'AGUARDANDO_GESTOR' || existing.status === 'AGUARDANDO_DIRETORIA');
   const [c, setC] = useState<ScContent>(() => (existing ? JSON.parse(JSON.stringify(pickContent(existing))) : emptyContent()));
   const [errors, setErrors] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
@@ -102,7 +103,7 @@ function Editor({ existing }: { existing: PurchaseRequest | null }) {
     if (errs.length) return window.scrollTo({ top: 0, behavior: 'smooth' });
     const sc = await save();
     if (!sc) return;
-    if (user.role === 'GESTOR') return setSigning(sc.id);
+    if (isSectorApprover) return setSigning(sc.id);
     try {
       await api.submit(user, sc.id, null, requestContext());
       toast('success', `${sc.number} enviada para o gestor.`);
@@ -342,7 +343,7 @@ function Editor({ existing }: { existing: PurchaseRequest | null }) {
           ) : (
             <>
               <Button variant="secondary" onClick={saveDraft} disabled={busy}>Salvar rascunho</Button>
-              <Button onClick={submit} disabled={busy}>{user.role === 'GESTOR' ? 'Assinar e enviar à diretoria' : 'Enviar para o gestor'}</Button>
+              <Button onClick={submit} disabled={busy}>{isSectorApprover ? 'Assinar e escolher o diretor' : 'Enviar para o gestor'}</Button>
             </>
           )}
         </div>
@@ -354,9 +355,10 @@ function Editor({ existing }: { existing: PurchaseRequest | null }) {
         slotLabel="Autorização de Compra"
         number={existing?.number ?? 'Nova SC'}
         total={total}
-        onConfirm={async (password) => {
-          const sc = await api.submit(user, signing!, password, requestContext());
-          toast('success', `${sc.number} assinada e enviada à diretoria.`);
+        chooseDirector
+        onConfirm={async (password, directorId) => {
+          const sc = await api.submit(user, signing!, password, requestContext(), directorId);
+          toast('success', `${sc.number} assinada e enviada para liberação de ${sc.assignedDirectorName}.`);
           navigate(`/sc/ver?id=${sc.id}`);
         }}
       />

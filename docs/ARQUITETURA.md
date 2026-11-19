@@ -20,8 +20,8 @@ banco** e confere perfil, setor e status. Esconder botão nunca é a única barr
 | Perfil | Pode |
 |---|---|
 | Funcionário | Criar SC, ver o painel do setor, acompanhar as próprias SCs, anexar NF/comprovantes após aprovação |
-| Gestor | Tudo do funcionário + usuários do próprio setor (sempre como Funcionário), editar/devolver/reprovar/aprovar SCs do setor, assinar **só** a Autorização de Compra |
-| Diretoria | Aprovar/reprovar SCs vindas do gestor, assinar **só** a Autorização de Pagamento |
+| Gestor | Tudo do funcionário + usuários do próprio setor (sempre como Funcionário), editar/devolver/reprovar/aprovar SCs do setor, assinar **só** a Autorização de Compra e escolher o diretor que libera o pagamento |
+| Diretoria | Liberar (assinar a Autorização de Pagamento), reprovar ou encaminhar a outro diretor as SCs atribuídas a ele, até o seu limite (`paymentLimit`; vazio = qualquer valor). O diretor responsável por um setor (`sectorId`) também aprova a etapa do setor, como o gestor |
 | Financeiro | Fila de Contas a Pagar, imprimir pacote, marcar como paga (data + comprovante) |
 | Admin | Setores, limites, usuários de qualquer perfil, centros de custo, naturezas, fornecedores |
 
@@ -31,7 +31,12 @@ Rascunho → Aguardando gestor → Aguardando diretoria → Aprovada · aguardan
               │  └─ Devolvida para ajuste (motivo) → volta ao solicitante
               └─ Reprovada (motivo; encerra)            Reprovada pela diretoria (motivo)
 ```
-SC criada pelo gestor entra direto em "Aguardando diretoria", já com a Autorização de Compra dele.
+Na aprovação do setor, quem aprova escolhe o diretor que vai liberar o pagamento (`assignedDirectorId`). Só esse diretor
+libera ou reprova; ele pode encaminhar para outro diretor com limite suficiente. SC criada pelo gestor (ou pelo diretor do
+setor) entra direto em "Aguardando diretoria", já com a Autorização de Compra dele e o diretor escolhido.
+
+Quadro atual: Manoel e Antônio (diretores gerais) e Ana (diretora financeira) liberam qualquer valor; Felipe (comercial)
+e Victor (logística) liberam até R$ 10.000.
 
 ## Limite do setor (por mês)
 - **Reservado:** SCs aprovadas pelo gestor que aguardam a diretoria (valor atual da SC).
@@ -40,6 +45,12 @@ SC criada pelo gestor entra direto em "Aguardando diretoria", já com a Autoriza
 - Reprovada ou cancelada devolve a reserva. Se o gestor alterar uma SC que já estava na diretoria, a assinatura dele
   perde a validade, a SC volta para ele e a reserva é recalculada na nova aprovação.
 - Transferência temporária de limite entre setores: aceite do gestor cedente + aprovação da diretoria.
+
+## PDF da Solicitação
+`scripts/extract-sc-template.py` lê a aba "C.I (1 por página)" (convertida para .xlsx) e gera `src/pdf/scTemplate.json`
+com larguras de coluna, alturas de linha, células mescladas, cores, bordas, fontes e alinhamentos. `src/pdf/scPdf.ts`
+desenha esse gabarito na mesma escala do Excel ("ajustar à largura de 1 página") e preenche as células de dados.
+Se a planilha mudar, rode o script de novo.
 
 ## Assinatura eletrônica (fase 1)
 - O gestor e o diretor cadastram a própria imagem em *Meu perfil*. Pode ser foto da assinatura em papel (o fundo é

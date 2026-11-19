@@ -19,8 +19,13 @@ export interface User {
   name: string;
   email: string;
   role: Role;
-  /** Obrigatório para FUNCIONARIO e GESTOR. */
+  /** Obrigatório para FUNCIONARIO e GESTOR; opcional para DIRETORIA (diretor responsável por um setor). */
   sectorId: string | null;
+  /**
+   * DIRETORIA: valor máximo (centavos) que pode liberar na Autorização de Pagamento.
+   * null = sem limite (diretores gerais e diretora financeira).
+   */
+  paymentLimit: number | null;
   /** Cargo impresso abaixo da assinatura (ex.: "Diretora"). */
   cargo: string;
   active: boolean;
@@ -187,6 +192,9 @@ export interface PurchaseRequest extends ScContent {
   createdAt: string;
   submittedAt?: string;
   status: ScStatus;
+  /** Diretor escolhido na aprovação do setor para liberar o pagamento. */
+  assignedDirectorId: string | null;
+  assignedDirectorName: string | null;
   signatures: Partial<Record<SignatureSlot, AppliedSignature>>;
   attachments: Attachment[];
   changes: FieldChange[];

@@ -21,7 +21,13 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
 
   const { data: counts } = useQuery(async () => {
     if (user.role === 'GESTOR') return { gestor: (await api.listRequests(user, { status: 'AGUARDANDO_GESTOR' })).length };
-    if (user.role === 'DIRETORIA') return { dir: (await api.listRequests(user, { status: 'AGUARDANDO_DIRETORIA' })).length };
+    if (user.role === 'DIRETORIA') {
+      const all = await api.listRequests(user, { status: ['AGUARDANDO_DIRETORIA', 'AGUARDANDO_GESTOR'] });
+      return {
+        dir: all.filter((r) => r.status === 'AGUARDANDO_DIRETORIA' && r.assignedDirectorId === user.id).length +
+          all.filter((r) => r.status === 'AGUARDANDO_GESTOR' && !!user.sectorId && r.sectorId === user.sectorId).length,
+      };
+    }
     if (user.role === 'FINANCEIRO') return { fin: (await api.listRequests(user, { status: 'ENVIADA_FINANCEIRO' })).length };
     return {};
   }, [user.id]);
@@ -46,6 +52,7 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
       { path: '/', label: 'Visão geral' },
       { path: '/aprovacoes', label: 'Aprovações', badge: counts?.dir },
       { path: '/sc', label: 'Solicitações' },
+      ...(user.sectorId ? [{ path: '/sc/nova', label: 'Nova SC' }] : []),
       { path: '/transferencias', label: 'Transferência de limite' },
       { path: '/perfil', label: 'Meu perfil e assinatura' },
     ],
@@ -86,8 +93,8 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
       <div className="border-t border-white/15 px-4 py-3 text-sm">
         <div className="truncate font-medium text-white">{user.name}</div>
         <div className="truncate text-xs text-sidebar-foreground">
-          {ROLE_LABEL[user.role]}
-          {sectorName ? ` · ${sectorName}` : ''}
+          {user.role === 'DIRETORIA' ? user.cargo : ROLE_LABEL[user.role]}
+          {sectorName && user.role !== 'DIRETORIA' ? ` · ${sectorName}` : ''}
         </div>
         <button onClick={logout} className="mt-2 text-xs text-sidebar-foreground underline hover:text-white">Sair</button>
       </div>

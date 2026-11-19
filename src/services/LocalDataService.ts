@@ -34,6 +34,7 @@ import {
   BusinessError,
   ForbiddenError,
   type DataService,
+  type DirectorInfo,
   type NewFile,
   type RequestContext,
   type RequestFilter,
@@ -62,7 +63,7 @@ export interface KeyValueStore {
   set(key: string, value: string): Promise<void>;
 }
 
-export const DB_VERSION = 2;
+export const DB_VERSION = 3;
 const KEY = 'amc:db';
 export const MAX_ATTACHMENT_BYTES = 5 * 1024 * 1024;
 export const ALLOWED_ATTACHMENT_TYPES = ['application/pdf', 'image/png', 'image/jpeg'];
@@ -154,7 +155,7 @@ export class LocalDataService implements DataService {
       case 'GESTOR':
         return sc.sectorId === actor.sectorId && (sc.status !== 'RASCUNHO' || sc.requesterId === actor.id);
       case 'DIRETORIA':
-        return sc.status !== 'RASCUNHO';
+        return sc.status !== 'RASCUNHO' || sc.requesterId === actor.id;
       case 'FINANCEIRO':
         return sc.status === 'ENVIADA_FINANCEIRO' || sc.status === 'PAGA';
       default:
@@ -168,7 +169,23 @@ export class LocalDataService implements DataService {
     return sc;
   }
 
-  private isSectorManager = (actor: User, sc: PurchaseRequest) => actor.role === 'GESTOR' && actor.sectorId === sc.sectorId;
+  /** Aprovação do setor: o gestor do setor ou o diretor responsável pelo setor. */
+  private isSectorManager = (actor: User, sc: PurchaseRequest) =>
+    (actor.role === 'GESTOR' || actor.role === 'DIRETORIA') && !!actor.sectorId && actor.sectorId === sc.sectorId;
+
+  /** Diretor apto a liberar o pagamento desta SC (ativo e com limite suficiente). */
+  private eligibleDirector(db: Database, directorId: string | undefined, total: number): UserRecord {
+    const d = db.users.find((u) => u.id === directorId && u.role === 'DIRETORIA' && u.active);
+    if (!d) throw new BusinessError('Escolha o diretor que vai liberar o pagamento.');
+    if (d.paymentLimit !== null && total > d.paymentLimit)
+      throw new BusinessError(`${d.name} libera pagamentos até ${money(d.paymentLimit)}. Escolha outro diretor para ${money(total)}.`);
+    return d;
+  }
+
+  private assign(sc: PurchaseRequest, d: UserRecord) {
+    sc.assignedDirectorId = d.id;
+    sc.assignedDirectorName = d.name;
+  }
 
   private expectStatus(sc: PurchaseRequest, ...statuses: ScStatus[]) {
     if (!statuses.includes(sc.status)) throw new BusinessError('Esta ação não é permitida no status atual da solicitação.');
@@ -369,7 +386,7 @@ export class LocalDataService implements DataService {
 
   /** Cria ou atualiza um rascunho (ou uma SC devolvida) do próprio solicitante. */
   async saveDraft(actor: User, id: string | null, content: ScContent) {
-    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR']);
+    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR', 'DIRETORIA']);
     if (!actor.sectorId) throw new ForbiddenError('Usuário sem setor.');
     if (!id) {
       const now = this.now();
@@ -387,6 +404,8 @@ export class LocalDataService implements DataService {
         month: date.slice(0, 7),
         createdAt: this.iso(),
         status: 'RASCUNHO',
+        assignedDirectorId: null,
+        assignedDirectorName: null,
         signatures: {},
         attachments: [],
         changes: [],
@@ -409,24 +428,26 @@ export class LocalDataService implements DataService {
    * Envia a SC. Funcionário → "Aguardando gestor".
    * Gestor → já entra como "Aguardando diretoria", com a Autorização de Compra dele (exige senha e saldo).
    */
-  async submit(actor: User, id: string, password: string | null, ctx: RequestContext) {
-    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR']);
+  async submit(actor: User, id: string, password: string | null, ctx: RequestContext, directorId?: string) {
+    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR', 'DIRETORIA']);
     const sc = this.find(db, actor, id);
     if (sc.requesterId !== actor.id) throw new ForbiddenError('Somente o solicitante envia a solicitação.');
     this.expectStatus(sc, 'RASCUNHO', 'DEVOLVIDA');
     this.assertValid(sc);
     sc.submittedAt = this.iso();
     sc.returnReason = undefined;
-    if (actor.role === 'GESTOR') {
+    if (this.isSectorManager(actor, sc)) {
+      const director = this.eligibleDirector(db, directorId, scTotal(sc));
       this.assertBudget(db, sc);
       await this.sign(db, actor, sc, 'COMPRA', password ?? '', ctx);
+      this.assign(sc, director);
       sc.status = 'AGUARDANDO_DIRETORIA';
-      sc.timeline.push(this.entry(actor, 'Enviou à Diretoria (solicitação do próprio gestor)'));
-      this.notify(db, this.usersBy(db, (u) => u.role === 'DIRETORIA'), `${sc.number} aguarda a aprovação da Diretoria.`, sc.id);
+      sc.timeline.push(this.entry(actor, `Enviou para liberação de ${director.name}`, 'Solicitação do próprio aprovador do setor'));
+      this.notify(db, [director.id], `${sc.number} aguarda a sua liberação de pagamento (${money(scTotal(sc))}).`, sc.id, actor.id);
     } else {
       sc.status = 'AGUARDANDO_GESTOR';
       sc.timeline.push(this.entry(actor, 'Enviou para o gestor'));
-      this.notify(db, this.usersBy(db, (u) => u.role === 'GESTOR' && u.sectorId === sc.sectorId), `${actor.name} criou a ${sc.number} (${money(scTotal(sc))}).`, sc.id);
+      this.notify(db, this.usersBy(db, (u) => (u.role === 'GESTOR' || u.role === 'DIRETORIA') && u.sectorId === sc.sectorId), `${actor.name} criou a ${sc.number} (${money(scTotal(sc))}).`, sc.id);
     }
     await this.persist();
     return sc;
@@ -439,7 +460,7 @@ export class LocalDataService implements DataService {
    * e recalculada na nova aprovação).
    */
   async managerEdit(actor: User, id: string, content: ScContent) {
-    const db = await this.auth(actor, ['GESTOR']);
+    const db = await this.auth(actor, ['GESTOR', 'DIRETORIA']);
     const sc = this.find(db, actor, id);
     if (!this.isSectorManager(actor, sc)) throw new ForbiddenError();
     this.expectStatus(sc, 'AGUARDANDO_GESTOR', 'AGUARDANDO_DIRETORIA');
@@ -447,6 +468,8 @@ export class LocalDataService implements DataService {
     if (!changed) return sc;
     if (sc.status === 'AGUARDANDO_DIRETORIA') {
       sc.status = 'AGUARDANDO_GESTOR';
+      sc.assignedDirectorId = null;
+      sc.assignedDirectorName = null;
       sc.timeline.push(this.entry(actor, 'Voltou para "Aguardando gestor" por alteração; nova aprovação necessária'));
     }
     if (sc.requesterId !== actor.id) this.notify(db, [sc.requesterId], `O gestor alterou a ${sc.number}. Veja o que mudou.`, sc.id);
@@ -454,24 +477,26 @@ export class LocalDataService implements DataService {
     return sc;
   }
 
-  async managerApprove(actor: User, id: string, password: string, ctx: RequestContext) {
-    const db = await this.auth(actor, ['GESTOR']);
+  async managerApprove(actor: User, id: string, password: string, ctx: RequestContext, directorId: string) {
+    const db = await this.auth(actor, ['GESTOR', 'DIRETORIA']);
     const sc = this.find(db, actor, id);
-    if (!this.isSectorManager(actor, sc)) throw new ForbiddenError();
+    if (!this.isSectorManager(actor, sc)) throw new ForbiddenError('Somente o gestor ou o diretor do setor aprova esta etapa.');
     this.expectStatus(sc, 'AGUARDANDO_GESTOR');
     this.assertValid(sc);
+    const director = this.eligibleDirector(db, directorId, scTotal(sc));
     this.assertBudget(db, sc);
     await this.sign(db, actor, sc, 'COMPRA', password, ctx);
+    this.assign(sc, director);
     sc.status = 'AGUARDANDO_DIRETORIA';
-    sc.timeline.push(this.entry(actor, 'Aprovou e enviou à Diretoria', `Valor reservado: ${money(scTotal(sc))}`));
-    this.notify(db, [sc.requesterId], `${sc.number} foi aprovada pelo gestor e enviada à Diretoria.`, sc.id, actor.id);
-    this.notify(db, this.usersBy(db, (u) => u.role === 'DIRETORIA'), `${sc.number} aguarda a aprovação da Diretoria.`, sc.id);
+    sc.timeline.push(this.entry(actor, `Aprovou e enviou para liberação de ${director.name}`, `Valor reservado: ${money(scTotal(sc))}`));
+    this.notify(db, [sc.requesterId], `${sc.number} foi aprovada no setor e enviada para liberação de ${director.name}.`, sc.id, actor.id);
+    this.notify(db, [director.id], `${sc.number} aguarda a sua liberação de pagamento (${money(scTotal(sc))}).`, sc.id, actor.id);
     await this.persist();
     return sc;
   }
 
   async returnForAdjustment(actor: User, id: string, reason: string) {
-    const db = await this.auth(actor, ['GESTOR']);
+    const db = await this.auth(actor, ['GESTOR', 'DIRETORIA']);
     const sc = this.find(db, actor, id);
     if (!this.isSectorManager(actor, sc)) throw new ForbiddenError();
     this.expectStatus(sc, 'AGUARDANDO_GESTOR');
@@ -488,18 +513,19 @@ export class LocalDataService implements DataService {
   async reject(actor: User, id: string, reason: string) {
     const db = await this.auth(actor, ['GESTOR', 'DIRETORIA']);
     const sc = this.find(db, actor, id);
-    if (actor.role === 'GESTOR') {
+    const sectorStage = sc.status === 'AGUARDANDO_GESTOR';
+    if (sectorStage) {
       if (!this.isSectorManager(actor, sc)) throw new ForbiddenError();
-      this.expectStatus(sc, 'AGUARDANDO_GESTOR');
     } else {
       this.expectStatus(sc, 'AGUARDANDO_DIRETORIA');
+      if (sc.assignedDirectorId !== actor.id) throw new ForbiddenError('Esta SC está com outro diretor.');
     }
     if (!reason?.trim()) throw new BusinessError('Informe o motivo da reprovação.');
     sc.status = 'REPROVADA';
     sc.rejectReason = reason.trim();
-    sc.timeline.push(this.entry(actor, actor.role === 'GESTOR' ? 'Reprovou (gestor)' : 'Reprovou (Diretoria)', reason));
+    sc.timeline.push(this.entry(actor, sectorStage ? 'Reprovou (aprovação do setor)' : 'Reprovou (liberação de pagamento)', reason));
     const managers = this.usersBy(db, (u) => u.role === 'GESTOR' && u.sectorId === sc.sectorId);
-    this.notify(db, actor.role === 'DIRETORIA' ? [sc.requesterId, ...managers] : [sc.requesterId], `${sc.number} foi reprovada: ${reason.trim()}`, sc.id, actor.id);
+    this.notify(db, sectorStage ? [sc.requesterId] : [sc.requesterId, ...managers], `${sc.number} foi reprovada: ${reason.trim()}`, sc.id, actor.id);
     await this.persist();
     return sc;
   }
@@ -509,20 +535,46 @@ export class LocalDataService implements DataService {
     const db = await this.auth(actor, ['DIRETORIA']);
     const sc = this.find(db, actor, id);
     this.expectStatus(sc, 'AGUARDANDO_DIRETORIA');
+    if (sc.assignedDirectorId !== actor.id) throw new ForbiddenError(`Esta SC aguarda a liberação de ${sc.assignedDirectorName ?? 'outro diretor'}.`);
+    const me = db.users.find((u) => u.id === actor.id)!;
+    if (me.paymentLimit !== null && scTotal(sc) > me.paymentLimit)
+      throw new BusinessError(`O seu limite de liberação é ${money(me.paymentLimit)}. Encaminhe para outro diretor.`);
     const compra = sc.signatures.COMPRA;
     if (!compra || compra.invalidatedAt || compra.contentHash !== (await contentHash(sc)))
       throw new BusinessError('A Autorização de Compra não é válida para o conteúdo atual. É preciso nova aprovação do gestor.');
     await this.sign(db, actor, sc, 'PAGAMENTO', password, ctx);
     sc.status = 'AGUARDANDO_NF';
-    sc.timeline.push(this.entry(actor, 'Aprovou (Diretoria)', `Valor consumido: ${money(scTotal(sc))}`));
+    sc.timeline.push(this.entry(actor, 'Liberou o pagamento (Diretoria)', `Valor consumido: ${money(scTotal(sc))}`));
     const managers = this.usersBy(db, (u) => u.role === 'GESTOR' && u.sectorId === sc.sectorId);
     this.notify(db, [sc.requesterId, ...managers], `${sc.number} foi aprovada pela Diretoria. Anexe a NF e os comprovantes.`, sc.id, actor.id);
     await this.persist();
     return sc;
   }
 
+  async forwardToDirector(actor: User, id: string, directorId: string, note: string) {
+    const db = await this.auth(actor, ['DIRETORIA']);
+    const sc = this.find(db, actor, id);
+    this.expectStatus(sc, 'AGUARDANDO_DIRETORIA');
+    if (sc.assignedDirectorId !== actor.id) throw new ForbiddenError('Só o diretor escolhido pode encaminhar.');
+    if (directorId === actor.id) throw new BusinessError('Escolha outro diretor.');
+    const d = this.eligibleDirector(db, directorId, scTotal(sc));
+    this.assign(sc, d);
+    sc.timeline.push(this.entry(actor, `Encaminhou a liberação para ${d.name}`, note));
+    this.notify(db, [d.id], `${actor.name} encaminhou a ${sc.number} (${money(scTotal(sc))}) para a sua liberação.`, sc.id);
+    await this.persist();
+    return sc;
+  }
+
+  async listDirectors(actor: User): Promise<DirectorInfo[]> {
+    const db = await this.auth(actor);
+    return db.users
+      .filter((u) => u.role === 'DIRETORIA' && u.active)
+      .map(({ id, name, cargo, sectorId, paymentLimit }) => ({ id, name, cargo, sectorId, paymentLimit }))
+      .sort((a, b) => (a.paymentLimit === null ? 0 : 1) - (b.paymentLimit === null ? 0 : 1) || a.name.localeCompare(b.name));
+  }
+
   async cancel(actor: User, id: string) {
-    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR']);
+    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR', 'DIRETORIA']);
     const sc = this.find(db, actor, id);
     if (sc.requesterId !== actor.id && !this.isSectorManager(actor, sc)) throw new ForbiddenError();
     this.expectStatus(sc, ...CANCELLABLE);
@@ -533,7 +585,7 @@ export class LocalDataService implements DataService {
   }
 
   async addAttachment(actor: User, id: string, kind: AttachmentKind, file: NewFile) {
-    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR']);
+    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR', 'DIRETORIA']);
     const sc = this.find(db, actor, id);
     if (sc.requesterId !== actor.id && !this.isSectorManager(actor, sc)) throw new ForbiddenError();
     if (kind === 'ORCAMENTO') this.expectStatus(sc, 'RASCUNHO', 'DEVOLVIDA', 'AGUARDANDO_GESTOR');
@@ -547,7 +599,7 @@ export class LocalDataService implements DataService {
   }
 
   async removeAttachment(actor: User, id: string, attachmentId: string) {
-    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR']);
+    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR', 'DIRETORIA']);
     const sc = this.find(db, actor, id);
     const a = sc.attachments.find((x) => x.id === attachmentId);
     if (!a) throw new BusinessError('Anexo não encontrado.');
@@ -566,7 +618,7 @@ export class LocalDataService implements DataService {
   }
 
   async sendToFinance(actor: User, id: string) {
-    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR']);
+    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR', 'DIRETORIA']);
     const sc = this.find(db, actor, id);
     if (sc.requesterId !== actor.id && !this.isSectorManager(actor, sc)) throw new ForbiddenError();
     this.expectStatus(sc, 'AGUARDANDO_NF');
@@ -646,7 +698,9 @@ export class LocalDataService implements DataService {
     if (input.password && input.password.length < 6) throw new BusinessError('A senha deve ter ao menos 6 caracteres.');
 
     const role = isManager ? 'FUNCIONARIO' : input.role;
-    const sectorId = isManager ? actor.sectorId : role === 'FUNCIONARIO' || role === 'GESTOR' ? input.sectorId : null;
+    const sectorId = isManager ? actor.sectorId : role === 'FUNCIONARIO' || role === 'GESTOR' || role === 'DIRETORIA' ? input.sectorId : null;
+    const paymentLimit = role === 'DIRETORIA' && !isManager ? (input.paymentLimit ?? null) : null;
+    if (paymentLimit !== null && (!Number.isInteger(paymentLimit) || paymentLimit <= 0)) throw new BusinessError('Limite de liberação inválido.');
     if ((role === 'FUNCIONARIO' || role === 'GESTOR') && !sectorId) throw new BusinessError('Funcionário e gestor precisam de um setor.');
     if (sectorId) this.sector(db, sectorId);
 
@@ -656,7 +710,7 @@ export class LocalDataService implements DataService {
       if (isManager && (u.sectorId !== actor.sectorId || u.role !== 'FUNCIONARIO'))
         throw new ForbiddenError('O gestor só edita funcionários do próprio setor.');
       if (u.id === actor.id && (!input.active || role !== u.role)) throw new BusinessError('Você não pode alterar o seu próprio perfil ou desativar a si mesmo.');
-      Object.assign(u, { name: input.name.trim(), email, role, sectorId, cargo: input.cargo.trim(), active: input.active });
+      Object.assign(u, { name: input.name.trim(), email, role, sectorId, cargo: input.cargo.trim(), active: input.active, paymentLimit });
       if (input.password) u.passwordHash = await hashPassword(input.password);
       await this.persist();
       return strip(u);
@@ -670,6 +724,7 @@ export class LocalDataService implements DataService {
       sectorId,
       cargo: input.cargo.trim() || (role === 'FUNCIONARIO' ? 'Funcionário' : ''),
       active: input.active,
+      paymentLimit,
       signature: null,
       passwordHash: await hashPassword(input.password),
     };

@@ -12,7 +12,7 @@ import { Modal, useToast } from '@/components/ui/overlay';
 import { Button, Card, CardHeader, EmptyState, Field, Input, Select, Table, Td, Textarea, Th, cx } from '@/components/ui/primitives';
 import { errMsg, useLookups } from '../shared/lookups';
 import { ScStatusTag } from './ScTable';
-import { SignModal } from './SignModal';
+import { SignModal, limitLabel } from './SignModal';
 
 export default function ScDetail({ query }: { query: URLSearchParams }) {
   const user = useUser();
@@ -27,7 +27,7 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
   const user = useUser();
   const toast = useToast();
   const lk = useLookups();
-  const [modal, setModal] = useState<null | 'return' | 'reject' | 'signCompra' | 'signPagamento' | 'paid'>(null);
+  const [modal, setModal] = useState<null | 'return' | 'reject' | 'signCompra' | 'signPagamento' | 'paid' | 'forward'>(null);
   const [hash, setHash] = useState('');
   const [busy, setBusy] = useState(false);
   useEffect(() => {
@@ -35,7 +35,10 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
   }, [sc]);
 
   const isRequester = sc.requesterId === user.id;
-  const isManager = user.role === 'GESTOR' && user.sectorId === sc.sectorId;
+  /** Aprovador do setor: gestor do setor ou diretor responsável pelo setor. */
+  const isManager = (user.role === 'GESTOR' || user.role === 'DIRETORIA') && !!user.sectorId && user.sectorId === sc.sectorId;
+  const isAssignedDirector = user.role === 'DIRETORIA' && sc.assignedDirectorId === user.id;
+  const myLimit = user.role === 'DIRETORIA' ? user.paymentLimit : null;
   const s = sc.status;
   const total = scTotal(sc);
 
@@ -70,15 +73,19 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
       <Button key="ret" variant="secondary" onClick={() => setModal('return')}>Devolver</Button>,
       <Button key="rej" variant="danger" onClick={() => setModal('reject')}>Reprovar</Button>,
       <Button key="edit" variant="secondary" icon="pencil" onClick={() => navigate(`/sc/editar?id=${sc.id}`)}>Editar</Button>,
-      <Button key="ok" onClick={() => setModal('signCompra')}>Aprovar e assinar</Button>,
+      <Button key="ok" onClick={() => setModal('signCompra')}>Aprovar, assinar e escolher diretor</Button>,
     );
   }
   if (isManager && s === 'AGUARDANDO_DIRETORIA')
     actions.push(<Button key="edit" variant="secondary" icon="pencil" onClick={() => navigate(`/sc/editar?id=${sc.id}`)}>Editar</Button>);
-  if (user.role === 'DIRETORIA' && s === 'AGUARDANDO_DIRETORIA')
+  const overLimit = myLimit !== null && total > myLimit;
+  if (isAssignedDirector && s === 'AGUARDANDO_DIRETORIA')
     actions.push(
       <Button key="rej" variant="danger" onClick={() => setModal('reject')}>Reprovar</Button>,
-      <Button key="ok" onClick={() => setModal('signPagamento')}>Aprovar e assinar</Button>,
+      <Button key="fw" variant="secondary" onClick={() => setModal('forward')}>Encaminhar para outro diretor</Button>,
+      <Button key="ok" disabled={overLimit} title={overLimit ? `Acima do seu limite de ${money(myLimit!)}` : ''} onClick={() => setModal('signPagamento')}>
+        Liberar pagamento e assinar
+      </Button>,
     );
   if (user.role === 'FINANCEIRO' && s === 'ENVIADA_FINANCEIRO') actions.push(<Button key="paid" onClick={() => setModal('paid')}>Marcar como paga</Button>);
   if ((isRequester || isManager) && CANCELLABLE.includes(s))
@@ -121,6 +128,12 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
       {sc.returnReason && s === 'DEVOLVIDA' && <Notice tone="critical">Devolvida para ajuste: {sc.returnReason}</Notice>}
       {sc.rejectReason && s === 'REPROVADA' && <Notice tone="critical">Reprovada: {sc.rejectReason}</Notice>}
       {s === 'AGUARDANDO_NF' && (isRequester || isManager) && <Notice tone="info">Aprovada pela Diretoria. Anexe a nota fiscal (obrigatória), boletos e comprovantes e envie para pagamento.</Notice>}
+      {s === 'AGUARDANDO_DIRETORIA' && (
+        <Notice tone="info">
+          Aguardando liberação de pagamento de <strong>{sc.assignedDirectorName}</strong>.
+          {isAssignedDirector && overLimit && ` O valor passa do seu limite (${money(myLimit!)}): encaminhe para outro diretor.`}
+        </Notice>
+      )}
       {sc.paidAt && <Notice tone="good">Paga em {sc.paidAt.split('-').reverse().join('/')}.</Notice>}
 
       {actions.length > 0 && <div className="no-print mb-4 flex flex-wrap justify-end gap-2 rounded border bg-white p-3">{actions}</div>}
@@ -164,12 +177,14 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
         slotLabel={modal === 'signPagamento' ? 'Autorização de Pagamento' : 'Autorização de Compra'}
         number={sc.number}
         total={total}
-        onConfirm={async (password) => {
+        chooseDirector={modal === 'signCompra'}
+        onConfirm={async (password, directorId) => {
           if (modal === 'signPagamento') await api.directorApprove(user, sc.id, password, requestContext());
-          else await api.managerApprove(user, sc.id, password, requestContext());
-          toast('success', modal === 'signPagamento' ? 'Aprovada. O valor passou de reservado para consumido.' : 'Aprovada e enviada à Diretoria. O valor foi reservado no saldo do setor.');
+          else await api.managerApprove(user, sc.id, password, requestContext(), directorId);
+          toast('success', modal === 'signPagamento' ? 'Pagamento liberado. O valor passou de reservado para consumido.' : 'Aprovada e enviada ao diretor escolhido. O valor foi reservado no saldo do setor.');
         }}
       />
+      <ForwardModal open={modal === 'forward'} sc={sc} onClose={() => setModal(null)} />
       <PaidModal open={modal === 'paid'} sc={sc} onClose={() => setModal(null)} />
     </>
   );
@@ -300,7 +315,7 @@ function Signatures({ sc, hash }: { sc: PurchaseRequest; hash: string }) {
           </div>
         </div>
         {box('Autorização de Compra', sc.signatures.COMPRA, 'Gestor do setor')}
-        {box('Autorização de Pagamento', sc.signatures.PAGAMENTO, 'Diretoria')}
+        {box('Autorização de Pagamento', sc.signatures.PAGAMENTO, sc.assignedDirectorName ? `Aguardando ${sc.assignedDirectorName}` : 'Diretoria')}
       </div>
     </Card>
   );
@@ -478,6 +493,57 @@ function PaidModal({ open, sc, onClose }: { open: boolean; sc: PurchaseRequest; 
         <Field label="Comprovante de pagamento (PDF, JPG ou PNG)">
           <input type="file" accept={ALLOWED_ATTACHMENT_TYPES.join(',')} onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="block w-full text-sm" />
         </Field>
+      </div>
+    </Modal>
+  );
+}
+
+function ForwardModal({ open, sc, onClose }: { open: boolean; sc: PurchaseRequest; onClose: () => void }) {
+  const user = useUser();
+  const toast = useToast();
+  const total = scTotal(sc);
+  const [directorId, setDirectorId] = useState('');
+  const [note, setNote] = useState('');
+  const { data: directors = [] } = useQuery(() => api.listDirectors(user), [open]);
+  const options = directors.filter((d) => d.id !== user.id && (d.paymentLimit === null || total <= d.paymentLimit));
+  useEffect(() => {
+    setDirectorId('');
+    setNote('');
+  }, [open]);
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      title={`Encaminhar ${sc.number}`}
+      description={`Outro diretor libera o pagamento de ${money(total)}.`}
+      footer={
+        <>
+          <Button variant="secondary" onClick={onClose}>Cancelar</Button>
+          <Button
+            disabled={!directorId}
+            onClick={async () => {
+              try {
+                await api.forwardToDirector(user, sc.id, directorId, note);
+                toast('success', 'Encaminhada.');
+                onClose();
+              } catch (e) {
+                toast('error', errMsg(e));
+              }
+            }}
+          >
+            Encaminhar
+          </Button>
+        </>
+      }
+    >
+      <div className="space-y-3">
+        <Field label="Diretor">
+          <Select id="fw-director" value={directorId} onChange={(e) => setDirectorId(e.target.value)}>
+            <option value="">Selecione…</option>
+            {options.map((d) => <option key={d.id} value={d.id}>{d.name} · {d.cargo} ({limitLabel(d.paymentLimit)})</option>)}
+          </Select>
+        </Field>
+        <Field label="Observação (opcional)"><Input id="fw-note" value={note} onChange={(e) => setNote(e.target.value)} /></Field>
       </div>
     </Modal>
   );

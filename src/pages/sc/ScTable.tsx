@@ -14,11 +14,13 @@ export function ScTable({
   items,
   showSector,
   showDue,
+  showDirector,
   empty = 'Nenhuma solicitação encontrada.',
 }: {
   items: PurchaseRequest[];
   showSector?: boolean;
   showDue?: boolean;
+  showDirector?: boolean;
   empty?: string;
 }) {
   const lk = useLookups();
@@ -33,6 +35,7 @@ export function ScTable({
           <Th>Solicitante</Th>
           {showSector && <Th>Setor</Th>}
           {showDue && <Th>Vencimento</Th>}
+          {showDirector && <Th>Com o diretor</Th>}
           <Th right>Total</Th>
           <Th>Status</Th>
         </tr>
@@ -48,6 +51,7 @@ export function ScTable({
             <Td>{sc.requesterName}</Td>
             {showSector && <Td>{lk.sector(sc.sectorId)}</Td>}
             {showDue && <Td className="whitespace-nowrap tabular">{nextDue(sc) ?? '—'}</Td>}
+            {showDirector && <Td>{sc.assignedDirectorName ?? '—'}</Td>}
             <Td right className="font-medium">{money(scTotal(sc))}</Td>
             <Td><ScStatusTag sc={sc} /></Td>
           </tr>

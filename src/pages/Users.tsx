@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useUser } from '@/app/session';
+import { centsToInput, money, parseMoney } from '@/domain/format';
 import { ROLE_LABEL } from '@/domain/sc';
 import type { Role, User } from '@/domain/types';
 import { api } from '@/services/api';
@@ -19,13 +20,18 @@ export default function Users() {
   const isAdmin = user.role === 'ADMIN';
   const { data: users = [] } = useQuery(() => api.listUsers(user), [user.id]);
   const [form, setForm] = useState<UserInput | null>(null);
+  const [limitText, setLimitText] = useState('');
 
-  const open = (u?: User) =>
+  const open = (u?: User) => {
     setForm(u ? { ...u, password: '' } : { name: '', email: '', role: 'FUNCIONARIO', sectorId: isAdmin ? null : user.sectorId, cargo: '', active: true, password: '' });
+    setLimitText(u?.paymentLimit ? centsToInput(u.paymentLimit) : '');
+  };
   const canEdit = (u: User) => isAdmin || (u.role === 'FUNCIONARIO' && u.sectorId === user.sectorId);
   const save = async () => {
     try {
-      await api.saveUser(user, form!);
+      const paymentLimit = form!.role === 'DIRETORIA' && limitText.trim() ? parseMoney(limitText) : null;
+      if (Number.isNaN(paymentLimit)) throw new Error('Limite de liberação inválido.');
+      await api.saveUser(user, { ...form!, paymentLimit });
       toast('success', 'Usuário salvo.');
       setForm(null);
     } catch (e) {
@@ -50,7 +56,10 @@ export default function Users() {
                 <Td className="text-muted-foreground">{u.email}</Td>
                 <Td>{ROLE_LABEL[u.role]}</Td>
                 <Td>{u.sectorId ? lk.sector(u.sectorId) : '—'}</Td>
-                <Td>{u.cargo || '—'}</Td>
+                <Td>
+                  {u.cargo || '—'}
+                  {u.role === 'DIRETORIA' && <div className="text-xs text-muted-foreground">Libera {u.paymentLimit === null ? 'qualquer valor' : `até ${money(u.paymentLimit)}`}</div>}
+                </Td>
                 <Td>{u.active ? <Badge tone="good">Ativo</Badge> : <Badge tone="neutral">Inativo</Badge>}</Td>
                 <Td right>{canEdit(u) && u.id !== user.id && <Button size="sm" variant="ghost" onClick={() => open(u)}>Editar</Button>}</Td>
               </tr>
@@ -77,10 +86,10 @@ export default function Users() {
                     {(Object.keys(ROLE_LABEL) as Role[]).map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}
                   </Select>
                 </Field>
-                {(form.role === 'FUNCIONARIO' || form.role === 'GESTOR') && (
-                  <Field label="Setor">
+                {(form.role === 'FUNCIONARIO' || form.role === 'GESTOR' || form.role === 'DIRETORIA') && (
+                  <Field label={form.role === 'DIRETORIA' ? 'Setor que dirige (opcional)' : 'Setor'}>
                     <Select value={form.sectorId ?? ''} onChange={(e) => setForm({ ...form, sectorId: e.target.value || null })}>
-                      <option value="">Selecione…</option>
+                      <option value="">{form.role === 'DIRETORIA' ? 'Nenhum (diretor geral)' : 'Selecione…'}</option>
                       {lk.sectors.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
                     </Select>
                   </Field>
@@ -88,6 +97,11 @@ export default function Users() {
               </div>
             ) : (
               <p className="text-sm text-muted-foreground">Perfil: Funcionário · Setor: {lk.sector(user.sectorId!)}</p>
+            )}
+            {isAdmin && form.role === 'DIRETORIA' && (
+              <Field label="Limite para liberar pagamentos (R$)" hint="Deixe vazio para liberar qualquer valor.">
+                <Input id="u-limit" inputMode="decimal" value={limitText} onChange={(e) => setLimitText(e.target.value)} placeholder="Sem limite" />
+              </Field>
             )}
             <Field label={form.id ? 'Nova senha (opcional)' : 'Senha inicial'} hint="Mínimo de 6 caracteres.">
               <Input id="u-pass" type="password" autoComplete="new-password" value={form.password ?? ''} onChange={(e) => setForm({ ...form, password: e.target.value })} />

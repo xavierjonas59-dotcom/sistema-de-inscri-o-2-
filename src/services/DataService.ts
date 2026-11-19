@@ -49,9 +49,15 @@ export interface DataService {
   listRequests(actor: User, filter?: RequestFilter): Promise<PurchaseRequest[]>;
   getRequest(actor: User, id: string): Promise<PurchaseRequest>;
   saveDraft(actor: User, id: string | null, content: ScContent): Promise<PurchaseRequest>;
-  submit(actor: User, id: string, password: string | null, ctx: RequestContext): Promise<PurchaseRequest>;
+  /** directorId: obrigatório quando quem envia é gestor/diretor do setor (já assina a Autorização de Compra). */
+  submit(actor: User, id: string, password: string | null, ctx: RequestContext, directorId?: string): Promise<PurchaseRequest>;
   managerEdit(actor: User, id: string, content: ScContent): Promise<PurchaseRequest>;
-  managerApprove(actor: User, id: string, password: string, ctx: RequestContext): Promise<PurchaseRequest>;
+  /** Aprovação do setor (gestor ou diretor do setor): assina a Autorização de Compra e escolhe o diretor do pagamento. */
+  managerApprove(actor: User, id: string, password: string, ctx: RequestContext, directorId: string): Promise<PurchaseRequest>;
+  /** O diretor escolhido repassa a liberação do pagamento para outro diretor. */
+  forwardToDirector(actor: User, id: string, directorId: string, note: string): Promise<PurchaseRequest>;
+  /** Diretores e o limite de liberação de cada um (para a escolha do aprovador). */
+  listDirectors(actor: User): Promise<DirectorInfo[]>;
   returnForAdjustment(actor: User, id: string, reason: string): Promise<PurchaseRequest>;
   reject(actor: User, id: string, reason: string): Promise<PurchaseRequest>;
   directorApprove(actor: User, id: string, password: string, ctx: RequestContext): Promise<PurchaseRequest>;
@@ -90,6 +96,14 @@ export interface DataService {
   subscribe(listener: () => void): () => void;
 }
 
+export interface DirectorInfo {
+  id: string;
+  name: string;
+  cargo: string;
+  sectorId: string | null;
+  paymentLimit: number | null;
+}
+
 export interface RequestFilter {
   month?: Month;
   status?: ScStatus | ScStatus[];
@@ -105,6 +119,7 @@ export interface UserInput {
   sectorId: string | null;
   cargo: string;
   active: boolean;
+  paymentLimit?: number | null;
   password?: string;
 }
 

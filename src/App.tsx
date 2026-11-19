@@ -24,7 +24,7 @@ const sc = { '/sc': () => <ScList />, '/sc/ver': ScDetail };
 const routes: Record<Role, Record<string, Page>> = {
   FUNCIONARIO: { '/': SectorDashboard, ...sc, '/sc/nova': ScForm, '/sc/editar': ScForm },
   GESTOR: { '/': SectorDashboard, ...sc, '/sc/nova': ScForm, '/sc/editar': ScForm, '/transferencias': Transfers, '/usuarios': Users, '/perfil': Profile },
-  DIRETORIA: { '/': DirectorDashboard, '/aprovacoes': () => <ScList approvals />, ...sc, '/transferencias': Transfers, '/perfil': Profile },
+  DIRETORIA: { '/': DirectorDashboard, '/aprovacoes': () => <ScList approvals />, ...sc, '/sc/nova': ScForm, '/sc/editar': ScForm, '/transferencias': Transfers, '/perfil': Profile },
   FINANCEIRO: { '/': Payables, '/sc/ver': ScDetail },
   ADMIN: { '/': SectorsAdmin, '/usuarios': Users, '/cadastros': CodesAdmin, '/fornecedores': SuppliersAdmin },
 };

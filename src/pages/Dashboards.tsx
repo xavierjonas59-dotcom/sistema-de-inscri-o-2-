@@ -77,6 +77,11 @@ export function DirectorDashboard() {
   const lk = useLookups();
   const { data: budgets = [] } = useQuery(() => api.getAllBudgets(user, month), [month]);
   const { data: waiting = [] } = useQuery(() => api.listRequests(user, { status: 'AGUARDANDO_DIRETORIA' }), []);
+  const { data: sectorWaiting = [] } = useQuery(
+    async () => (user.sectorId ? (await api.listRequests(user, { status: 'AGUARDANDO_GESTOR' })).filter((r) => r.sectorId === user.sectorId) : []),
+    [],
+  );
+  const mine = waiting.filter((r) => r.assignedDirectorId === user.id).sort((a, b) => a.createdAt.localeCompare(b.createdAt));
   const { data: monthReqs = [] } = useQuery(() => api.listRequests(user, { month }), [month]);
   const g = budgets.reduce((s, b) => ({ limit: s.limit + b.limit, reserved: s.reserved + b.reserved, consumed: s.consumed + b.consumed, available: s.available + b.available }), { limit: 0, reserved: 0, consumed: 0, available: 0 });
   const gAlert = alertLevel(g.limit ? (g.reserved + g.consumed) / g.limit : 0);
@@ -91,7 +96,7 @@ export function DirectorDashboard() {
       <PageHeader title="Visão geral" description={`Todos os setores · ${monthLabel(month)}`} />
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Limite total" value={money(g.limit)} hint={`${budgets.length} setores`} />
-        <StatCard label="Reservado" value={money(g.reserved)} hint={`${waiting.length} SC aguardando diretoria`} />
+        <StatCard label="Reservado" value={money(g.reserved)} hint={`${waiting.length} SC na diretoria`} />
         <StatCard label="Consumido" value={money(g.consumed)} />
         <StatCard label="Disponível" value={money(g.available)} emphasis={gAlert !== 'ok' ? 'warning' : undefined} />
       </div>
@@ -100,9 +105,19 @@ export function DirectorDashboard() {
       </div>
 
       <Card className="mt-5">
-        <CardHeader title="Aguardando a diretoria" subtitle="Da mais antiga para a mais recente" action={<a className="text-sm text-primary hover:underline" href="#/aprovacoes">Abrir aprovações</a>} />
-        <ScTable items={[...waiting].sort((a, b) => a.createdAt.localeCompare(b.createdAt)).slice(0, 8)} showSector empty="Nenhuma SC aguardando a diretoria." />
+        <CardHeader
+          title="Aguardando a minha liberação de pagamento"
+          subtitle={user.paymentLimit === null ? 'Você libera qualquer valor' : `Você libera até ${money(user.paymentLimit)}; acima disso, encaminhe`}
+          action={<a className="text-sm text-primary hover:underline" href="#/aprovacoes">Abrir aprovações</a>}
+        />
+        <ScTable items={mine} showSector empty="Nenhuma SC aguardando você." />
       </Card>
+      {user.sectorId && (
+        <Card className="mt-4">
+          <CardHeader title={`Aprovação do setor ${lk.sector(user.sectorId)}`} subtitle="Como diretor do setor, você também pode aprovar (Autorização de Compra)" />
+          <ScTable items={sectorWaiting} empty="Nenhuma SC do setor aguardando aprovação." />
+        </Card>
+      )}
 
       <div className="mt-5 grid gap-4 lg:grid-cols-5">
         <Card className="lg:col-span-3">
