@@ -3,3 +3,7 @@ dist/
 .env
 .env.local
 *.log
+
+# Skill de terceiros (40 MB): restaurar com "npx skills experimental_install" a partir do skills-lock.json
+.claude/skills/design-taste-frontend/
+.taste-skill/
