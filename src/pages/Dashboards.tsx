@@ -4,7 +4,8 @@ import { alertLevel } from '@/domain/budget';
 import { money, monthLabel, pct } from '@/domain/format';
 import { scSummary } from '@/domain/sc';
 import { api } from '@/services/api';
-import { BalanceCard, MonthlyChart, NatureChart } from '@/components/charts/SpendingCharts';
+import { BalanceCard, MonthlyChart } from '@/components/charts/SpendingCharts';
+import { FlowChart } from '@/components/charts/FlowChart';
 import { MonthCalendar } from '@/components/charts/MonthCalendar';
 import { SpendingDetailModal, type DetailFilter } from '@/components/charts/SpendingDetailModal';
 import { Modal } from '@/components/ui/overlay';
@@ -27,7 +28,6 @@ export default function Home() {
 
   const { data: budgets = [] } = useQuery(async () => (wide ? api.getAllBudgets(user, month) : [await api.getBudget(user, user.sectorId!, month)]), [month]);
   const { data: monthly = [] } = useQuery(() => api.spendingByMonth(user, sectorId, 12), [sectorId]);
-  const { data: natures = [] } = useQuery(() => api.spendingByNature(user, sectorId, month), [sectorId, month]);
   const { data: details = [] } = useQuery(() => api.spendingDetails(user, sectorId, month), [sectorId, month]);
   const [detail, setDetail] = useState<DetailFilter | null>(null);
   // Orçamento por conta contábil: gestor (o próprio setor), diretoria e admin. Funcionário não vê.
@@ -82,16 +82,15 @@ export default function Home() {
             <MonthCalendar month={month} onMonth={setMonth} spent={spentByDay} onDay={(day) => setDetail({ day })} />
           </div>
         </Card>
-        <Card className="xl:col-span-5">
-          <CardHeader
-            title="Gastos por natureza"
-            subtitle={`${monthLabel(month)}. Clique numa natureza para ver as solicitações.`}
-            action={details.length > 0 && <Button size="sm" variant="secondary" onClick={() => setDetail({})}>Ver gastos do mês</Button>}
+        <div className="xl:col-span-5">
+          <FlowChart
+            sectorId={sectorId}
+            onDay={(day) => {
+              setMonth(day.slice(0, 7));
+              setDetail({ day });
+            }}
           />
-          <div className="px-5 py-4">
-            <NatureChart data={natures} name={lk.nature} onPick={(natureId) => setDetail({ natureId })} />
-          </div>
-        </Card>
+        </div>
       </div>
       {seesAccounts && <AccountsModal open={accountsOpen} onClose={() => setAccountsOpen(false)} sectorId={sectorId} title={scopeName} />}
       <SpendingDetailModal month={month} sectorId={sectorId} filter={detail} onFilter={setDetail} onClose={() => setDetail(null)} />

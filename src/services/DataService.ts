@@ -71,6 +71,8 @@ export interface DataService {
   spendingByMonth(actor: User, sectorId: string | null, months: number): Promise<{ month: Month; consumed: number; reserved: number }[]>;
   /** Consumido no mês por natureza, do maior para o menor. */
   spendingByNature(actor: User, sectorId: string | null, month: Month): Promise<{ natureId: string | null; consumed: number }[]>;
+  /** Aprovado pela diretoria por dia (data da SC), dos últimos `days` dias até hoje. */
+  spendingByDay(actor: User, sectorId: string | null, days: number): Promise<{ date: string; consumed: number }[]>;
   /** Cada SC que entrou no consumido do mês, com os itens. `canOpen` diz se a pessoa pode abrir a SC. */
   spendingDetails(actor: User, sectorId: string | null, month: Month): Promise<SpendingDetail[]>;
   /** Plano de contas contábeis (despesas). */

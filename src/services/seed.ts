@@ -78,6 +78,9 @@ export async function buildSeed(now: Date): Promise<Database> {
     { id: 'sup-3', code: '1003', name: 'Oficina Mecânica (exemplo)', contact: '(84) 3333-1003', bankData: bank('Caixa', '0456-1', '11223-4'), active: true },
     { id: 'sup-4', code: '1004', name: 'Papelaria Central (exemplo)', contact: '(84) 3333-1004', bankData: bank('Itaú', '3030', '45678-9'), active: true },
     { id: 'sup-5', code: '1005', name: 'InfoTech Suprimentos (exemplo)', contact: '(84) 3333-1005', bankData: bank('', '', '', 'contato@exemplo.com'), active: true },
+    { id: 'sup-6', code: '1006', name: 'Posto Avenida (exemplo)', contact: '(84) 3333-1006', bankData: bank('', '', '', '23.456.789/0001-02'), active: true },
+    { id: 'sup-7', code: '1007', name: 'Hotel Central (exemplo)', contact: '(84) 3333-1007', bankData: bank('Bradesco', '0101', '22334-5'), active: true },
+    { id: 'sup-8', code: '1008', name: 'Escritório Contábil (exemplo)', contact: '(84) 3333-1008', bankData: bank('Itaú', '0202', '55667-8'), active: true },
   ];
 
   const user = (id: string, name: string, email: string, role: UserRecord['role'], sectorId: string | null, cargo: string, paymentLimit: number | null = null): UserRecord => ({
@@ -187,26 +190,50 @@ export async function buildSeed(now: Date): Promise<Database> {
       const m = shiftMonth(m0, -back);
       const f = 0.85 + 0.25 * Math.sin(back * 1.7) + 0.1 * Math.cos(back * 0.9);
       return [
-        { sector: 'sec-log', requester: 'fun-log', month: m, day: 5, supplier: 'TransNordeste', natureCode: '51102024', ccCode: '220102', items: [item('Fretes do mês', 1, Math.round(1_100_000 * f))], payment: 'TRANSFERENCIA', status: 'PAGA' },
-        { sector: 'sec-log', requester: 'fun-log', month: m, day: 15, supplier: 'Oficina', natureCode: '51102041', ccCode: '220102', items: [item('Manutenção da frota', 1, Math.round(520_000 * (2.1 - f)))], status: 'PAGA' },
-        { sector: 'sec-com', requester: 'fun-com', month: m, day: 9, supplier: 'Papelaria', natureCode: '51102014', ccCode: '220104', items: [item('Material de campanha', 1, Math.round(640_000 * f))], payment: 'PIX', status: 'PAGA' },
+        // Fretes e material de campanha saem toda semana (o total do mês continua o mesmo).
+        ...[4, 11, 18, 25].map((day, w) => ({ sector: 'sec-log', requester: 'fun-log', month: m, day: day + (w % 2), supplier: 'TransNordeste', natureCode: '51102024', ccCode: '220102', items: [item('Fretes da semana', 1, Math.round((1_100_000 * f * (0.8 + 0.13 * w)) / 4.78))], payment: 'TRANSFERENCIA' as const, status: 'PAGA' as ScStatus })),
+        ...[9, 23].map((day) => ({ sector: 'sec-log', requester: 'fun-log', month: m, day, supplier: 'Oficina', natureCode: '51102041', ccCode: '220102', items: [item('Manutenção da frota', 1, Math.round(260_000 * (2.1 - f)))], status: 'PAGA' as ScStatus })),
+        ...[7, 21].map((day, w) => ({ sector: 'sec-com', requester: 'fun-com', month: m, day, supplier: 'Papelaria', natureCode: '51102014', ccCode: '220104', items: [item('Material de campanha', 1, Math.round(320_000 * f * (w ? 1.1 : 0.9)))], payment: 'PIX' as const, status: 'PAGA' as ScStatus })),
         { sector: 'sec-adm', requester: 'ges-adriano', month: m, day: 3, supplier: 'Papelaria', natureCode: '51102037', ccCode: '220101', items: [item('Material de escritório', 1, Math.round(210_000 * f))], status: 'PAGA' },
         { sector: 'sec-ti', requester: 'ges-siliel', month: m, day: 12, supplier: 'InfoTech', natureCode: '51102007', ccCode: '220103', items: [item('Licenças e periféricos', 1, Math.round(380_000 * (1.9 - f)))], payment: 'PIX', status: 'PAGA' },
       ];
     }),
     // Mês anterior (consumo de exemplo)
-    { sector: 'sec-log', requester: 'fun-log', month: m1, day: 6, supplier: 'TransNordeste', natureCode: '51102024', ccCode: '220102', items: [item('Frete de reposição de estoque', 1, 980_000)], payment: 'TRANSFERENCIA', status: 'PAGA' },
+    { sector: 'sec-log', requester: 'fun-log', month: m1, day: 6, supplier: 'TransNordeste', natureCode: '51102024', ccCode: '220102', items: [item('Frete de reposição de estoque', 1, 480_000)], payment: 'TRANSFERENCIA', status: 'PAGA' },
     { sector: 'sec-com', requester: 'fun-com', month: m1, day: 9, supplier: 'Papelaria', natureCode: '51102014', ccCode: '220104', items: [item('Folders promocionais', 2000, 95)], status: 'PAGA' },
     // Mês atual
     { sector: 'sec-log', requester: 'fun-log', month: m0, day: 3, supplier: 'Panificadora', natureCode: '51102021', ccCode: '220102', items: [item('PÃES', 84, 1_800)], payment: 'PIX', status: 'PAGA' },
-    { sector: 'sec-log', requester: 'fun-log', month: m0, day: 5, supplier: 'Oficina', natureCode: '51102041', ccCode: '220102', items: [item('Revisão do caminhão', 1, 640_000)], status: 'PAGA' },
+    { sector: 'sec-log', requester: 'fun-log', month: m0, day: 5, supplier: 'Oficina', natureCode: '51102041', ccCode: '220102', items: [item('Revisão do caminhão', 1, 320_000)], status: 'PAGA' },
+    ...[2, 9, 16, 23].map((day, w) => ({ sector: 'sec-com', requester: 'fun-com', month: m0, day, supplier: 'Papelaria', natureCode: '51102014', ccCode: '220104', items: [item('Material de campanha', 1, [140_000, 210_000, 120_000, 180_000][w])], payment: 'PIX' as const, status: 'PAGA' as ScStatus })),
     { sector: 'sec-adm', requester: 'ges-adriano', month: m0, day: 4, supplier: 'Papelaria', natureCode: '51102037', ccCode: '220101', items: [item('Material de escritório', 1, 186_000)], status: 'PAGA' },
     { sector: 'sec-log', requester: 'fun-log', month: m0, day: 12, supplier: 'TransNordeste', natureCode: '51102024', ccCode: '220102', items: [item('Frete emergencial de paletes', 1, 450_000)], payment: 'TRANSFERENCIA', status: 'AGUARDANDO_GESTOR' },
     { sector: 'sec-log', requester: 'fun-log', month: m0, day: 13, supplier: 'Oficina', natureCode: '51102041', ccCode: '220102', items: [item('Troca de pneus do caminhão', 6, 210_000, 60_000)], status: 'AGUARDANDO_GESTOR' },
     { sector: 'sec-log', requester: 'fun-log', month: m0, day: 11, supplier: 'Panificadora', natureCode: '51102021', ccCode: '220102', items: [item('Lanche turno noturno', 30, 1_500)], payment: 'PIX', status: 'DEVOLVIDA' as ScStatus, reason: 'Anexar o orçamento da padaria.' },
     { sector: 'sec-com', requester: 'fun-com', month: m0, day: 10, supplier: 'Papelaria', natureCode: '51102014', ccCode: '220104', items: [item('Banners para feira', 2, 85_000)], payment: 'PIX', status: 'AGUARDANDO_GESTOR' },
   ];
-  const requests = specs.map(build);
+  // Pequenas compras do dia a dia (já pagas) espalhadas pelos últimos 12 meses, dentro do orçamento de cada conta.
+  const daily: [string, string, string, string, string, string, number][] = [
+    // setor, solicitante, fornecedor, natureza, centro de custo, item, valor médio (centavos)
+    ['sec-log', 'fun-log', 'Posto', '51102030', '220102', 'Abastecimento da frota', 30_000],
+    ['sec-adm', 'ges-adriano', 'Papelaria', '51102037', '220101', 'Suprimentos de escritório', 18_000],
+    ['sec-ti', 'ges-siliel', 'InfoTech', '51102025', '220103', 'Internet e dados móveis', 16_000],
+    ['sec-com', 'fun-com', 'Hotel', '51102003', '220104', 'Hospedagem de visita a cliente', 52_000],
+    ['sec-fin', 'dir-ana', 'Escritório', '51102017', '220105', 'Serviço de apoio contábil', 38_000],
+  ];
+  let rnd = 7;
+  const rand = () => ((rnd = (rnd * 48271) % 2147483647) / 2147483647);
+  const start = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+  const dailySpecs: Spec[] = [];
+  for (let d = new Date(start); d < new Date(now.getFullYear(), now.getMonth(), now.getDate()); d.setDate(d.getDate() + 1)) {
+    if (d.getDay() === 0) continue;
+    for (const [sector, requester, supplier, natureCode, ccCode, desc, avg] of daily) {
+      if (rand() > 0.3) continue;
+      const value = Math.round((avg * (0.5 + rand() * 1.1)) / 100) * 100;
+      dailySpecs.push({ sector, requester, month: currentMonth(d), day: d.getDate(), supplier, natureCode, ccCode, items: [item(desc, 1, value)], payment: 'PIX', status: 'PAGA' });
+    }
+  }
+  // Numeração em ordem de data, como aconteceria de verdade.
+  const requests = [...specs, ...dailySpecs].sort((a, b) => a.month.localeCompare(b.month) || a.day - b.day).map(build);
 
   const byItem = (d: string) => requests.find((r) => r.items[0].description === d)!;
   const n = (id: string, userId: string, text: string, scId?: string) => ({ id, userId, text, scId, at: now.toISOString(), read: false });

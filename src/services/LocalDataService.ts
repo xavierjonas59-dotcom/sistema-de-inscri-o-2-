@@ -706,6 +706,22 @@ export class LocalDataService implements DataService {
     return [...totals].map(([natureId, consumed]) => ({ natureId, consumed })).sort((a, b) => b.consumed - a.consumed);
   }
 
+  async spendingByDay(actor: User, sectorId: string | null, days: number) {
+    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR', 'DIRETORIA', 'ADMIN']);
+    const scope = this.spendingScope(actor, sectorId);
+    const now = this.now();
+    const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const list: { date: string; consumed: number }[] = [];
+    for (let i = days - 1; i >= 0; i--) list.push({ date: iso(new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)), consumed: 0 });
+    const byDate = new Map(list.map((x) => [x.date, x]));
+    for (const r of db.requests) {
+      if ((scope && r.sectorId !== scope) || !CONSUMED_STATUSES.includes(r.status)) continue;
+      const row = byDate.get(r.date);
+      if (row) row.consumed += scTotal(r);
+    }
+    return list;
+  }
+
   async spendingDetails(actor: User, sectorId: string | null, month: Month): Promise<SpendingDetail[]> {
     const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR', 'DIRETORIA', 'ADMIN']);
     const scope = this.spendingScope(actor, sectorId);
