@@ -13,6 +13,7 @@ import { Button, Card, CardHeader, EmptyState, Field, Input, Select, Table, Td, 
 import { errMsg, useLookups } from '../shared/lookups';
 import { ScStatusTag } from './ScTable';
 import { EmailRequestModal } from './EmailRequestModal';
+import { ScChat } from './ScChat';
 import { SignModal, limitLabel } from './SignModal';
 
 export default function ScDetail({ query }: { query: URLSearchParams }) {
@@ -150,6 +151,8 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
           {sc.changes.length > 0 && <Changes sc={sc} />}
           <Attachments sc={sc} canEdit={isRequester || isManager} />
         </div>
+        <div className="space-y-4">
+        <ScChat sc={sc} />
         <Card className="h-fit">
           <CardHeader title="Linha do tempo" />
           <ol className="space-y-3 p-4">
@@ -162,6 +165,7 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
             ))}
           </ol>
         </Card>
+        </div>
       </div>
 
       <ReasonModal

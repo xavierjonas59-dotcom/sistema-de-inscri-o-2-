@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { navigate, useQuery, useUser } from '@/app/session';
 import { money } from '@/domain/format';
 import { SC_STATUS, scTotal } from '@/domain/sc';
@@ -47,7 +48,7 @@ export function CommandPalette({ screens }: { screens: Screen[] }) {
       <button type="button" onClick={() => setOpen(true)} className="grid h-9 w-9 place-items-center rounded-md hover:bg-foreground/[0.05] md:hidden" aria-label="Buscar">
         <Icon name="search" size={18} />
       </button>
-      {open && <Palette screens={screens} onClose={() => setOpen(false)} canSearch={user.role !== 'ADMIN'} />}
+      {open && createPortal(<Palette screens={screens} onClose={() => setOpen(false)} canSearch={user.role !== 'ADMIN'} />, document.body)}
     </>
   );
 }
