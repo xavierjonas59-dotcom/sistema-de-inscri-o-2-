@@ -44,7 +44,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     store.set(u.id);
     sessionId = u.id;
     setUser(u);
-    window.location.hash = '#/';
+    // Volta para onde a pessoa estava indo (ex.: link do pedido de autorização por e-mail).
+    if (window.location.hash.startsWith('#/validar')) window.location.hash = '#/';
   }, []);
 
   const logout = useCallback(() => {
