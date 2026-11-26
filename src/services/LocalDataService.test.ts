@@ -27,6 +27,8 @@ beforeEach(async () => {
     ].map(login),
   );
   for (const u of [silvio, victor, manoel, ana, felipe, stwart]) Object.assign(u, await svc.setMySignature(u, TEST_SIGNATURE));
+  // Os testes gerais não usam o orçamento por conta (testado à parte em "contábil").
+  await svc.saveAccountBudget(admin, 'sec-log', MONTH, { limit: 3_200_000, entries: [] });
 });
 
 function content(total = 100_000): ScContent {
@@ -35,7 +37,7 @@ function content(total = 100_000): ScContent {
     supplierId: 'sup-4',
     supplierName: 'Papelaria Central (exemplo)',
     supplierCode: '1004',
-    natureId: 'nat-2',
+    natureId: 'nat-51102037',
     apportionment: [{ costCenterId: 'cc-2', percent: 100 }],
     items: [{ description: 'Papel A4', quantity: 1, unitPrice: total, discount: 0, surcharge: 0 }],
   };
@@ -231,6 +233,57 @@ describe('acesso e e-mail', () => {
   });
 });
 
+describe('contábil: limite do setor e orçamento por conta', () => {
+  const ESC = 'acc-511003050302'; // IMPRESSOS MATERIAIS ESCRITORIO (natureza Material de escritório)
+  const FRETE = 'acc-511003050307';
+  it('só Antônio, Manoel, Ana e o Admin alteram; gestor vê só o próprio setor; funcionário não vê', async () => {
+    const plan = { limit: 3_000_000, entries: [{ accountId: ESC, amount: 500_000 }] };
+    await expect(svc.saveAccountBudget(victor, 'sec-log', MONTH, plan)).rejects.toThrow('Somente a diretoria');
+    await expect(svc.saveAccountBudget(silvio, 'sec-log', MONTH, plan)).rejects.toThrow();
+    const v = await svc.saveAccountBudget(ana, 'sec-log', MONTH, plan);
+    expect(v.baseLimit).toBe(3_000_000);
+    expect(v.rows.find((r) => r.accountId === ESC)?.share).toBeCloseTo(500_000 / 3_000_000);
+    expect(v.undistributed).toBe(2_500_000);
+    const g = await svc.getAccountBudget(silvio, 'sec-com', MONTH);
+    expect(g.sectorId).toBe('sec-log');
+    expect(g.canEdit).toBe(false);
+    expect((await svc.getAccountBudget(manoel, 'sec-log', MONTH)).canEdit).toBe(true);
+    await expect(svc.getAccountBudget(func, 'sec-log', MONTH)).rejects.toThrow();
+  });
+  it('a soma das contas não passa do limite e "repetir" copia até dezembro', async () => {
+    await expect(
+      svc.saveAccountBudget(manoel, 'sec-log', MONTH, { limit: 100_000, entries: [{ accountId: ESC, amount: 200_000 }] }),
+    ).rejects.toThrow('passa do limite');
+    await svc.saveAccountBudget(manoel, 'sec-log', MONTH, { limit: 2_000_000, entries: [{ accountId: FRETE, amount: 700_000 }] }, true);
+    const dec = await svc.getAccountBudget(manoel, 'sec-log', '2026-12');
+    expect(dec.baseLimit).toBe(2_000_000);
+    expect(dec.rows.find((r) => r.accountId === FRETE)?.budget).toBe(700_000);
+    expect((await svc.getBudget(manoel, 'sec-log', '2026-12')).limit).toBe(2_000_000);
+  });
+  it('a SC alimenta a conta da natureza e é bloqueada quando estoura o orçamento da conta', async () => {
+    await svc.saveAccountBudget(manoel, 'sec-log', MONTH, { limit: 3_200_000, entries: [{ accountId: ESC, amount: 150_000 }, { accountId: FRETE, amount: 100_000 }] });
+    const ok = await newSc(100_000);
+    await svc.managerApprove(silvio, ok.id, PW, CTX, manoel.id);
+    let v = await svc.getAccountBudget(manoel, 'sec-log', MONTH);
+    expect(v.rows.find((r) => r.accountId === ESC)).toMatchObject({ reserved: 100_000, available: 50_000 });
+    await svc.directorApprove(manoel, ok.id, PW, CTX);
+    v = await svc.getAccountBudget(manoel, 'sec-log', MONTH);
+    expect(v.rows.find((r) => r.accountId === ESC)).toMatchObject({ consumed: 100_000, reserved: 0 });
+    const tooMuch = await newSc(80_000);
+    await expect(svc.managerApprove(silvio, tooMuch.id, PW, CTX, manoel.id)).rejects.toThrow('Orçamento insuficiente na conta 511003050302');
+  });
+  it('bloqueia conta sem orçamento e natureza sem conta; sem distribuição no mês não bloqueia', async () => {
+    await svc.saveAccountBudget(manoel, 'sec-log', MONTH, { limit: 3_200_000, entries: [{ accountId: FRETE, amount: 100_000 }] });
+    const sc = await newSc(10_000);
+    await expect(svc.managerApprove(silvio, sc.id, PW, CTX, manoel.id)).rejects.toThrow('não tem orçamento');
+    await svc.setNatureAccount(admin, 'nat-51102037', null);
+    await expect(svc.managerApprove(silvio, sc.id, PW, CTX, manoel.id)).rejects.toThrow('não está ligada a uma conta');
+    await expect(svc.setNatureAccount(victor, 'nat-51102037', FRETE)).rejects.toThrow();
+    await svc.saveAccountBudget(manoel, 'sec-log', MONTH, { limit: 3_200_000, entries: [] });
+    await svc.managerApprove(silvio, sc.id, PW, CTX, manoel.id);
+  });
+});
+
 describe('início: gastos por mês e por natureza', () => {
   it('funcionário só vê o próprio setor, mesmo pedindo outro ou a empresa', async () => {
     const own = await svc.spendingByMonth(func, null, 6);
@@ -248,7 +301,7 @@ describe('início: gastos por mês e por natureza', () => {
     const before = await svc.spendingByNature(manoel, 'sec-log', MONTH);
     await svc.directorApprove(manoel, sc.id, PW, CTX);
     const after = await svc.spendingByNature(manoel, 'sec-log', MONTH);
-    const nat = (r: typeof after) => r.find((x) => x.natureId === 'nat-2')?.consumed ?? 0;
+    const nat = (r: typeof after) => r.find((x) => x.natureId === 'nat-51102037')?.consumed ?? 0;
     expect(nat(after) - nat(before)).toBe(100_000);
     expect([...after].sort((a, b) => b.consumed - a.consumed)).toEqual(after);
     expect((await svc.spendingByMonth(manoel, 'sec-log', 1))[0].consumed).toBe(after.reduce((s, x) => s + x.consumed, 0));

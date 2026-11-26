@@ -1,0 +1,1206 @@
+{
+"accounts": [
+{
+"code": "511001050108",
+"name": "AJUDA DE CUSTO",
+"group": "Despesas com pessoal"
+},
+{
+"code": "511001050116",
+"name": "HONORARIOS",
+"group": "Despesas com pessoal"
+},
+{
+"code": "511001050117",
+"name": "VIDA E PREVIDENCIA",
+"group": "Despesas com pessoal"
+},
+{
+"code": "511001050118",
+"name": "COMISSOES A FUNCIONARIOS",
+"group": "Despesas com pessoal"
+},
+{
+"code": "511001050119",
+"name": "CAMPANHAS E PREMIACOES",
+"group": "Despesas com pessoal"
+},
+{
+"code": "511001050120",
+"name": "GASTOS DIVERSOS COM FUNCIONARIOS",
+"group": "Despesas com pessoal"
+},
+{
+"code": "511002050201",
+"name": "SERVISOS PREST PESSOA FISICA",
+"group": "Serviços prestados"
+},
+{
+"code": "511002050202",
+"name": "SERVICOS PREST PESSOA JURIDICA",
+"group": "Serviços prestados"
+},
+{
+"code": "511003050301",
+"name": "MATERIAIS DE USO E CONSUMO",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050302",
+"name": "IMPRESSOS MATERIAIS ESCRITORIO",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050303",
+"name": "COMBUSTIVEIS E LUBRIFICANTES",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050305",
+"name": "MANUT CONSERVACAO DE VEICULOS",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050307",
+"name": "FRETES E CARRETOS",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050308",
+"name": "MATERIAIS DE LIMPEZA",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050309",
+"name": "ALUGUEIS",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050311",
+"name": "AGUA",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050312",
+"name": "ENERGIA ELETRICA",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050315",
+"name": "DESPESAS POSTAIS TELEGRAFICAS",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050317",
+"name": "JORNAIS E REVISTAS",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050318",
+"name": "DESPESAS LEGAIS E JUDICIAIS",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050319",
+"name": "VIAGENS E ESTADIAS",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050320",
+"name": "ASSISTENCIA MEDICA",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050321",
+"name": "UNIFORMES E UTENSILIOS",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050325",
+"name": "VALE TRANSPORTE",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050326",
+"name": "CONTRIBUICAO A ENTIDADE CLASSE",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050327",
+"name": "CONTRIBUICOES E DOACOES",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050329",
+"name": "BRINDES E PRESENTES",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050330",
+"name": "CONDUCAO",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050331",
+"name": "REFEICOES E LANCHES",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050333",
+"name": "ENCARGOS DE DEPRECIACAO",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050336",
+"name": "TELEFONE COMERCIAL",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050337",
+"name": "PROPAGANDA E PUBLICIDADE",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050338",
+"name": "INTERNET",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050340",
+"name": "DESPESAS PROCESSAMENTO DADOS",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050343",
+"name": "OUTRAS DESPESAS",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050350",
+"name": "DESPESAS COM SEGUROS",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050352",
+"name": "ESTACIONAMENTO",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050353",
+"name": "PEDAGIO",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050354",
+"name": "DESPESAS C/ ORGANIZACAO E REORGANIZACAO",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050355",
+"name": "PERDAS EM OPERACOES DE CREDITO",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050356",
+"name": "PROVISAO EM OPERACOES DE CREDITO",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050357",
+"name": "MANUTENCAO DE SOFTWARE",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050358",
+"name": "PROV. PERDA ESTOQUE",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050359",
+"name": "CURSOS, TREINAMENTOS E EVENTOS",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050360",
+"name": "SERVICOS DE VIGILANCIA E MONITORAMENTO E",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050361",
+"name": "BONIFICACOES CONCEDIDAS A CLIENTES",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050362",
+"name": "COMISSOES A TERCEIROS",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050363",
+"name": "DESPESAS COM MANUTENCAO DE PREDIOS E EQU",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050364",
+"name": "BENS DE NATUREZA PERMANENTE",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050365",
+"name": "CONSUMO INTERNO",
+"group": "Despesas gerais"
+},
+{
+"code": "511003050366",
+"name": "DESPESAS COM CARTOES DE CREDITO",
+"group": "Despesas gerais"
+},
+{
+"code": "513001050702",
+"name": "DESCONTOS CONCEDIDOS",
+"group": "Despesas financeiras"
+},
+{
+"code": "513001050703",
+"name": "JUROS E COMISSOES BANCARIAS",
+"group": "Despesas financeiras"
+},
+{
+"code": "513001050704",
+"name": "JUROS DE MORA",
+"group": "Despesas financeiras"
+},
+{
+"code": "513001050708",
+"name": "MULTA DE MORA",
+"group": "Despesas financeiras"
+},
+{
+"code": "513001050709",
+"name": "TAXAS DIVERSAS",
+"group": "Despesas financeiras"
+},
+{
+"code": "513001050710",
+"name": "ENCARGOS FINANCEIROS",
+"group": "Despesas financeiras"
+},
+{
+"code": "513001050712",
+"name": "TAXA DE ADMINISTRACAO DE CARTAO DE CREDI",
+"group": "Despesas financeiras"
+},
+{
+"code": "515001050905",
+"name": "TAXA LICENCA I FUNCIONAMENTO",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050907",
+"name": "IMPOSTO PREDIAL TERRITORIAL",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050908",
+"name": "IR-FONTE NAO COMPENSAVEL",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050910",
+"name": "TAXA DE SERVICOS ESTADUAL",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050911",
+"name": "TAXA DE SERVICOS FEDERAL",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050913",
+"name": "IOF",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050914",
+"name": "IMPOSTO S/ PROP. DE VEICULOS AUTOMOTORES",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050915",
+"name": "TAXA DE SERVICO MUNICIPAL",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050920",
+"name": "ICMS ART. 9º, II, DEC. 20.747/2012",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050922",
+"name": "ICMS ART.9º,II,B.1 DEC. 20747/12",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050923",
+"name": "ICMS ART. 9º I B  DERETO  20.747/2012",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050924",
+"name": "TAXA DE LICENCIAMENTO DE VEICULOS",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050926",
+"name": "ICMS FEFAL",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050927",
+"name": "ICMS - ATIVO IMOBILIZADO",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050928",
+"name": "ICMS FECOEP - ATIVO IMOBILIZADO",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050929",
+"name": "ICMS - DIFAL",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050930",
+"name": "MULTAS DIVERSAS",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050931",
+"name": "ICMS SUBSTITUICAO TRIBUTARIA",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050932",
+"name": "ICMS S/ BONIFICACAO CONCEDIDA",
+"group": "Despesas tributárias"
+},
+{
+"code": "515001050933",
+"name": "ICMS SOBRE BAIXA DE ESTOQUE",
+"group": "Despesas tributárias"
+},
+{
+"code": "515002051001",
+"name": "MULTAS FISCAIS",
+"group": "Despesas tributárias"
+},
+{
+"code": "515002051002",
+"name": "MULTA DE TRANSITO",
+"group": "Despesas tributárias"
+},
+{
+"code": "521002051906",
+"name": "ALIENACAO DE VEICULOS",
+"group": "Outras despesas"
+}
+],
+"natures": [
+{
+"code": "51102001",
+"name": "AUDITORIA",
+"account": "511002050202"
+},
+{
+"code": "51102002",
+"name": "CONSULTORIA",
+"account": "511002050202"
+},
+{
+"code": "51102003",
+"name": "VIAGENS E ESTADIAS",
+"account": "511003050319"
+},
+{
+"code": "51102004",
+"name": "ASSESSORIA CONTABIL",
+"account": "511002050202"
+},
+{
+"code": "51102005",
+"name": "CONSULTORIA JURIDICA",
+"account": "511003050318"
+},
+{
+"code": "51102006",
+"name": "ASSISTENCIA MEDICA",
+"account": "511003050320"
+},
+{
+"code": "51102007",
+"name": "DESPESAS COM INFORMATICA",
+"account": "511003050340"
+},
+{
+"code": "51102008",
+"name": "SERV SEGURANCA E MONITORAMENTO",
+"account": "511003050360"
+},
+{
+"code": "51102009",
+"name": "SERVICOS LIMPEZA E CONSERVACAO",
+"account": "511002050202"
+},
+{
+"code": "51102010",
+"name": "SERVICOS SEGURANCA DO TRABALHO",
+"account": "511002050202"
+},
+{
+"code": "51102011",
+"name": "SERVICOS GRAFICOS",
+"account": "511003050302"
+},
+{
+"code": "51102012",
+"name": "SERVICOS DE ENTREGA",
+"account": "511003050307"
+},
+{
+"code": "51102013",
+"name": "FRETES E CARRETOS - COMPRAS ME",
+"account": "511003050307"
+},
+{
+"code": "51102014",
+"name": "DESPESAS COM PUBLICIDADE PROPA",
+"account": "511003050337"
+},
+{
+"code": "51102015",
+"name": "SERVICOS MONTAGENS",
+"account": "511002050202"
+},
+{
+"code": "51102016",
+"name": "SERVICOS PRESTADOS PF",
+"account": "511002050201"
+},
+{
+"code": "51102017",
+"name": "SERVICOS PRESTADOS PJ",
+"account": "511002050202"
+},
+{
+"code": "51102018",
+"name": "DESPESAS COM MARKETING",
+"account": "511003050337"
+},
+{
+"code": "51102019",
+"name": "LOCACAO DE MAO DE OBRA -PJ",
+"account": "511002050202"
+},
+{
+"code": "51102020",
+"name": "SERV OBRAS CONSTR CIVIL EMPREI",
+"account": "511003050363"
+},
+{
+"code": "51102021",
+"name": "LANCHES E REFEICOES",
+"account": "511003050331"
+},
+{
+"code": "51102022",
+"name": "DESPESAS TELEFONICAS",
+"account": "511003050336"
+},
+{
+"code": "51102023",
+"name": "DESPESAS COM ENERGIA ELETRICA",
+"account": "511003050312"
+},
+{
+"code": "51102024",
+"name": "FRETES E CARRETOS - DESPESA",
+"account": "511003050307"
+},
+{
+"code": "51102025",
+"name": "INTERNET",
+"account": "511003050338"
+},
+{
+"code": "51102026",
+"name": "CONTRIBUICAO SINDICAL DESC FOL",
+"account": "511003050326"
+},
+{
+"code": "51102027",
+"name": "SERVICOS DE ASSISTENCIA SOCIAL",
+"account": "511002050202"
+},
+{
+"code": "51102028",
+"name": "DESPESAS C/ SISTEMAS",
+"account": "511003050357"
+},
+{
+"code": "51102029",
+"name": "COMISSOES - SEM RETENCAO",
+"account": "511003050362"
+},
+{
+"code": "51102030",
+"name": "COMBUSTIVEIS E LUBRIFICANTES",
+"account": "511003050303"
+},
+{
+"code": "51102031",
+"name": "GASTOS DIVERSOS C FUNCIONARIOS",
+"account": "511001050120"
+},
+{
+"code": "51102032",
+"name": "COMISSOES - IRRF",
+"account": "511003050362"
+},
+{
+"code": "51102034",
+"name": "MANUTENCAO DE AR CONDICIONADOS",
+"account": "511003050363"
+},
+{
+"code": "51102035",
+"name": "REFORMAS DE LOJA",
+"account": "511003050363"
+},
+{
+"code": "51102036",
+"name": "DESPESAS COM SEGUROS",
+"account": "511003050350"
+},
+{
+"code": "51102037",
+"name": "MATERIAL DE ESCRITORIO",
+"account": "511003050302"
+},
+{
+"code": "51102038",
+"name": "MANUTENCAO DE VEICULOS - RET.",
+"account": "511003050305"
+},
+{
+"code": "51102039",
+"name": "DESPESAS C/ ALUGUEIS VEICULOS",
+"account": "511003050309"
+},
+{
+"code": "51102040",
+"name": "MANUTENCAO DE COMPUTADORES",
+"account": "511003050340"
+},
+{
+"code": "51102041",
+"name": "MANUTENCAO VEICULOS - SEM RET.",
+"account": "511003050305"
+},
+{
+"code": "51102042",
+"name": "SEGURANCA E MONIT. COM RET",
+"account": "511003050360"
+},
+{
+"code": "51102043",
+"name": "COMISSAO PF - INSS",
+"account": "511003050362"
+},
+{
+"code": "51102044",
+"name": "VIAGENS E ESTADIAS GER LOG",
+"account": "511003050319"
+},
+{
+"code": "51102045",
+"name": "EQUIPAM ELETRONICOS DE DADOS",
+"account": "511003050364"
+},
+{
+"code": "51102046",
+"name": "SERVICOS DE COBRANCA_SERASA",
+"account": "511002050202"
+},
+{
+"code": "51102047",
+"name": "SERVICOS DE COBRANCA",
+"account": "511002050202"
+},
+{
+"code": "51102048",
+"name": "COLETA DE RESIDUOS",
+"account": "511002050202"
+},
+{
+"code": "51102049",
+"name": "CAMPANHAS E PREMIACOES",
+"account": "511001050119"
+},
+{
+"code": "51102050",
+"name": "BENS DE NATUREZA PERMANENTE",
+"account": "511003050364"
+},
+{
+"code": "51102051",
+"name": "MANUTENCAO DE EQUIPAMENTOS",
+"account": "511003050363"
+},
+{
+"code": "51102052",
+"name": "SERVICOS PRESTADOS PJ_PCC",
+"account": "511002050202"
+},
+{
+"code": "51102053",
+"name": "MATERIAIS DE USO E CONSUMO",
+"account": "511003050301"
+},
+{
+"code": "51102054",
+"name": "ASSISTENCIA MEDICA_RETENCAO",
+"account": "511003050320"
+},
+{
+"code": "51102055",
+"name": "DESPESAS C/ SISTEMAS - RET",
+"account": "511003050357"
+},
+{
+"code": "51102056",
+"name": "MAO DE OBRA - INSS",
+"account": "511002050201"
+},
+{
+"code": "51102057",
+"name": "OUTRAS DESPESAS - INDEDUTIVEIS",
+"account": "511003050343"
+},
+{
+"code": "51102058",
+"name": "EVENTOS",
+"account": "511003050359"
+},
+{
+"code": "51102059",
+"name": "DESPESAS COM AGUA",
+"account": "511003050311"
+},
+{
+"code": "51102060",
+"name": "CONTRIBUICOES DE ASSOCIACAO",
+"account": "511003050326"
+},
+{
+"code": "51102061",
+"name": "AVARIAS INTERNAS",
+"account": "511003050343"
+},
+{
+"code": "51102062",
+"name": "DESP C/ TRANSPORTE DE PESSOAL",
+"account": "511003050330"
+},
+{
+"code": "51102063",
+"name": "EXTRAVIO DE MERCADORIA",
+"account": "511003050343"
+},
+{
+"code": "51102064",
+"name": "LIQ. PROCESSOS JUDICIAIS TRAB.",
+"account": "511003050318"
+},
+{
+"code": "51102065",
+"name": "DEPOSITO JUDICIAL TRABALHISTA",
+"account": "511003050318"
+},
+{
+"code": "51102066",
+"name": "DESP. CUSTAS PROCESSUAIS TRAB.",
+"account": "511003050318"
+},
+{
+"code": "51102067",
+"name": "DESPESAS COM SEGUROS",
+"account": "511003050350"
+},
+{
+"code": "51102068",
+"name": "CONS.INTERNO - EPI FUNCIONARIO",
+"account": "511003050321"
+},
+{
+"code": "51102069",
+"name": "DOACOES",
+"account": "511003050327"
+},
+{
+"code": "51102070",
+"name": "DESPESAS COM EMBALAGENS",
+"account": "511003050301"
+},
+{
+"code": "51102071",
+"name": "ESTORNO DE OUTRAS RECEITAS",
+"account": "511003050343"
+},
+{
+"code": "51102072",
+"name": "DESP C/ TARIFAS DE CARTOES CRE",
+"account": "513001050712"
+},
+{
+"code": "51102073",
+"name": "DESPESAS C/ ALUGUEIS CAMINHOES",
+"account": "511003050309"
+},
+{
+"code": "51102074",
+"name": "DESPESAS C/ ALUGUEIS EMPILHADE",
+"account": "511003050309"
+},
+{
+"code": "51102075",
+"name": "DESP. ALUGUEIS IMOV. E EQUIP.",
+"account": "511003050309"
+},
+{
+"code": "51102076",
+"name": "SERVICO DE ENTREGAS - ISS",
+"account": "511003050307"
+},
+{
+"code": "51102078",
+"name": "DESPESAS PAGAS C/ CARTOES CRED",
+"account": "511003050366"
+},
+{
+"code": "51102079",
+"name": "DESPESAS COM BRINDES",
+"account": "511003050329"
+},
+{
+"code": "51102080",
+"name": "FARDAMENTO E EPI",
+"account": "511003050321"
+},
+{
+"code": "51102081",
+"name": "DESPESAS C/CARTORIO E LEGAIS",
+"account": "511003050318"
+},
+{
+"code": "51102082",
+"name": "MANUTENCAO MOVEIS E UTENSILIOS",
+"account": "511003050363"
+},
+{
+"code": "51102083",
+"name": "AVARIA TRANSPORTE",
+"account": "511003050343"
+},
+{
+"code": "51102084",
+"name": "FALTA NO TRANSPORTE",
+"account": "511003050343"
+},
+{
+"code": "51102085",
+"name": "MANUTENCAO PREDIAL",
+"account": "511003050363"
+},
+{
+"code": "51102086",
+"name": "AJUDA DE CUSTO RCA",
+"account": "511001050108"
+},
+{
+"code": "51102087",
+"name": "FRETES E CARRETOS - RETENCAO",
+"account": "511003050307"
+},
+{
+"code": "51102088",
+"name": "DESP. CUSTAS PROCESSUAIS",
+"account": "511003050318"
+},
+{
+"code": "51102089",
+"name": "VALE ALIMENTACAO",
+"account": "511001050120"
+},
+{
+"code": "51102090",
+"name": "ADVOCACIA C/ RETENCAO",
+"account": "511003050318"
+},
+{
+"code": "51102091",
+"name": "CURSOS E TREINAMENTOS C/ RET",
+"account": "511003050359"
+},
+{
+"code": "51102092",
+"name": "DESP. CUSTAS PROCESSUAIS",
+"account": "511003050318"
+},
+{
+"code": "51102093",
+"name": "DESPESAS C/ DEDETIZACAO",
+"account": "511002050202"
+},
+{
+"code": "51102094",
+"name": "ESTACIONAMENTO/PEDAGIO",
+"account": "511003050352"
+},
+{
+"code": "51102095",
+"name": "DESPESA C/ JUSTICA DO TRABALHO",
+"account": "511003050318"
+},
+{
+"code": "51103001",
+"name": "PIS",
+"account": null
+},
+{
+"code": "51103002",
+"name": "COFINS",
+"account": null
+},
+{
+"code": "51103003",
+"name": "CSLL",
+"account": null
+},
+{
+"code": "51103004",
+"name": "IRRF SERVICOS PJ DARF 1708",
+"account": null
+},
+{
+"code": "51103005",
+"name": "IRRF SERVICOS PF DARF 0588",
+"account": null
+},
+{
+"code": "51103006",
+"name": "INSS A RECOLHER GPS 2631",
+"account": null
+},
+{
+"code": "51103007",
+"name": "CSRF S/ SERVICOS TOMADOS -5952",
+"account": null
+},
+{
+"code": "51103008",
+"name": "IRRF SERVICOS PJ DARF 8045",
+"account": null
+},
+{
+"code": "51103009",
+"name": "IRPJ",
+"account": null
+},
+{
+"code": "51103010",
+"name": "FGTS RESCISAO",
+"account": null
+},
+{
+"code": "51103011",
+"name": "FGTS FOLHA MENSAL",
+"account": null
+},
+{
+"code": "51103012",
+"name": "IRRF FOLHA MENSAL",
+"account": null
+},
+{
+"code": "51103013",
+"name": "FGTS - APRENDIZES",
+"account": null
+},
+{
+"code": "51103014",
+"name": "IRRF SOBRE ALUGUEIS - 3208",
+"account": null
+},
+{
+"code": "51104001",
+"name": "IMPOSTOS ESTADUAIS",
+"account": null
+},
+{
+"code": "51104002",
+"name": "TAXAS DE BOMBEIRO",
+"account": "515001050910"
+},
+{
+"code": "51104003",
+"name": "TAXA SEFAZ",
+"account": "515001050910"
+},
+{
+"code": "51104004",
+"name": "ICMS ANTECIPADO AL",
+"account": null
+},
+{
+"code": "51104005",
+"name": "ICMS ST AL",
+"account": null
+},
+{
+"code": "51104006",
+"name": "ICMS NORMAL AL",
+"account": null
+},
+{
+"code": "51104007",
+"name": "ICMS PARCELAMENTO",
+"account": null
+},
+{
+"code": "51104008",
+"name": "IMPOSTOS E TAXAS ESTADUAIS",
+"account": "515001050910"
+},
+{
+"code": "51104009",
+"name": "ICMS GNRE",
+"account": null
+},
+{
+"code": "51104010",
+"name": "ICMS NORMAL FECOEP AL",
+"account": null
+},
+{
+"code": "51104011",
+"name": "ICMS SERVICO DE TRANSPORTE",
+"account": null
+},
+{
+"code": "51104012",
+"name": "NOTIFICACAO SEFAZ ICMS ANTECIP",
+"account": null
+},
+{
+"code": "51104013",
+"name": "NOTIFICACAO SEFAZ AL ICMS NORM",
+"account": null
+},
+{
+"code": "51104014",
+"name": "NOTIFICACAO SEFAZ ICMS ST",
+"account": null
+},
+{
+"code": "51104015",
+"name": "ICMS ANTECIPADO FECOEP AL",
+"account": null
+},
+{
+"code": "51104016",
+"name": "ICMS NORMAL PE",
+"account": null
+},
+{
+"code": "51104017",
+"name": "ICMS ST PE",
+"account": null
+},
+{
+"code": "51104018",
+"name": "ICMS ST FECOEP AL",
+"account": null
+},
+{
+"code": "51104019",
+"name": "ICMS ANTECIPADO PE",
+"account": null
+},
+{
+"code": "51104020",
+"name": "DETRAN",
+"account": "515001050924"
+},
+{
+"code": "51104021",
+"name": "TAXAS DE CAMBIO",
+"account": "513001050709"
+},
+{
+"code": "51104022",
+"name": "MULTA SEFAZ",
+"account": "515002051001"
+},
+{
+"code": "51104023",
+"name": "NOTIFICACAO SEFAZ FECOEP ANTEC",
+"account": null
+},
+{
+"code": "51104024",
+"name": "CUSTAS PROCESSUAIS ICMS",
+"account": null
+},
+{
+"code": "51104025",
+"name": "FEFAL",
+"account": null
+},
+{
+"code": "51105001",
+"name": "IPTU IMP PREDIAL TERRIT URBANO",
+"account": "515001050907"
+},
+{
+"code": "51105002",
+"name": "ALVARA",
+"account": "515001050905"
+},
+{
+"code": "51105003",
+"name": "ISS NORMAL",
+"account": null
+},
+{
+"code": "51105004",
+"name": "TAXA LICENCA",
+"account": "515001050905"
+},
+{
+"code": "51105005",
+"name": "ISS RETIDO",
+"account": null
+},
+{
+"code": "51105006",
+"name": "TAXAS DIVERSAS MUNICIPAIS",
+"account": "515001050915"
+},
+{
+"code": "51105007",
+"name": "TAXAS DIVERSAS",
+"account": "513001050709"
+},
+{
+"code": "51106001",
+"name": "MAQUINAS E FERRAMENTAS - IMOB",
+"account": "511003050364"
+},
+{
+"code": "51106002",
+"name": "VEICULOS - IMOB",
+"account": "511003050364"
+},
+{
+"code": "51106003",
+"name": "MOVEIS E UTENSILIOS - IMOB",
+"account": "511003050364"
+},
+{
+"code": "51106004",
+"name": "EQUIP ELETRONICOS DADOS - IMOB",
+"account": "511003050364"
+},
+{
+"code": "51106005",
+"name": "INSTALACOES - IMOB",
+"account": "511003050364"
+},
+{
+"code": "51106006",
+"name": "IMOVEIS - IMOB",
+"account": null
+},
+{
+"code": "51107001",
+"name": "FOLHA DE PAGAMENTO",
+"account": null
+},
+{
+"code": "51107002",
+"name": "FOLHA DE 13 SALARIO INTEGRAL",
+"account": null
+},
+{
+"code": "51107003",
+"name": "RESCISAO / AVISO PREVIO",
+"account": null
+},
+{
+"code": "51107004",
+"name": "PENSAO ALIMENTICIA",
+"account": null
+},
+{
+"code": "51107005",
+"name": "AUXILIO EDUCACAO",
+"account": "511003050359"
+},
+{
+"code": "51107006",
+"name": "AJUDA DE CUSTO - FUNCIONARIOS",
+"account": "511001050108"
+},
+{
+"code": "51107007",
+"name": "FERIAS A PAGAR",
+"account": null
+},
+{
+"code": "51107008",
+"name": "DISTRIB. LUCROS ANTONIO CHRON.",
+"account": null
+},
+{
+"code": "51107009",
+"name": "DISTRIB. LUCROS MANOEL CHRON.",
+"account": null
+},
+{
+"code": "51107010",
+"name": "DISTRIBUICAO DE LUCROS SOCIOS",
+"account": null
+},
+{
+"code": "51107011",
+"name": "PLANO ODONTOLOGICO",
+"account": "511003050320"
+},
+{
+"code": "51107012",
+"name": "MEDICINA OCUPACIONAL",
+"account": "511003050320"
+},
+{
+"code": "51107013",
+"name": "BONUS ASSIDUIDADE",
+"account": null
+},
+{
+"code": "51107014",
+"name": "PRO-LABORE",
+"account": null
+}
+]
+}

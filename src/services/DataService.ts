@@ -5,6 +5,7 @@ import type {
   CostCenter,
   LimitOverride,
   Month,
+  LedgerAccount,
   Nature,
   Notification,
   PurchaseRequest,
@@ -72,6 +73,14 @@ export interface DataService {
   spendingByNature(actor: User, sectorId: string | null, month: Month): Promise<{ natureId: string | null; consumed: number }[]>;
   /** Cada SC que entrou no consumido do mês, com os itens. `canOpen` diz se a pessoa pode abrir a SC. */
   spendingDetails(actor: User, sectorId: string | null, month: Month): Promise<SpendingDetail[]>;
+  /** Plano de contas contábeis (despesas). */
+  listAccounts(actor: User): Promise<LedgerAccount[]>;
+  /** Orçamento por conta contábil do setor no mês (null = empresa toda, só diretoria/admin). Gestor vê só o próprio setor. */
+  getAccountBudget(actor: User, sectorId: string | null, month: Month): Promise<AccountBudgetView>;
+  /** Diretoria responsável/Admin: limite do setor e orçamento de cada conta; `repeat` aplica até dezembro. */
+  saveAccountBudget(actor: User, sectorId: string, month: Month, input: { limit: number; entries: { accountId: string; amount: number }[] }, repeat?: boolean): Promise<AccountBudgetView>;
+  /** Liga a natureza a uma conta contábil (os gastos da natureza alimentam a conta). */
+  setNatureAccount(actor: User, natureId: string, accountId: string | null): Promise<Nature>;
   returnForAdjustment(actor: User, id: string, reason: string): Promise<PurchaseRequest>;
   reject(actor: User, id: string, reason: string): Promise<PurchaseRequest>;
   directorApprove(actor: User, id: string, password: string, ctx: RequestContext): Promise<PurchaseRequest>;
@@ -139,6 +148,8 @@ export interface UserInput {
   cargo: string;
   active: boolean;
   paymentLimit?: number | null;
+  /** Diretoria: pode definir limites e orçamentos no Contábil. */
+  budgetEditor?: boolean;
   password?: string;
 }
 
@@ -179,4 +190,31 @@ export interface SpendingDetail {
   total: number;
   items: { description: string; quantity: number; total: number }[];
   canOpen: boolean;
+}
+
+/** Orçamento por conta contábil: quanto do limite foi para cada conta e quanto já foi usado. */
+export interface AccountBudgetView {
+  sectorId: string | null;
+  month: Month;
+  /** Limite definido pela diretoria (sem transferências). */
+  baseLimit: number;
+  /** Limite com transferências aprovadas. */
+  limit: number;
+  distributed: number;
+  undistributed: number;
+  consumed: number;
+  reserved: number;
+  rows: {
+    accountId: string | null;
+    code: string;
+    name: string;
+    group: string;
+    budget: number;
+    /** Parte do limite do setor (0–1). */
+    share: number;
+    consumed: number;
+    reserved: number;
+    available: number;
+  }[];
+  canEdit: boolean;
 }

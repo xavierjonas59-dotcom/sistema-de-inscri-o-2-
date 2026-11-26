@@ -1,6 +1,7 @@
 import { currentMonth, shiftMonth } from '@/domain/format';
 import { emptyContent, scNumber } from '@/domain/sc';
-import type { Attachment, CostCenter, Item, Nature, PurchaseRequest, ScContent, ScStatus, Sector, Supplier, TimelineEntry, UserRecord } from '@/domain/types';
+import contabil from '@/data/contabil.json';
+import type { AccountBudget, Attachment, CostCenter, Item, LedgerAccount, Nature, PurchaseRequest, ScContent, ScStatus, Sector, Supplier, TimelineEntry, UserRecord } from '@/domain/types';
 import { DB_VERSION, hashPassword, type Database } from './LocalDataService';
 
 /** Senha inicial de todos os usuários (também usada para assinar). Trocar no primeiro acesso real. */
@@ -53,7 +54,7 @@ export async function buildSeed(now: Date): Promise<Database> {
     { id: 'sec-com', name: 'Comercial', monthlyLimit: 2_800_000, active: true },
     { id: 'sec-fin', name: 'Financeiro', monthlyLimit: 1_800_000, active: true },
   ];
-  // 220101 e 51105007 vêm da planilha; os demais são exemplos para o Admin ajustar ao plano de contas.
+  // 220101 vem da planilha; os demais são exemplos para o Admin ajustar ao plano de contas.
   const costCenters: CostCenter[] = [
     ['220101', 'ADMINISTRATIVO'],
     ['220102', 'LOGÍSTICA'],
@@ -61,14 +62,15 @@ export async function buildSeed(now: Date): Promise<Database> {
     ['220104', 'COMERCIAL'],
     ['220105', 'FINANCEIRO'],
   ].map(([code, name], i) => ({ id: `cc-${i + 1}`, code, name, active: true }));
-  const natures: Nature[] = [
-    ['51105007', 'Alimentação'],
-    ['51105001', 'Material de escritório'],
-    ['51105010', 'Manutenção e reparos'],
-    ['51105015', 'Fretes e transportes'],
-    ['51105020', 'Brindes e eventos'],
-    ['51105025', 'Informática e softwares'],
-  ].map(([code, name], i) => ({ id: `nat-${i + 1}`, code, name, active: true }));
+  // Plano de contas e naturezas reais (planilhas CTBA020 e Naturezas). Natureza sem conta ligada fica inativa.
+  const accounts: LedgerAccount[] = contabil.accounts.map((a) => ({ id: `acc-${a.code}`, code: a.code, name: a.name, group: a.group, active: true }));
+  const natures: Nature[] = contabil.natures.map((n) => ({
+    id: `nat-${n.code}`,
+    code: n.code,
+    name: n.name,
+    active: !!n.account,
+    accountId: n.account ? `acc-${n.account}` : null,
+  }));
   const bank = (b = '', a = '', c = '', p = '') => ({ bank: b, agency: a, account: c, pix: p });
   const suppliers: Supplier[] = [
     { id: 'sup-1', code: '1001', name: 'Panificadora Bom Trigo (exemplo)', contact: '(84) 3333-1001', bankData: bank('', '', '', '12.345.678/0001-01'), active: true },
@@ -83,9 +85,9 @@ export async function buildSeed(now: Date): Promise<Database> {
   });
   const users: UserRecord[] = [
     // Diretoria (e-mails a confirmar)
-    user('dir-manoel', 'Manoel Chroniaris', 'manoel@amcomercial.com.br', 'DIRETORIA', null, 'Diretor Geral'),
-    user('dir-antonio', 'Antônio Chroniaris', 'antonio@amcomercial.com.br', 'DIRETORIA', null, 'Diretor Geral'),
-    user('dir-ana', 'Ana Katarina', 'ana@amcomercial.com.br', 'DIRETORIA', 'sec-fin', 'Diretora Financeira'),
+    { ...user('dir-manoel', 'Manoel Chroniaris', 'manoel@amcomercial.com.br', 'DIRETORIA', null, 'Diretor Geral'), budgetEditor: true },
+    { ...user('dir-antonio', 'Antônio Chroniaris', 'antonio@amcomercial.com.br', 'DIRETORIA', null, 'Diretor Geral'), budgetEditor: true },
+    { ...user('dir-ana', 'Ana Katarina', 'ana@amcomercial.com.br', 'DIRETORIA', 'sec-fin', 'Diretora Financeira'), budgetEditor: true },
     user('dir-felipe', 'Felipe Chroniaris', 'felipe@amcomercial.com.br', 'DIRETORIA', 'sec-com', 'Diretor Comercial', LIMIT_10K),
     user('dir-victor', 'Victor Chroniaris', 'victor@amcomercial.com.br', 'DIRETORIA', 'sec-log', 'Diretor de Logística', LIMIT_10K),
     // Gestores
@@ -185,24 +187,24 @@ export async function buildSeed(now: Date): Promise<Database> {
       const m = shiftMonth(m0, -back);
       const f = 0.85 + 0.25 * Math.sin(back * 1.7) + 0.1 * Math.cos(back * 0.9);
       return [
-        { sector: 'sec-log', requester: 'fun-log', month: m, day: 5, supplier: 'TransNordeste', natureCode: '51105015', ccCode: '220102', items: [item('Fretes do mês', 1, Math.round(1_100_000 * f))], payment: 'TRANSFERENCIA', status: 'PAGA' },
-        { sector: 'sec-log', requester: 'fun-log', month: m, day: 15, supplier: 'Oficina', natureCode: '51105010', ccCode: '220102', items: [item('Manutenção da frota', 1, Math.round(520_000 * (2.1 - f)))], status: 'PAGA' },
-        { sector: 'sec-com', requester: 'fun-com', month: m, day: 9, supplier: 'Papelaria', natureCode: '51105020', ccCode: '220104', items: [item('Material de campanha', 1, Math.round(640_000 * f))], payment: 'PIX', status: 'PAGA' },
-        { sector: 'sec-adm', requester: 'ges-adriano', month: m, day: 3, supplier: 'Papelaria', natureCode: '51105001', ccCode: '220101', items: [item('Material de escritório', 1, Math.round(210_000 * f))], status: 'PAGA' },
-        { sector: 'sec-ti', requester: 'ges-siliel', month: m, day: 12, supplier: 'InfoTech', natureCode: '51105025', ccCode: '220103', items: [item('Licenças e periféricos', 1, Math.round(380_000 * (1.9 - f)))], payment: 'PIX', status: 'PAGA' },
+        { sector: 'sec-log', requester: 'fun-log', month: m, day: 5, supplier: 'TransNordeste', natureCode: '51102024', ccCode: '220102', items: [item('Fretes do mês', 1, Math.round(1_100_000 * f))], payment: 'TRANSFERENCIA', status: 'PAGA' },
+        { sector: 'sec-log', requester: 'fun-log', month: m, day: 15, supplier: 'Oficina', natureCode: '51102041', ccCode: '220102', items: [item('Manutenção da frota', 1, Math.round(520_000 * (2.1 - f)))], status: 'PAGA' },
+        { sector: 'sec-com', requester: 'fun-com', month: m, day: 9, supplier: 'Papelaria', natureCode: '51102014', ccCode: '220104', items: [item('Material de campanha', 1, Math.round(640_000 * f))], payment: 'PIX', status: 'PAGA' },
+        { sector: 'sec-adm', requester: 'ges-adriano', month: m, day: 3, supplier: 'Papelaria', natureCode: '51102037', ccCode: '220101', items: [item('Material de escritório', 1, Math.round(210_000 * f))], status: 'PAGA' },
+        { sector: 'sec-ti', requester: 'ges-siliel', month: m, day: 12, supplier: 'InfoTech', natureCode: '51102007', ccCode: '220103', items: [item('Licenças e periféricos', 1, Math.round(380_000 * (1.9 - f)))], payment: 'PIX', status: 'PAGA' },
       ];
     }),
     // Mês anterior (consumo de exemplo)
-    { sector: 'sec-log', requester: 'fun-log', month: m1, day: 6, supplier: 'TransNordeste', natureCode: '51105015', ccCode: '220102', items: [item('Frete de reposição de estoque', 1, 980_000)], payment: 'TRANSFERENCIA', status: 'PAGA' },
-    { sector: 'sec-com', requester: 'fun-com', month: m1, day: 9, supplier: 'Papelaria', natureCode: '51105020', ccCode: '220104', items: [item('Folders promocionais', 2000, 95)], status: 'PAGA' },
+    { sector: 'sec-log', requester: 'fun-log', month: m1, day: 6, supplier: 'TransNordeste', natureCode: '51102024', ccCode: '220102', items: [item('Frete de reposição de estoque', 1, 980_000)], payment: 'TRANSFERENCIA', status: 'PAGA' },
+    { sector: 'sec-com', requester: 'fun-com', month: m1, day: 9, supplier: 'Papelaria', natureCode: '51102014', ccCode: '220104', items: [item('Folders promocionais', 2000, 95)], status: 'PAGA' },
     // Mês atual
-    { sector: 'sec-log', requester: 'fun-log', month: m0, day: 3, supplier: 'Panificadora', natureCode: '51105007', ccCode: '220102', items: [item('PÃES', 84, 1_800)], payment: 'PIX', status: 'PAGA' },
-    { sector: 'sec-log', requester: 'fun-log', month: m0, day: 5, supplier: 'Oficina', natureCode: '51105010', ccCode: '220102', items: [item('Revisão do caminhão', 1, 640_000)], status: 'PAGA' },
-    { sector: 'sec-adm', requester: 'ges-adriano', month: m0, day: 4, supplier: 'Papelaria', natureCode: '51105001', ccCode: '220101', items: [item('Material de escritório', 1, 186_000)], status: 'PAGA' },
-    { sector: 'sec-log', requester: 'fun-log', month: m0, day: 12, supplier: 'TransNordeste', natureCode: '51105015', ccCode: '220102', items: [item('Frete emergencial de paletes', 1, 450_000)], payment: 'TRANSFERENCIA', status: 'AGUARDANDO_GESTOR' },
-    { sector: 'sec-log', requester: 'fun-log', month: m0, day: 13, supplier: 'Oficina', natureCode: '51105010', ccCode: '220102', items: [item('Troca de pneus do caminhão', 6, 210_000, 60_000)], status: 'AGUARDANDO_GESTOR' },
-    { sector: 'sec-log', requester: 'fun-log', month: m0, day: 11, supplier: 'Panificadora', natureCode: '51105007', ccCode: '220102', items: [item('Lanche turno noturno', 30, 1_500)], payment: 'PIX', status: 'DEVOLVIDA' as ScStatus, reason: 'Anexar o orçamento da padaria.' },
-    { sector: 'sec-com', requester: 'fun-com', month: m0, day: 10, supplier: 'Papelaria', natureCode: '51105020', ccCode: '220104', items: [item('Banners para feira', 2, 85_000)], payment: 'PIX', status: 'AGUARDANDO_GESTOR' },
+    { sector: 'sec-log', requester: 'fun-log', month: m0, day: 3, supplier: 'Panificadora', natureCode: '51102021', ccCode: '220102', items: [item('PÃES', 84, 1_800)], payment: 'PIX', status: 'PAGA' },
+    { sector: 'sec-log', requester: 'fun-log', month: m0, day: 5, supplier: 'Oficina', natureCode: '51102041', ccCode: '220102', items: [item('Revisão do caminhão', 1, 640_000)], status: 'PAGA' },
+    { sector: 'sec-adm', requester: 'ges-adriano', month: m0, day: 4, supplier: 'Papelaria', natureCode: '51102037', ccCode: '220101', items: [item('Material de escritório', 1, 186_000)], status: 'PAGA' },
+    { sector: 'sec-log', requester: 'fun-log', month: m0, day: 12, supplier: 'TransNordeste', natureCode: '51102024', ccCode: '220102', items: [item('Frete emergencial de paletes', 1, 450_000)], payment: 'TRANSFERENCIA', status: 'AGUARDANDO_GESTOR' },
+    { sector: 'sec-log', requester: 'fun-log', month: m0, day: 13, supplier: 'Oficina', natureCode: '51102041', ccCode: '220102', items: [item('Troca de pneus do caminhão', 6, 210_000, 60_000)], status: 'AGUARDANDO_GESTOR' },
+    { sector: 'sec-log', requester: 'fun-log', month: m0, day: 11, supplier: 'Panificadora', natureCode: '51102021', ccCode: '220102', items: [item('Lanche turno noturno', 30, 1_500)], payment: 'PIX', status: 'DEVOLVIDA' as ScStatus, reason: 'Anexar o orçamento da padaria.' },
+    { sector: 'sec-com', requester: 'fun-com', month: m0, day: 10, supplier: 'Papelaria', natureCode: '51102014', ccCode: '220104', items: [item('Banners para feira', 2, 85_000)], payment: 'PIX', status: 'AGUARDANDO_GESTOR' },
   ];
   const requests = specs.map(build);
 
@@ -214,5 +216,19 @@ export async function buildSeed(now: Date): Promise<Database> {
     n('n3', 'ges-stwart', `Funcionário Comercial (exemplo) criou a ${byItem('Banners para feira').number}.`, byItem('Banners para feira').id),
   ];
 
-  return { version: DB_VERSION, seq: { [year]: seq }, users, sectors, overrides: [], costCenters, natures, suppliers, requests, transfers: [], notifications };
+  // Orçamento de exemplo por conta contábil (a diretoria ajusta no Contábil), dos últimos 12 meses até dezembro.
+  const G = '5110030503';
+  const plan: Record<string, [string, number][]> = {
+    'sec-log': [[G + '07', 1_200_000], [G + '05', 800_000], [G + '03', 500_000], [G + '31', 400_000], [G + '01', 200_000]],
+    'sec-adm': [[G + '02', 400_000], ['511002050202', 800_000], [G + '63', 500_000], [G + '12', 400_000], [G + '11', 100_000]],
+    'sec-ti': [[G + '40', 600_000], [G + '57', 400_000], [G + '38', 250_000], [G + '64', 200_000]],
+    'sec-com': [[G + '37', 1_000_000], [G + '19', 600_000], [G + '29', 400_000], [G + '62', 500_000]],
+    'sec-fin': [['511002050202', 600_000], ['513001050709', 300_000], [G + '18', 400_000]],
+  };
+  const accountBudgets: AccountBudget[] = [];
+  for (let mo = shiftMonth(m0, -11); mo <= `${year}-12`; mo = shiftMonth(mo, 1))
+    for (const [sectorId, rows] of Object.entries(plan))
+      for (const [code, amount] of rows) accountBudgets.push({ sectorId, month: mo, accountId: `acc-${code}`, amount });
+
+  return { version: DB_VERSION, seq: { [year]: seq }, users, sectors, overrides: [], costCenters, natures, accounts, accountBudgets, suppliers, requests, transfers: [], notifications };
 }

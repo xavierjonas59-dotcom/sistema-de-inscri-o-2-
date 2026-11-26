@@ -1,5 +1,5 @@
 import { computeBudget, outgoingInFlight } from '@/domain/budget';
-import { money } from '@/domain/format';
+import { money, shiftMonth } from '@/domain/format';
 import {
   CANCELLABLE,
   CONSUMED_STATUSES,
@@ -13,7 +13,9 @@ import {
   validateContent,
 } from '@/domain/sc';
 import type {
+  AccountBudget,
   AppliedSignature,
+  LedgerAccount,
   AttachmentKind,
   CostCenter,
   LimitOverride,
@@ -35,6 +37,7 @@ import type {
 import {
   BusinessError,
   ForbiddenError,
+  type AccountBudgetView,
   type DataService,
   type DirectorInfo,
   type NewFile,
@@ -54,6 +57,8 @@ export interface Database {
   overrides: LimitOverride[];
   costCenters: CostCenter[];
   natures: Nature[];
+  accounts: LedgerAccount[];
+  accountBudgets: AccountBudget[];
   suppliers: Supplier[];
   requests: PurchaseRequest[];
   transfers: Transfer[];
@@ -66,7 +71,7 @@ export interface KeyValueStore {
   set(key: string, value: string): Promise<void>;
 }
 
-export const DB_VERSION = 4;
+export const DB_VERSION = 5;
 const KEY = 'amc:db';
 export const MAX_ATTACHMENT_BYTES = 5 * 1024 * 1024;
 export const ALLOWED_ATTACHMENT_TYPES = ['application/pdf', 'image/png', 'image/jpeg'];
@@ -236,6 +241,57 @@ export class LocalDataService implements DataService {
           `Faltam ${money(total - Math.max(0, b.available))}.`,
       );
     }
+  }
+
+  // ------------------------------------------------------------------ contábil
+  /** Diretoria escolhida (Antônio, Manoel e Ana) e o Admin definem limites e orçamentos. */
+  private isBudgetEditor = (actor: User) => actor.role === 'ADMIN' || (actor.role === 'DIRETORIA' && !!actor.budgetEditor);
+
+  private accountOf(db: Database, natureId: string | null) {
+    const n = db.natures.find((x) => x.id === natureId);
+    return n?.accountId ? (db.accounts.find((a) => a.id === n.accountId) ?? null) : null;
+  }
+
+  /** Reservado + consumido por conta contábil no setor/mês (sem a SC informada). */
+  private accountUsage(db: Database, sectorIds: string[] | null, month: Month, exceptId?: string) {
+    const use = new Map<string | null, { consumed: number; reserved: number }>();
+    for (const r of db.requests) {
+      if (r.id === exceptId || r.month !== month || (sectorIds && !sectorIds.includes(r.sectorId))) continue;
+      const consumed = CONSUMED_STATUSES.includes(r.status);
+      const reserved = r.status === 'AGUARDANDO_DIRETORIA';
+      if (!consumed && !reserved) continue;
+      const key = this.accountOf(db, r.natureId)?.id ?? null;
+      const row = use.get(key) ?? { consumed: 0, reserved: 0 };
+      if (consumed) row.consumed += scTotal(r);
+      else row.reserved += scTotal(r);
+      use.set(key, row);
+    }
+    return use;
+  }
+
+  /**
+   * Bloqueio pelo orçamento da conta contábil. Vale quando a diretoria distribuiu o limite do setor
+   * em contas naquele mês: a natureza precisa estar ligada a uma conta com saldo suficiente.
+   */
+  private assertAccountBudget(db: Database, sc: PurchaseRequest) {
+    const plan = db.accountBudgets.filter((b) => b.sectorId === sc.sectorId && b.month === sc.month && b.amount > 0);
+    if (!plan.length) return;
+    const nature = db.natures.find((n) => n.id === sc.natureId);
+    const account = this.accountOf(db, sc.natureId);
+    if (!account)
+      throw new BusinessError(`A natureza ${nature ? `${nature.code} - ${nature.name}` : 'escolhida'} não está ligada a uma conta contábil. Peça para ligar no Contábil.`);
+    const budget = plan.find((b) => b.accountId === account.id)?.amount ?? 0;
+    const sector = this.sector(db, sc.sectorId).name;
+    if (!budget)
+      throw new BusinessError(`A conta ${account.code} - ${account.name} não tem orçamento para ${sector} neste mês. Peça à diretoria para incluir no Contábil.`);
+    const u = this.accountUsage(db, [sc.sectorId], sc.month, sc.id).get(account.id) ?? { consumed: 0, reserved: 0 };
+    const available = budget - u.consumed - u.reserved;
+    const total = scTotal(sc);
+    if (total > available)
+      throw new BusinessError(
+        `Orçamento insuficiente na conta ${account.code} - ${account.name}: disponível ${money(Math.max(0, available))}, ` +
+          `esta SC precisa de ${money(total)}. Peça à diretoria para ajustar o orçamento da conta no Contábil.`,
+      );
   }
 
   private async sign(db: Database, actor: User, sc: PurchaseRequest, slot: SignatureSlot, password: string, ctx: RequestContext) {
@@ -507,6 +563,7 @@ export class LocalDataService implements DataService {
     this.assertValid(sc);
     const director = this.eligibleDirector(db, directorId, scTotal(sc));
     this.assertBudget(db, sc);
+    this.assertAccountBudget(db, sc);
     await this.sign(db, actor, sc, 'COMPRA', password, ctx);
     this.assign(sc, director);
     sc.status = 'AGUARDANDO_DIRETORIA';
@@ -564,6 +621,7 @@ export class LocalDataService implements DataService {
     const compra = sc.signatures.COMPRA;
     if (!compra || compra.invalidatedAt || compra.contentHash !== (await contentHash(sc)))
       throw new BusinessError('A Autorização de Compra não é válida para o conteúdo atual. É preciso nova aprovação do gestor.');
+    this.assertAccountBudget(db, sc);
     await this.sign(db, actor, sc, 'PAGAMENTO', password, ctx);
     sc.status = 'AGUARDANDO_NF';
     sc.timeline.push(this.entry(actor, 'Liberou o pagamento (Diretoria)', `Valor consumido: ${money(scTotal(sc))}`));
@@ -667,6 +725,98 @@ export class LocalDataService implements DataService {
         items: r.items.filter((i) => i.description.trim()).map((i) => ({ description: i.description, quantity: i.quantity, total: itemTotal(i) })),
         canOpen: this.canView(actor, r),
       }));
+  }
+
+  async listAccounts(actor: User) {
+    const db = await this.auth(actor);
+    return [...db.accounts].sort((a, b) => a.code.localeCompare(b.code));
+  }
+
+  async getAccountBudget(actor: User, sectorId: string | null, month: Month): Promise<AccountBudgetView> {
+    const db = await this.auth(actor, ['GESTOR', 'DIRETORIA', 'ADMIN']);
+    // Gestor só enxerga o próprio setor, mesmo pedindo outro.
+    const scope = actor.role === 'GESTOR' ? actor.sectorId : sectorId;
+    const sectors = scope ? [this.sector(db, scope)] : db.sectors.filter((s) => s.active);
+    const ids = sectors.map((s) => s.id);
+    const budgets = sectors.map((s) => computeBudget(s, month, db));
+    const baseLimit = budgets.reduce((t, b) => t + b.baseLimit, 0);
+    const limit = budgets.reduce((t, b) => t + b.limit, 0);
+    const planned = new Map<string, number>();
+    for (const b of db.accountBudgets) if (b.month === month && ids.includes(b.sectorId)) planned.set(b.accountId, (planned.get(b.accountId) ?? 0) + b.amount);
+    const usage = this.accountUsage(db, ids, month);
+    const keys = new Set<string | null>([...[...planned].filter(([, v]) => v > 0).map(([k]) => k), ...usage.keys()]);
+    const rows = [...keys].map((accountId) => {
+      const acc = accountId ? db.accounts.find((a) => a.id === accountId) : null;
+      const budget = accountId ? (planned.get(accountId) ?? 0) : 0;
+      const u = usage.get(accountId) ?? { consumed: 0, reserved: 0 };
+      return {
+        accountId,
+        code: acc?.code ?? '',
+        name: acc?.name ?? 'Sem conta contábil',
+        group: acc?.group ?? 'Sem conta contábil',
+        budget,
+        share: baseLimit > 0 ? budget / baseLimit : 0,
+        consumed: u.consumed,
+        reserved: u.reserved,
+        available: budget - u.consumed - u.reserved,
+      };
+    });
+    rows.sort((a, b) => (a.accountId === null ? 1 : b.accountId === null ? -1 : a.code.localeCompare(b.code)));
+    const distributed = rows.reduce((t, r) => t + r.budget, 0);
+    return {
+      sectorId: scope,
+      month,
+      baseLimit,
+      limit,
+      distributed,
+      undistributed: baseLimit - distributed,
+      consumed: budgets.reduce((t, b) => t + b.consumed, 0),
+      reserved: budgets.reduce((t, b) => t + b.reserved, 0),
+      rows,
+      canEdit: this.isBudgetEditor(actor) && !!scope,
+    };
+  }
+
+  /**
+   * A diretoria define o limite do setor no mês e quanto dele vai para cada conta contábil.
+   * Com `repeat`, aplica o mesmo a todos os meses seguintes até dezembro.
+   */
+  async saveAccountBudget(actor: User, sectorId: string, month: Month, input: { limit: number; entries: { accountId: string; amount: number }[] }, repeat = false) {
+    const db = await this.auth(actor, ['DIRETORIA', 'ADMIN']);
+    if (!this.isBudgetEditor(actor)) throw new ForbiddenError('Somente a diretoria responsável (Antônio, Manoel e Ana) ou o Admin altera limites e orçamentos.');
+    this.sector(db, sectorId);
+    if (!Number.isInteger(input.limit) || input.limit < 0) throw new BusinessError('Limite do setor inválido.');
+    const seen = new Set<string>();
+    for (const e of input.entries) {
+      if (!db.accounts.some((a) => a.id === e.accountId)) throw new BusinessError('Conta contábil não encontrada.');
+      if (seen.has(e.accountId)) throw new BusinessError('Conta contábil repetida.');
+      seen.add(e.accountId);
+      if (!Number.isInteger(e.amount) || e.amount < 0) throw new BusinessError('Valor de orçamento inválido.');
+    }
+    const total = input.entries.reduce((t, e) => t + e.amount, 0);
+    if (total > input.limit)
+      throw new BusinessError(`A soma das contas (${money(total)}) passa do limite do setor (${money(input.limit)}). Diminua alguma conta ou aumente o limite.`);
+    const months: Month[] = [month];
+    if (repeat) for (let m = shiftMonth(month, 1); m <= `${month.slice(0, 4)}-12`; m = shiftMonth(m, 1)) months.push(m);
+    for (const m of months) {
+      db.overrides = db.overrides.filter((o) => !(o.sectorId === sectorId && o.month === m));
+      db.overrides.push({ sectorId, month: m, limit: input.limit });
+      db.accountBudgets = db.accountBudgets.filter((b) => !(b.sectorId === sectorId && b.month === m));
+      for (const e of input.entries) if (e.amount > 0) db.accountBudgets.push({ sectorId, month: m, accountId: e.accountId, amount: e.amount });
+    }
+    await this.persist();
+    return this.getAccountBudget(actor, sectorId, month);
+  }
+
+  async setNatureAccount(actor: User, natureId: string, accountId: string | null) {
+    const db = await this.auth(actor, ['DIRETORIA', 'ADMIN']);
+    if (!this.isBudgetEditor(actor)) throw new ForbiddenError();
+    const n = db.natures.find((x) => x.id === natureId);
+    if (!n) throw new BusinessError('Natureza não encontrada.');
+    if (accountId && !db.accounts.some((a) => a.id === accountId)) throw new BusinessError('Conta contábil não encontrada.');
+    n.accountId = accountId;
+    await this.persist();
+    return n;
   }
 
   async cancel(actor: User, id: string) {
@@ -820,6 +970,7 @@ export class LocalDataService implements DataService {
     const sectorId = isManager ? actor.sectorId : role === 'FUNCIONARIO' || role === 'GESTOR' || role === 'DIRETORIA' ? input.sectorId : null;
     const paymentLimit = role === 'DIRETORIA' && !isManager ? (input.paymentLimit ?? null) : null;
     if (paymentLimit !== null && (!Number.isInteger(paymentLimit) || paymentLimit <= 0)) throw new BusinessError('Limite de liberação inválido.');
+    const budgetEditor = !isManager && role === 'DIRETORIA' && !!input.budgetEditor;
     if ((role === 'FUNCIONARIO' || role === 'GESTOR') && !sectorId) throw new BusinessError('Funcionário e gestor precisam de um setor.');
     if (sectorId) this.sector(db, sectorId);
 
@@ -829,7 +980,7 @@ export class LocalDataService implements DataService {
       if (isManager && (u.sectorId !== actor.sectorId || u.role !== 'FUNCIONARIO'))
         throw new ForbiddenError('O gestor só edita funcionários do próprio setor.');
       if (u.id === actor.id && (!input.active || role !== u.role)) throw new BusinessError('Você não pode alterar o seu próprio perfil ou desativar a si mesmo.');
-      Object.assign(u, { name: input.name.trim(), email, role, sectorId, cargo: input.cargo.trim(), active: input.active, paymentLimit });
+      Object.assign(u, { name: input.name.trim(), email, role, sectorId, cargo: input.cargo.trim(), active: input.active, paymentLimit, budgetEditor });
       if (input.password) u.passwordHash = await hashPassword(input.password);
       await this.persist();
       return strip(u);
@@ -844,6 +995,7 @@ export class LocalDataService implements DataService {
       cargo: input.cargo.trim() || (role === 'FUNCIONARIO' ? 'Funcionário' : ''),
       active: input.active,
       paymentLimit,
+      budgetEditor,
       signature: null,
       passwordHash: await hashPassword(input.password),
     };

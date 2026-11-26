@@ -28,6 +28,8 @@ export interface User {
   paymentLimit: number | null;
   /** Cargo impresso abaixo da assinatura (ex.: "Diretora"). */
   cargo: string;
+  /** Diretoria que define o limite dos setores e o orçamento das contas contábeis (o Admin sempre pode). */
+  budgetEditor?: boolean;
   active: boolean;
   signature: SignatureImage | null;
 }
@@ -62,6 +64,27 @@ export interface Nature {
   code: string;
   name: string;
   active: boolean;
+  /** Conta contábil que recebe os gastos desta natureza. */
+  accountId?: string | null;
+}
+
+/** Conta contábil do plano de contas (despesas). */
+export interface LedgerAccount {
+  id: string;
+  /** Ex.: 511003050307 */
+  code: string;
+  name: string;
+  /** Grupo do plano (Despesas gerais, Serviços prestados…). */
+  group: string;
+  active: boolean;
+}
+
+/** Orçamento de uma conta contábil para um setor num mês (centavos). */
+export interface AccountBudget {
+  sectorId: string;
+  month: Month;
+  accountId: string;
+  amount: number;
 }
 
 export interface BankData {
