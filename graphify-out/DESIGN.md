@@ -1,6 +1,6 @@
 # Design system
 
-Generated: 2026-11-26T12:21:28.105522+00:00
+Generated: 2026-11-26T13:05:23.822920+00:00
 
 ## Tokens
 - --background: 240 11.1% 96.5% (src/index.css)
@@ -69,7 +69,9 @@ Generated: 2026-11-26T12:21:28.105522+00:00
 - primitives
 
 ## Project components
+- src/components/charts/SpendingCharts.tsx
 - src/components/layout/AppShell.tsx
+- src/components/layout/CommandPalette.tsx
 - src/components/ui/ThemeSwitch.tsx
 - src/components/ui/icons.tsx
 - src/components/ui/overlay.tsx
