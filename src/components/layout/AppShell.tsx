@@ -82,10 +82,11 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
     ],
     FINANCEIRO: [{ title: 'Financeiro', items: [{ path: '/', label: 'Contas a Pagar', icon: 'wallet', badge: counts?.fin }] }],
     ADMIN: [
+      { items: [{ path: '/', label: 'Início', icon: 'home' }] },
       {
         title: 'Organização',
         items: [
-          { path: '/', label: 'Setores e limites', icon: 'building' },
+          { path: '/setores', label: 'Setores e limites', icon: 'building' },
           { path: '/usuarios', label: 'Usuários', icon: 'users' },
           { path: '/cadastros', label: 'Centros de custo e naturezas', icon: 'tag' },
           { path: '/fornecedores', label: 'Fornecedores', icon: 'truck' },
@@ -149,7 +150,7 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
     </nav>
   );
 
-  const showMonth = user.role !== 'FINANCEIRO' && user.role !== 'ADMIN';
+  const showMonth = user.role !== 'FINANCEIRO';
 
   return (
     <div className="min-h-screen lg:pl-64">

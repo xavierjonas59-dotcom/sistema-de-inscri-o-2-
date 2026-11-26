@@ -180,6 +180,18 @@ export async function buildSeed(now: Date): Promise<Database> {
   };
 
   const specs: Spec[] = [
+    // Histórico de exemplo (6 meses antes) para o gráfico "Gastos por mês"
+    ...[11, 10, 9, 8, 7, 6, 5, 4, 3, 2].flatMap((back): Spec[] => {
+      const m = shiftMonth(m0, -back);
+      const f = 0.85 + 0.25 * Math.sin(back * 1.7) + 0.1 * Math.cos(back * 0.9);
+      return [
+        { sector: 'sec-log', requester: 'fun-log', month: m, day: 5, supplier: 'TransNordeste', natureCode: '51105015', ccCode: '220102', items: [item('Fretes do mês', 1, Math.round(1_100_000 * f))], payment: 'TRANSFERENCIA', status: 'PAGA' },
+        { sector: 'sec-log', requester: 'fun-log', month: m, day: 15, supplier: 'Oficina', natureCode: '51105010', ccCode: '220102', items: [item('Manutenção da frota', 1, Math.round(520_000 * (2.1 - f)))], status: 'PAGA' },
+        { sector: 'sec-com', requester: 'fun-com', month: m, day: 9, supplier: 'Papelaria', natureCode: '51105020', ccCode: '220104', items: [item('Material de campanha', 1, Math.round(640_000 * f))], payment: 'PIX', status: 'PAGA' },
+        { sector: 'sec-adm', requester: 'ges-adriano', month: m, day: 3, supplier: 'Papelaria', natureCode: '51105001', ccCode: '220101', items: [item('Material de escritório', 1, Math.round(210_000 * f))], status: 'PAGA' },
+        { sector: 'sec-ti', requester: 'ges-siliel', month: m, day: 12, supplier: 'InfoTech', natureCode: '51105025', ccCode: '220103', items: [item('Licenças e periféricos', 1, Math.round(380_000 * (1.9 - f)))], payment: 'PIX', status: 'PAGA' },
+      ];
+    }),
     // Mês anterior (consumo de exemplo)
     { sector: 'sec-log', requester: 'fun-log', month: m1, day: 6, supplier: 'TransNordeste', natureCode: '51105015', ccCode: '220102', items: [item('Frete de reposição de estoque', 1, 980_000)], payment: 'TRANSFERENCIA', status: 'PAGA' },
     { sector: 'sec-com', requester: 'fun-com', month: m1, day: 9, supplier: 'Papelaria', natureCode: '51105020', ccCode: '220104', items: [item('Folders promocionais', 2000, 95)], status: 'PAGA' },
@@ -194,11 +206,12 @@ export async function buildSeed(now: Date): Promise<Database> {
   ];
   const requests = specs.map(build);
 
+  const byItem = (d: string) => requests.find((r) => r.items[0].description === d)!;
   const n = (id: string, userId: string, text: string, scId?: string) => ({ id, userId, text, scId, at: now.toISOString(), read: false });
   const notifications = [
-    n('n1', 'ges-silvio', `Funcionário Logística (exemplo) criou a ${requests[5].number} (R$ 4.500,00).`, requests[5].id),
-    n('n2', 'dir-victor', `Funcionário Logística (exemplo) criou a ${requests[6].number}.`, requests[6].id),
-    n('n3', 'ges-stwart', `Funcionário Comercial (exemplo) criou a ${requests[8].number}.`, requests[8].id),
+    n('n1', 'ges-silvio', `Funcionário Logística (exemplo) criou a ${byItem('Frete emergencial de paletes').number} (R$ 4.500,00).`, byItem('Frete emergencial de paletes').id),
+    n('n2', 'dir-victor', `Funcionário Logística (exemplo) criou a ${byItem('Troca de pneus do caminhão').number}.`, byItem('Troca de pneus do caminhão').id),
+    n('n3', 'ges-stwart', `Funcionário Comercial (exemplo) criou a ${byItem('Banners para feira').number}.`, byItem('Banners para feira').id),
   ];
 
   return { version: DB_VERSION, seq: { [year]: seq }, users, sectors, overrides: [], costCenters, natures, suppliers, requests, transfers: [], notifications };
