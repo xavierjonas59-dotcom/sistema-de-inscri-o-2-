@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T11:32:51.363112+00:00",
+  "generated_at": "2026-11-26T11:43:39.793297+00:00",
   "files": [
     {
       "path": "package-lock.json",
@@ -43,7 +43,7 @@
     },
     {
       "path": "src/index.css",
-      "bytes": 1032
+      "bytes": 1477
     },
     {
       "path": "src/App.tsx",
@@ -79,7 +79,7 @@
     },
     {
       "path": "src/pages/Login.tsx",
-      "bytes": 2993
+      "bytes": 3054
     },
     {
       "path": "src/domain/format.ts",
@@ -155,11 +155,11 @@
     },
     {
       "path": "src/components/layout/AppShell.tsx",
-      "bytes": 8978
+      "bytes": 16282
     },
     {
       "path": "src/components/ui/icons.tsx",
-      "bytes": 3015
+      "bytes": 3519
     },
     {
       "path": "src/components/ui/overlay.tsx",
@@ -167,7 +167,7 @@
     },
     {
       "path": "src/components/ui/primitives.tsx",
-      "bytes": 10376
+      "bytes": 10861
     },
     {
       "path": "src/pages/admin/AdminPages.tsx",
@@ -199,7 +199,7 @@
     },
     {
       "path": "src/pages/sc/ScDetail.tsx",
-      "bytes": 27255
+      "bytes": 27128
     },
     {
       "path": "src/pages/sc/ScForm.tsx",
@@ -753,7 +753,7 @@
     },
     {
       "source": "src/pages/Login.tsx",
-      "target": "@/assets/logo-am-comercial.jpg"
+      "target": "@/assets/logo-planilha.jpg"
     },
     {
       "source": "src/pages/Login.tsx",
@@ -985,7 +985,7 @@
     },
     {
       "source": "src/components/layout/AppShell.tsx",
-      "target": "@/assets/logo-am-comercial.jpg"
+      "target": "@/assets/logo-planilha.jpg"
     },
     {
       "source": "src/components/layout/AppShell.tsx",
