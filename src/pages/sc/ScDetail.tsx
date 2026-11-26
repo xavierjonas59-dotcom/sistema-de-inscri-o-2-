@@ -98,7 +98,6 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
 
   return (
     <>
-      <div className="mb-1 text-sm"><a href="#/sc" className="text-primary hover:underline">Solicitações</a> / {sc.number}</div>
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="flex flex-wrap items-center gap-2 text-[22px] font-semibold leading-tight">
@@ -121,7 +120,7 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
         <ol className="mb-4 flex flex-wrap gap-x-1 gap-y-2 text-xs">
           {FLOW.map((f, i) => (
             <li key={f.label} className="flex items-center gap-1">
-              <span className={cx('rounded-sm px-2 py-1', i < flowIndex ? 'bg-[#eceefa] text-brand' : i === flowIndex ? 'bg-brand font-semibold text-white' : 'bg-muted text-muted-foreground')}>{f.label}</span>
+              <span className={cx('rounded-full px-2.5 py-1', i < flowIndex ? 'bg-[#eceefa] text-brand' : i === flowIndex ? 'bg-brand font-semibold text-white' : 'bg-muted text-muted-foreground')}>{f.label}</span>
               {i < FLOW.length - 1 && <span className="text-muted-foreground">›</span>}
             </li>
           ))}
