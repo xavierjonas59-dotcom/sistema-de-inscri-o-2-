@@ -1,6 +1,6 @@
 # Design system
 
-Generated: 2026-11-26T14:43:31.961443+00:00
+Generated: 2026-11-26T17:45:14.667578+00:00
 
 ## Tokens
 - --background: 240 11.1% 96.5% (src/index.css)
@@ -69,6 +69,7 @@ Generated: 2026-11-26T14:43:31.961443+00:00
 - primitives
 
 ## Project components
+- src/components/charts/FlowChart.tsx
 - src/components/charts/MonthCalendar.tsx
 - src/components/charts/SpendingCharts.tsx
 - src/components/charts/SpendingDetailModal.tsx

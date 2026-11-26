@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-26T14:43:31.961443+00:00",
+  "generated_at": "2026-11-26T17:45:14.667578+00:00",
   "files": [
     {
       "path": "package-lock.json",
-      "bytes": 155722
+      "bytes": 169782
     },
     {
       "path": "vite.config.ts",
@@ -11,7 +11,7 @@
     },
     {
       "path": "package.json",
-      "bytes": 850
+      "bytes": 876
     },
     {
       "path": "index.html",
@@ -19,7 +19,7 @@
     },
     {
       "path": "README.md",
-      "bytes": 4685
+      "bytes": 4776
     },
     {
       "path": "skills-lock.json",
@@ -71,7 +71,7 @@
     },
     {
       "path": "src/pages/Dashboards.tsx",
-      "bytes": 11400
+      "bytes": 11045
     },
     {
       "path": "src/pages/Transfers.tsx",
@@ -159,7 +159,7 @@
     },
     {
       "path": "src/services/LocalDataService.ts",
-      "bytes": 57092
+      "bytes": 57973
     },
     {
       "path": "src/services/api.ts",
@@ -167,11 +167,11 @@
     },
     {
       "path": "src/services/DataService.ts",
-      "bytes": 9576
+      "bytes": 9783
     },
     {
       "path": "src/services/seed.ts",
-      "bytes": 15903
+      "bytes": 18665
     },
     {
       "path": "src/services/LocalDataService.test.ts",
@@ -200,6 +200,10 @@
     {
       "path": "src/components/charts/SpendingDetailModal.tsx",
       "bytes": 5902
+    },
+    {
+      "path": "src/components/charts/FlowChart.tsx",
+      "bytes": 6837
     },
     {
       "path": "src/components/charts/SpendingCharts.tsx",
@@ -682,6 +686,10 @@
     {
       "source": "src/pages/Dashboards.tsx",
       "target": "@/components/charts/SpendingCharts"
+    },
+    {
+      "source": "src/pages/Dashboards.tsx",
+      "target": "@/components/charts/FlowChart"
     },
     {
       "source": "src/pages/Dashboards.tsx",
@@ -1230,6 +1238,30 @@
     {
       "source": "src/components/charts/SpendingDetailModal.tsx",
       "target": "@/pages/shared/lookups"
+    },
+    {
+      "source": "src/components/charts/FlowChart.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/charts/FlowChart.tsx",
+      "target": "recharts"
+    },
+    {
+      "source": "src/components/charts/FlowChart.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/components/charts/FlowChart.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/components/charts/FlowChart.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/components/charts/FlowChart.tsx",
+      "target": "@/components/ui/primitives"
     },
     {
       "source": "src/components/charts/SpendingCharts.tsx",
