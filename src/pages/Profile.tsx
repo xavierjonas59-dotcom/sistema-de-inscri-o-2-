@@ -13,7 +13,7 @@ function SignaturePreview({ src, name, cargo }: { src: string | null; name: stri
     <div className="rounded border bg-card">
       <div className="bg-sheet px-3 py-1 text-center text-[11px] font-semibold uppercase tracking-wide text-white">Autorização de pagamento</div>
       <div className="flex flex-col items-center px-4 pb-3 pt-4 text-center text-xs">
-        <div className="flex h-16 items-end">{src ? <img src={src} alt="Prévia da assinatura" className="max-h-16 max-w-[260px] object-contain" /> : <span className="text-muted-foreground">Sem assinatura</span>}</div>
+        <div className="flex h-16 items-end">{src ? <img src={src} alt="Prévia da assinatura" className="max-h-16 max-w-[260px] object-contain dark:rounded dark:bg-white dark:px-1.5 dark:py-0.5" /> : <span className="text-muted-foreground">Sem assinatura</span>}</div>
         <div className="mt-1 w-64 border-t border-foreground/60" />
         <div className="mt-1 font-semibold">{name}</div>
         <div className="text-muted-foreground">{cargo}</div>

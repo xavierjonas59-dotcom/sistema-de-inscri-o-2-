@@ -101,7 +101,7 @@ export function SignModal({
           </div>
         ) : (
           <div className="rounded border bg-card px-4 pt-3 text-center">
-            <img src={user.signature!.dataUrl} alt="Sua assinatura" className="mx-auto h-14 object-contain" />
+            <img src={user.signature!.dataUrl} alt="Sua assinatura" className="mx-auto h-14 object-contain dark:rounded dark:bg-white dark:px-1.5 dark:py-0.5" />
             <div className="mx-auto mt-1 w-56 border-t border-foreground/60" />
             <div className="py-2 text-xs">
               <div className="font-semibold">{user.name}</div>

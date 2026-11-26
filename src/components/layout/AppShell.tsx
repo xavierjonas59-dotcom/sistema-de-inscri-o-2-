@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import logo from '@/assets/logo-planilha.jpg';
+import logoDark from '@/assets/logo-planilha-claro.png';
 import { navigate, useQuery, useSession, useUser } from '@/app/session';
 import { dateTime, money, monthLabel, shiftMonth } from '@/domain/format';
 import { ROLE_LABEL, SC_STATUS, scTotal } from '@/domain/sc';
@@ -103,7 +104,8 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
   const sidebar = (
     <nav className="flex h-full flex-col" aria-label="Menu principal">
       <div className="flex h-16 items-center justify-center">
-        <img src={logo} alt="AM Comercial" className="h-9" />
+        <img src={logo} alt="AM Comercial" className="h-9 dark:hidden" />
+        <img src={logoDark} alt="AM Comercial" className="hidden h-9 dark:block" />
       </div>
       <div className="px-3">
         <div className="flex items-center gap-3 rounded-md border bg-card px-3 py-2.5 shadow-soft">
