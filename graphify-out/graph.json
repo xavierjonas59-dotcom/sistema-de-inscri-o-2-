@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-19T17:44:38.368798+00:00",
+  "generated_at": "2026-11-26T11:32:51.363112+00:00",
   "files": [
     {
       "path": "package-lock.json",
@@ -206,8 +206,244 @@
       "bytes": 19189
     },
     {
+      "path": ".claude/skills/master-engineering-protocol/SKILL.md",
+      "bytes": 28303
+    },
+    {
+      "path": ".claude/skills/ui-ux-pro-max/SKILL.md",
+      "bytes": 9157
+    },
+    {
+      "path": ".claude/skills/verification-before-completion/SKILL.md",
+      "bytes": 3646
+    },
+    {
+      "path": ".claude/skills/using-superpowers/SKILL.md",
+      "bytes": 3063
+    },
+    {
       "path": ".claude/skills/frontend-design/SKILL.md",
       "bytes": 9390
+    },
+    {
+      "path": ".claude/skills/executing-plans/SKILL.md",
+      "bytes": 2305
+    },
+    {
+      "path": ".claude/skills/brainstorming/visual-companion.md",
+      "bytes": 13298
+    },
+    {
+      "path": ".claude/skills/brainstorming/spec-document-reviewer-prompt.md",
+      "bytes": 1747
+    },
+    {
+      "path": ".claude/skills/brainstorming/SKILL.md",
+      "bytes": 10047
+    },
+    {
+      "path": ".claude/skills/test-driven-development/writing-good-tests.md",
+      "bytes": 8268
+    },
+    {
+      "path": ".claude/skills/test-driven-development/SKILL.md",
+      "bytes": 9015
+    },
+    {
+      "path": ".claude/skills/writing-skills/testing-skills-with-subagents.md",
+      "bytes": 12558
+    },
+    {
+      "path": ".claude/skills/writing-skills/anthropic-best-practices.md",
+      "bytes": 46197
+    },
+    {
+      "path": ".claude/skills/writing-skills/persuasion-principles.md",
+      "bytes": 5901
+    },
+    {
+      "path": ".claude/skills/writing-skills/render-graphs.js",
+      "bytes": 4857
+    },
+    {
+      "path": ".claude/skills/writing-skills/SKILL.md",
+      "bytes": 26360
+    },
+    {
+      "path": ".claude/skills/requesting-code-review/code-reviewer.md",
+      "bytes": 5213
+    },
+    {
+      "path": ".claude/skills/requesting-code-review/SKILL.md",
+      "bytes": 2956
+    },
+    {
+      "path": ".claude/skills/web-design-guidelines/SKILL.md",
+      "bytes": 1231
+    },
+    {
+      "path": ".claude/skills/desenvolvedor-de-projetos/SKILL.md",
+      "bytes": 7885
+    },
+    {
+      "path": ".claude/skills/systematic-debugging/condition-based-waiting.md",
+      "bytes": 3516
+    },
+    {
+      "path": ".claude/skills/systematic-debugging/test-pressure-2.md",
+      "bytes": 2283
+    },
+    {
+      "path": ".claude/skills/systematic-debugging/CREATION-LOG.md",
+      "bytes": 4257
+    },
+    {
+      "path": ".claude/skills/systematic-debugging/defense-in-depth.md",
+      "bytes": 3650
+    },
+    {
+      "path": ".claude/skills/systematic-debugging/condition-based-waiting-example.ts",
+      "bytes": 5054
+    },
+    {
+      "path": ".claude/skills/systematic-debugging/test-pressure-1.md",
+      "bytes": 1900
+    },
+    {
+      "path": ".claude/skills/systematic-debugging/test-pressure-3.md",
+      "bytes": 2692
+    },
+    {
+      "path": ".claude/skills/systematic-debugging/test-academic.md",
+      "bytes": 653
+    },
+    {
+      "path": ".claude/skills/systematic-debugging/SKILL.md",
+      "bytes": 9465
+    },
+    {
+      "path": ".claude/skills/systematic-debugging/root-cause-tracing.md",
+      "bytes": 5316
+    },
+    {
+      "path": ".claude/skills/grill-me/SKILL.md",
+      "bytes": 1060
+    },
+    {
+      "path": ".claude/skills/writing-plans/plan-document-reviewer-prompt.md",
+      "bytes": 1713
+    },
+    {
+      "path": ".claude/skills/writing-plans/SKILL.md",
+      "bytes": 6907
+    },
+    {
+      "path": ".claude/skills/dispatching-parallel-agents/SKILL.md",
+      "bytes": 6078
+    },
+    {
+      "path": ".claude/skills/find-skills/SKILL.md",
+      "bytes": 5446
+    },
+    {
+      "path": ".claude/skills/agent-browser/SKILL.md",
+      "bytes": 34042
+    },
+    {
+      "path": ".claude/skills/design-system/SKILL.md",
+      "bytes": 19467
+    },
+    {
+      "path": ".claude/skills/subagent-driven-development/task-reviewer-prompt.md",
+      "bytes": 7816
+    },
+    {
+      "path": ".claude/skills/subagent-driven-development/implementer-prompt.md",
+      "bytes": 5717
+    },
+    {
+      "path": ".claude/skills/subagent-driven-development/re-review-prompt.md",
+      "bytes": 4300
+    },
+    {
+      "path": ".claude/skills/subagent-driven-development/SKILL.md",
+      "bytes": 28077
+    },
+    {
+      "path": ".claude/skills/using-git-worktrees/SKILL.md",
+      "bytes": 6813
+    },
+    {
+      "path": ".claude/skills/receiving-code-review/SKILL.md",
+      "bytes": 6203
+    },
+    {
+      "path": ".claude/skills/finishing-a-development-branch/SKILL.md",
+      "bytes": 7022
+    },
+    {
+      "path": ".claude/skills/extract/SKILL.md",
+      "bytes": 13597
+    },
+    {
+      "path": ".claude/skills/prompt-diagnostico-corrrecao/SKILL.md",
+      "bytes": 24392
+    },
+    {
+      "path": ".claude/skills/agent-browser/references/authentication.md",
+      "bytes": 8432
+    },
+    {
+      "path": ".claude/skills/agent-browser/references/proxy-support.md",
+      "bytes": 4971
+    },
+    {
+      "path": ".claude/skills/agent-browser/references/session-management.md",
+      "bytes": 4337
+    },
+    {
+      "path": ".claude/skills/agent-browser/references/video-recording.md",
+      "bytes": 3569
+    },
+    {
+      "path": ".claude/skills/agent-browser/references/profiling.md",
+      "bytes": 3405
+    },
+    {
+      "path": ".claude/skills/agent-browser/references/snapshot-refs.md",
+      "bytes": 5377
+    },
+    {
+      "path": ".claude/skills/agent-browser/references/commands.md",
+      "bytes": 11484
+    },
+    {
+      "path": ".claude/skills/writing-skills/examples/CLAUDE_MD_TESTING.md",
+      "bytes": 5423
+    },
+    {
+      "path": ".claude/skills/brainstorming/scripts/helper.js",
+      "bytes": 5615
+    },
+    {
+      "path": ".claude/skills/brainstorming/scripts/frame-template.html",
+      "bytes": 8094
+    },
+    {
+      "path": ".claude/skills/using-superpowers/references/pi-tools.md",
+      "bytes": 1242
+    },
+    {
+      "path": ".claude/skills/using-superpowers/references/antigravity-tools.md",
+      "bytes": 1495
+    },
+    {
+      "path": ".claude/skills/using-superpowers/references/codex-tools.md",
+      "bytes": 1774
+    },
+    {
+      "path": ".claude/skills/using-superpowers/references/gemini-tools.md",
+      "bytes": 4598
     }
   ],
   "dependencies": [
@@ -1098,6 +1334,34 @@
     {
       "source": "src/pages/sc/ScForm.tsx",
       "target": "./SupplierPicker"
+    },
+    {
+      "source": ".claude/skills/writing-skills/render-graphs.js",
+      "target": "fs"
+    },
+    {
+      "source": ".claude/skills/writing-skills/render-graphs.js",
+      "target": "path"
+    },
+    {
+      "source": ".claude/skills/writing-skills/render-graphs.js",
+      "target": "child_process"
+    },
+    {
+      "source": ".claude/skills/systematic-debugging/condition-based-waiting-example.ts",
+      "target": "~/threads/thread-manager"
+    },
+    {
+      "source": ".claude/skills/systematic-debugging/condition-based-waiting-example.ts",
+      "target": "~/threads/types"
+    },
+    {
+      "source": ".claude/skills/extract/SKILL.md",
+      "target": "playwright"
+    },
+    {
+      "source": ".claude/skills/extract/SKILL.md",
+      "target": "fs"
     }
   ]
 }
