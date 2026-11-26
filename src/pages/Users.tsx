@@ -58,7 +58,7 @@ export default function Users() {
                 <Td>{u.sectorId ? lk.sector(u.sectorId) : '—'}</Td>
                 <Td>
                   {u.cargo || '—'}
-                  {u.role === 'DIRETORIA' && <div className="text-xs text-muted-foreground">Libera {u.paymentLimit === null ? 'qualquer valor' : `até ${money(u.paymentLimit)}`}</div>}
+                  {isAdmin && u.role === 'DIRETORIA' && <div className="text-xs text-muted-foreground">Libera {u.paymentLimit === null ? 'qualquer valor' : `até ${money(u.paymentLimit)}`}</div>}
                 </Td>
                 <Td>{u.active ? <Badge tone="good">Ativo</Badge> : <Badge tone="neutral">Inativo</Badge>}</Td>
                 <Td right>{canEdit(u) && u.id !== user.id && <Button size="sm" variant="ghost" onClick={() => open(u)}>Editar</Button>}</Td>

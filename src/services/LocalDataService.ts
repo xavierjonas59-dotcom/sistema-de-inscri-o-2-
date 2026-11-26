@@ -740,7 +740,7 @@ export class LocalDataService implements DataService {
     if (!to.length) throw new BusinessError('Informe ao menos um destinatário.');
     const bad = [...to, ...cc].find((e) => !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e));
     if (bad) throw new BusinessError(`E-mail inválido: ${bad}`);
-    sc.timeline.push(this.entry(actor, 'Pediu autorização por e-mail', `Para: ${to.join(', ')}${cc.length ? `; Cc: ${cc.join(', ')}` : ''}`));
+    sc.timeline.push(this.entry(actor, 'Notificou por e-mail', `Para: ${to.join(', ')}${cc.length ? `; Cc: ${cc.join(', ')}` : ''}`));
     await this.persist();
     return sc;
   }

@@ -14,7 +14,7 @@ import { errMsg, useLookups } from '../shared/lookups';
 import { ScStatusTag } from './ScTable';
 import { EmailRequestModal } from './EmailRequestModal';
 import { ScChat } from './ScChat';
-import { SignModal, limitLabel } from './SignModal';
+import { SignModal } from './SignModal';
 
 export default function ScDetail({ query }: { query: URLSearchParams }) {
   const user = useUser();
@@ -85,13 +85,13 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
     actions.push(
       <Button key="rej" variant="danger" onClick={() => setModal('reject')}>Reprovar</Button>,
       <Button key="fw" variant="secondary" onClick={() => setModal('forward')}>Encaminhar para outro diretor</Button>,
-      <Button key="ok" disabled={overLimit} title={overLimit ? `Acima do seu limite de ${money(myLimit!)}` : ''} onClick={() => setModal('signPagamento')}>
+      <Button key="ok" disabled={overLimit} title={overLimit ? 'Este valor precisa ser liberado por outro diretor' : ''} onClick={() => setModal('signPagamento')}>
         Liberar pagamento e assinar
       </Button>,
     );
   if (user.role === 'FINANCEIRO' && s === 'ENVIADA_FINANCEIRO') actions.push(<Button key="paid" onClick={() => setModal('paid')}>Marcar como paga</Button>);
   if ((isRequester || isManager) && (s === 'AGUARDANDO_GESTOR' || s === 'AGUARDANDO_DIRETORIA'))
-    actions.unshift(<Button key="mail" variant="secondary" icon="mail" onClick={() => setModal('email')}>Pedir autorização por e-mail</Button>);
+    actions.unshift(<Button key="mail" variant="secondary" icon="mail" onClick={() => setModal('email')}>Notificar por e-mail</Button>);
   if ((isRequester || isManager) && CANCELLABLE.includes(s))
     actions.unshift(
       <Button key="cancel" variant="ghost" disabled={busy} onClick={() => run(() => api.cancel(user, sc.id), `${sc.number} cancelada.`)}>Cancelar SC</Button>,
@@ -137,7 +137,7 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
       {s === 'AGUARDANDO_DIRETORIA' && (
         <Notice tone="info">
           Aguardando liberação de pagamento de <strong>{sc.assignedDirectorName}</strong>.
-          {isAssignedDirector && overLimit && ` O valor passa do seu limite (${money(myLimit!)}): encaminhe para outro diretor.`}
+          {isAssignedDirector && overLimit && ' Este valor precisa ser liberado por outro diretor: use “Encaminhar para outro diretor”.'}
         </Notice>
       )}
       {sc.paidAt && <Notice tone="good">Paga em {sc.paidAt.split('-').reverse().join('/')}.</Notice>}
@@ -514,8 +514,8 @@ function ForwardModal({ open, sc, onClose }: { open: boolean; sc: PurchaseReques
   const total = scTotal(sc);
   const [directorId, setDirectorId] = useState('');
   const [note, setNote] = useState('');
-  const { data: directors = [] } = useQuery(() => api.listDirectors(user), [open]);
-  const options = directors.filter((d) => d.id !== user.id && (d.paymentLimit === null || total <= d.paymentLimit));
+  const { data: directors = [] } = useQuery(() => api.listDirectors(user, total), [open]);
+  const options = directors.filter((d) => d.id !== user.id);
   useEffect(() => {
     setDirectorId('');
     setNote('');
@@ -550,7 +550,7 @@ function ForwardModal({ open, sc, onClose }: { open: boolean; sc: PurchaseReques
         <Field label="Diretor">
           <Select id="fw-director" value={directorId} onChange={(e) => setDirectorId(e.target.value)}>
             <option value="">Selecione…</option>
-            {options.map((d) => <option key={d.id} value={d.id}>{d.name}, {d.cargo.toLowerCase()} ({limitLabel(d.paymentLimit)})</option>)}
+            {options.map((d) => <option key={d.id} value={d.id}>{d.name}, {d.cargo.toLowerCase()}</option>)}
           </Select>
         </Field>
         <Field label="Observação (opcional)"><Input id="fw-note" value={note} onChange={(e) => setNote(e.target.value)} /></Field>

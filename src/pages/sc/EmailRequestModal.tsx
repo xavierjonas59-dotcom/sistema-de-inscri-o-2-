@@ -50,7 +50,7 @@ export function EmailRequestModal({ open, sc, sectorName, onClose }: { open: boo
       open={open}
       onClose={onClose}
       wide
-      title="Pedir autorização por e-mail"
+      title="Notificar por e-mail"
       description="O Outlook abre com a mensagem pronta. É só conferir e clicar em Enviar."
       footer={
         <>

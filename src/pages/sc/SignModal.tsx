@@ -8,7 +8,6 @@ import { errMsg } from '../shared/lookups';
 import { DrawPad } from '../shared/signature';
 
 /** Texto do limite de liberação de um diretor. */
-export const limitLabel = (limit: number | null) => (limit === null ? 'sem limite' : `até ${money(limit)}`);
 
 /**
  * Confirmação de senha para aplicar a assinatura eletrônica.
@@ -39,8 +38,8 @@ export function SignModal({
   const [drawn, setDrawn] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  const { data: directors = [] } = useQuery(() => (chooseDirector ? api.listDirectors(user) : Promise.resolve([])), [chooseDirector, open]);
-  const eligible = directors.filter((d) => d.paymentLimit === null || total <= d.paymentLimit);
+  // O serviço já devolve só quem pode liberar este valor (sem mostrar limites).
+  const { data: eligible = [] } = useQuery(() => (chooseDirector ? api.listDirectors(user, total) : Promise.resolve([])), [chooseDirector, open, total]);
   useEffect(() => {
     if (open) {
       setPassword('');
@@ -82,17 +81,12 @@ export function SignModal({
     >
       <div className="space-y-4">
         {chooseDirector && (
-          <Field label="Diretor que vai liberar o pagamento" hint={`Aparecem os diretores que podem liberar ${money(total)}.`}>
+          <Field label="Diretor que vai liberar o pagamento" hint="Aparecem só os diretores que podem liberar este valor.">
             <Select id="sign-director" value={directorId} onChange={(e) => setDirectorId(e.target.value)}>
               <option value="">Selecione…</option>
-              {eligible.map((d) => <option key={d.id} value={d.id}>{d.name}, {d.cargo.toLowerCase()} ({limitLabel(d.paymentLimit)})</option>)}
+              {eligible.map((d) => <option key={d.id} value={d.id}>{d.name}, {d.cargo.toLowerCase()}</option>)}
             </Select>
           </Field>
-        )}
-        {chooseDirector && directors.length > eligible.length && (
-          <p className="-mt-2 text-xs text-muted-foreground">
-            Fora da lista por limite: {directors.filter((d) => !eligible.includes(d)).map((d) => `${d.name} (${limitLabel(d.paymentLimit)})`).join(', ')}.
-          </p>
         )}
         {needsDrawing ? (
           <div>

@@ -224,7 +224,7 @@ describe('acesso e e-mail', () => {
     expect(await svc.approverEmails(func, sc.id)).toEqual(expect.arrayContaining(['silvio@amcomercial.com.br', 'victor@amcomercial.com.br']));
     await expect(svc.logEmailRequest(func, sc.id, ['invalido'], [])).rejects.toThrow('E-mail inválido');
     const r = await svc.logEmailRequest(func, sc.id, ['silvio@amcomercial.com.br'], ['ana@amcomercial.com.br']);
-    expect(r.timeline.at(-1)?.action).toBe('Pediu autorização por e-mail');
+    expect(r.timeline.at(-1)?.action).toBe('Notificou por e-mail');
     await expect(svc.logEmailRequest(stwart, sc.id, ['a@b.com'], [])).rejects.toThrow();
     await svc.managerApprove(silvio, sc.id, PW, CTX, ana.id);
     expect(await svc.approverEmails(func, sc.id)).toEqual(['ana@amcomercial.com.br']);

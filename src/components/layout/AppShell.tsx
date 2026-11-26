@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import logo from '@/assets/logo-planilha.jpg';
+import logo from '@/assets/logo-planilha-azul.png';
 import logoDark from '@/assets/logo-planilha-claro.png';
 import { navigate, useQuery, useSession, useUser } from '@/app/session';
 import { dateTime, money, monthLabel, shiftMonth } from '@/domain/format';

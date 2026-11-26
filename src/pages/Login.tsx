@@ -1,12 +1,11 @@
 import { useState, type FormEvent } from 'react';
-import logo from '@/assets/logo-planilha.jpg';
+import logo from '@/assets/logo-planilha-azul.png';
 import logoDark from '@/assets/logo-planilha-claro.png';
 import { useSession } from '@/app/session';
 import { Icon } from '@/components/ui/icons';
 import { ThemeSwitch } from '@/components/ui/ThemeSwitch';
 import { Button, Field, Input } from '@/components/ui/primitives';
 import { api } from '@/services/api';
-import { ScIllustration } from './login/ScIllustration';
 
 /** Campo preenchido (cinza, sem borda) como na tela de entrada do Alto. */
 const filled = 'h-11 border-transparent bg-muted shadow-none focus:bg-card';
@@ -37,9 +36,6 @@ export default function Login() {
             <span className="block whitespace-nowrap">Cada compra aprovada.</span>
             <span className="block whitespace-nowrap text-brand">Cada real sob controle.</span>
           </h1>
-          <div className="mt-14 pl-6">
-            <ScIllustration />
-          </div>
         </div>
         <div className="mx-auto w-full max-w-[400px] lg:mr-0">
           <div className="mb-8 flex justify-center lg:hidden">

@@ -130,7 +130,6 @@ export default function Profile({ query }: { query: URLSearchParams }) {
                 ['Cargo', user.cargo || '—'],
                 ['Perfil', ROLE_LABEL[user.role]],
                 ['Setor', sectorName ?? (user.role === 'DIRETORIA' ? 'Diretoria geral' : '—')],
-                ...(user.role === 'DIRETORIA' ? [['Libera pagamentos', user.paymentLimit === null ? 'Qualquer valor' : `Até ${(user.paymentLimit / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`]] : []),
               ].map(([k, v]) => (
                 <div key={k}>
                   <dt className="text-[13px] text-muted-foreground">{k}</dt>
@@ -153,7 +152,7 @@ export default function Profile({ query }: { query: URLSearchParams }) {
           <CardHeader title="Avisos por e-mail" subtitle="Em breve" />
           <div className="space-y-2 px-5 py-5 text-sm text-muted-foreground">
             <p>O envio automático de avisos por e-mail ainda será ativado. Hoje os avisos chegam pelo sininho, no topo da tela.</p>
-            <p>Para pedir uma autorização por e-mail agora, abra a solicitação e use “Pedir autorização por e-mail”.</p>
+            <p>Para pedir uma autorização por e-mail agora, abra a solicitação e use “Notificar por e-mail”.</p>
           </div>
         </Card>
       )}

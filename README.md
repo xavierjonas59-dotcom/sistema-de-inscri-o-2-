@@ -41,7 +41,7 @@ entre com um e-mail abaixo e a senha inicial `amc123` (também usada para assina
 ## Recursos de acesso
 - **Esqueci a senha:** avisa o Admin no sininho; a tela responde sempre de forma neutra.
 - **Tema claro / automático / escuro:** na tela de entrada e no painel do perfil (clique no seu nome no rodapé do menu).
-- **Pedir autorização por e-mail:** na SC aguardando aprovação, abre o Outlook com Para, Cc, assunto e o link da SC.
+- **Notificar por e-mail:** na SC aguardando aprovação, abre o Outlook com Para, Cc, assunto e o link da SC.
   Ao entrar pelo link, o sistema volta direto para a SC.
 
 ## Como testar cada perfil
