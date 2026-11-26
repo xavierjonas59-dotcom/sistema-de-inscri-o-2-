@@ -78,7 +78,7 @@ describe('aprovação do setor (gestor ou diretor do setor)', () => {
   });
   it('diretores com limite de R$ 10 mil não podem ser escolhidos acima disso', async () => {
     const sc = await newSc(1_000_001);
-    await expect(svc.managerApprove(silvio, sc.id, PW, CTX, victor.id)).rejects.toThrow(money(1_000_000));
+    await expect(svc.managerApprove(silvio, sc.id, PW, CTX, victor.id)).rejects.toThrow('não pode liberar este valor');
     await expect(svc.managerApprove(silvio, sc.id, PW, CTX, felipe.id)).rejects.toThrow();
     expect((await svc.managerApprove(silvio, sc.id, PW, CTX, ana.id)).assignedDirectorId).toBe(ana.id);
   });
@@ -228,5 +228,54 @@ describe('acesso e e-mail', () => {
     await expect(svc.logEmailRequest(stwart, sc.id, ['a@b.com'], [])).rejects.toThrow();
     await svc.managerApprove(silvio, sc.id, PW, CTX, ana.id);
     expect(await svc.approverEmails(func, sc.id)).toEqual(['ana@amcomercial.com.br']);
+  });
+});
+
+describe('início: gastos por mês e por natureza', () => {
+  it('funcionário só vê o próprio setor, mesmo pedindo outro ou a empresa', async () => {
+    const own = await svc.spendingByMonth(func, null, 6);
+    const asked = await svc.spendingByMonth(func, 'sec-com', 6);
+    const company = await svc.spendingByMonth(manoel, null, 6);
+    expect(own).toEqual(asked);
+    expect(own).toHaveLength(6);
+    expect(own.at(-1)?.month).toBe(MONTH);
+    const sum = (r: { consumed: number }[]) => r.reduce((s, x) => s + x.consumed, 0);
+    expect(sum(company)).toBeGreaterThan(sum(own));
+  });
+  it('soma o consumido do mês por natureza, do maior para o menor', async () => {
+    const sc = await newSc(100_000);
+    await svc.managerApprove(silvio, sc.id, PW, CTX, manoel.id);
+    const before = await svc.spendingByNature(manoel, 'sec-log', MONTH);
+    await svc.directorApprove(manoel, sc.id, PW, CTX);
+    const after = await svc.spendingByNature(manoel, 'sec-log', MONTH);
+    const nat = (r: typeof after) => r.find((x) => x.natureId === 'nat-2')?.consumed ?? 0;
+    expect(nat(after) - nat(before)).toBe(100_000);
+    expect([...after].sort((a, b) => b.consumed - a.consumed)).toEqual(after);
+    expect((await svc.spendingByMonth(manoel, 'sec-log', 1))[0].consumed).toBe(after.reduce((s, x) => s + x.consumed, 0));
+  });
+});
+
+describe('conversa na SC', () => {
+  it('participantes escrevem, os outros são avisados e quem não vê a SC não escreve', async () => {
+    const sc = await newSc();
+    await svc.postMessage(silvio, sc.id, 'Qual é o prazo de entrega?');
+    expect((await svc.listNotifications(func)).some((n) => n.text.includes('Qual é o prazo'))).toBe(true);
+    const r = await svc.postMessage(func, sc.id, 'Entrega em 5 dias.');
+    expect(r.messages.map((m) => m.userName)).toEqual(['Silvio Crispim', func.name]);
+    await expect(svc.postMessage(stwart, sc.id, 'oi')).rejects.toThrow();
+    await expect(svc.postMessage(admin, sc.id, 'oi')).rejects.toThrow();
+    await expect(svc.postMessage(func, sc.id, '   ')).rejects.toThrow('mensagem');
+    await svc.reject(silvio, sc.id, 'Fora do orçamento');
+    await expect(svc.postMessage(func, sc.id, 'Mas por quê?')).rejects.toThrow('encerrada');
+  });
+});
+
+describe('limites da diretoria', () => {
+  it('só o Admin recebe o limite; a lista para o valor já vem filtrada', async () => {
+    expect((await svc.listDirectors(silvio)).every((d) => d.paymentLimit === undefined)).toBe(true);
+    expect((await svc.listDirectors(admin)).find((d) => d.id === felipe.id)?.paymentLimit).toBe(1_000_000);
+    const for12k = (await svc.listDirectors(silvio, 1_200_000)).map((d) => d.name);
+    expect(for12k).not.toContain('Victor Chroniaris');
+    expect(for12k).toContain('Manoel Chroniaris');
   });
 });

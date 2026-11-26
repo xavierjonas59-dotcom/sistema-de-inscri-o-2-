@@ -59,8 +59,17 @@ export interface DataService {
   managerApprove(actor: User, id: string, password: string, ctx: RequestContext, directorId: string): Promise<PurchaseRequest>;
   /** O diretor escolhido repassa a liberação do pagamento para outro diretor. */
   forwardToDirector(actor: User, id: string, directorId: string, note: string): Promise<PurchaseRequest>;
-  /** Diretores e o limite de liberação de cada um (para a escolha do aprovador). */
-  listDirectors(actor: User): Promise<DirectorInfo[]>;
+  /**
+   * Diretores para a escolha do aprovador. Com `total`, só quem pode liberar esse valor.
+   * O limite (`paymentLimit`) só vem para o Admin.
+   */
+  listDirectors(actor: User, total?: number): Promise<DirectorInfo[]>;
+  /** Conversa da SC. */
+  postMessage(actor: User, id: string, text: string): Promise<PurchaseRequest>;
+  /** Consumido (aprovado pela diretoria) por mês, terminando no mês atual. sectorId null = empresa toda (só diretoria/admin). */
+  spendingByMonth(actor: User, sectorId: string | null, months: number): Promise<{ month: Month; consumed: number; reserved: number }[]>;
+  /** Consumido no mês por natureza, do maior para o menor. */
+  spendingByNature(actor: User, sectorId: string | null, month: Month): Promise<{ natureId: string | null; consumed: number }[]>;
   returnForAdjustment(actor: User, id: string, reason: string): Promise<PurchaseRequest>;
   reject(actor: User, id: string, reason: string): Promise<PurchaseRequest>;
   directorApprove(actor: User, id: string, password: string, ctx: RequestContext): Promise<PurchaseRequest>;
@@ -108,7 +117,8 @@ export interface DirectorInfo {
   name: string;
   cargo: string;
   sectorId: string | null;
-  paymentLimit: number | null;
+  /** Só para o Admin. */
+  paymentLimit?: number | null;
 }
 
 export interface RequestFilter {

@@ -2,6 +2,7 @@ import { computeBudget, outgoingInFlight } from '@/domain/budget';
 import { money } from '@/domain/format';
 import {
   CANCELLABLE,
+  CONSUMED_STATUSES,
   contentHash,
   diffContent,
   pickContent,
@@ -63,7 +64,7 @@ export interface KeyValueStore {
   set(key: string, value: string): Promise<void>;
 }
 
-export const DB_VERSION = 3;
+export const DB_VERSION = 4;
 const KEY = 'amc:db';
 export const MAX_ATTACHMENT_BYTES = 5 * 1024 * 1024;
 export const ALLOWED_ATTACHMENT_TYPES = ['application/pdf', 'image/png', 'image/jpeg'];
@@ -178,7 +179,7 @@ export class LocalDataService implements DataService {
     const d = db.users.find((u) => u.id === directorId && u.role === 'DIRETORIA' && u.active);
     if (!d) throw new BusinessError('Escolha o diretor que vai liberar o pagamento.');
     if (d.paymentLimit !== null && total > d.paymentLimit)
-      throw new BusinessError(`${d.name} libera pagamentos até ${money(d.paymentLimit)}. Escolha outro diretor para ${money(total)}.`);
+      throw new BusinessError(`${d.name} não pode liberar este valor. Escolha outro diretor.`);
     return d;
   }
 
@@ -428,6 +429,7 @@ export class LocalDataService implements DataService {
         attachments: [],
         changes: [],
         timeline: [this.entry(actor, 'Criou a solicitação')],
+        messages: [],
       };
       this.applyContent(db, actor, sc, content, false);
       db.requests.push(sc);
@@ -556,7 +558,7 @@ export class LocalDataService implements DataService {
     if (sc.assignedDirectorId !== actor.id) throw new ForbiddenError(`Esta SC aguarda a liberação de ${sc.assignedDirectorName ?? 'outro diretor'}.`);
     const me = db.users.find((u) => u.id === actor.id)!;
     if (me.paymentLimit !== null && scTotal(sc) > me.paymentLimit)
-      throw new BusinessError(`O seu limite de liberação é ${money(me.paymentLimit)}. Encaminhe para outro diretor.`);
+      throw new BusinessError('Este valor precisa ser liberado por outro diretor. Use "Encaminhar para outro diretor".');
     const compra = sc.signatures.COMPRA;
     if (!compra || compra.invalidatedAt || compra.contentHash !== (await contentHash(sc)))
       throw new BusinessError('A Autorização de Compra não é válida para o conteúdo atual. É preciso nova aprovação do gestor.');
@@ -583,12 +585,65 @@ export class LocalDataService implements DataService {
     return sc;
   }
 
-  async listDirectors(actor: User): Promise<DirectorInfo[]> {
+  async listDirectors(actor: User, total?: number): Promise<DirectorInfo[]> {
     const db = await this.auth(actor);
     return db.users
-      .filter((u) => u.role === 'DIRETORIA' && u.active)
-      .map(({ id, name, cargo, sectorId, paymentLimit }) => ({ id, name, cargo, sectorId, paymentLimit }))
-      .sort((a, b) => (a.paymentLimit === null ? 0 : 1) - (b.paymentLimit === null ? 0 : 1) || a.name.localeCompare(b.name));
+      .filter((u) => u.role === 'DIRETORIA' && u.active && (total === undefined || u.paymentLimit === null || total <= u.paymentLimit))
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(({ id, name, cargo, sectorId, paymentLimit }) => (actor.role === 'ADMIN' ? { id, name, cargo, sectorId, paymentLimit } : { id, name, cargo, sectorId }));
+  }
+
+  async postMessage(actor: User, id: string, text: string) {
+    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR', 'DIRETORIA', 'FINANCEIRO']);
+    const sc = this.find(db, actor, id);
+    if (['PAGA', 'REPROVADA', 'CANCELADA'].includes(sc.status)) throw new BusinessError('A solicitação está encerrada; a conversa é só para leitura.');
+    const body = text.trim();
+    if (!body) throw new BusinessError('Escreva a mensagem.');
+    if (body.length > 2000) throw new BusinessError('Mensagem muito longa (máximo 2.000 caracteres).');
+    sc.messages.push({ id: uid(), userId: actor.id, userName: actor.name, text: body, at: this.iso() });
+    const approvers = this.usersBy(db, (u) => (u.role === 'GESTOR' || u.role === 'DIRETORIA') && u.sectorId === sc.sectorId);
+    const participants = [sc.requesterId, ...approvers, sc.assignedDirectorId ?? undefined, ...sc.messages.map((m) => m.userId)];
+    const preview = body.length > 80 ? `${body.slice(0, 80)}…` : body;
+    this.notify(db, participants, `${actor.name} na ${sc.number}: "${preview}"`, sc.id, actor.id);
+    await this.persist();
+    return sc;
+  }
+
+  /** Funcionário e gestor só veem o próprio setor; diretoria e admin, qualquer setor ou a empresa toda. */
+  private spendingScope(actor: User, sectorId: string | null) {
+    if (actor.role === 'FUNCIONARIO' || actor.role === 'GESTOR') return actor.sectorId;
+    return sectorId;
+  }
+
+  async spendingByMonth(actor: User, sectorId: string | null, months: number) {
+    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR', 'DIRETORIA', 'ADMIN']);
+    const scope = this.spendingScope(actor, sectorId);
+    const now = this.now();
+    const list: { month: Month; consumed: number; reserved: number }[] = [];
+    for (let i = months - 1; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      list.push({ month: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`, consumed: 0, reserved: 0 });
+    }
+    const byMonth = new Map(list.map((x) => [x.month, x]));
+    for (const r of db.requests) {
+      if (scope && r.sectorId !== scope) continue;
+      const row = byMonth.get(r.month);
+      if (!row) continue;
+      if (CONSUMED_STATUSES.includes(r.status)) row.consumed += scTotal(r);
+      else if (r.status === 'AGUARDANDO_DIRETORIA') row.reserved += scTotal(r);
+    }
+    return list;
+  }
+
+  async spendingByNature(actor: User, sectorId: string | null, month: Month) {
+    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR', 'DIRETORIA', 'ADMIN']);
+    const scope = this.spendingScope(actor, sectorId);
+    const totals = new Map<string | null, number>();
+    for (const r of db.requests) {
+      if ((scope && r.sectorId !== scope) || r.month !== month || !CONSUMED_STATUSES.includes(r.status)) continue;
+      totals.set(r.natureId, (totals.get(r.natureId) ?? 0) + scTotal(r));
+    }
+    return [...totals].map(([natureId, consumed]) => ({ natureId, consumed })).sort((a, b) => b.consumed - a.consumed);
   }
 
   async cancel(actor: User, id: string) {

@@ -179,6 +179,15 @@ export interface TimelineEntry {
   note?: string;
 }
 
+/** Mensagem da conversa da SC (perguntas entre solicitante e aprovadores). */
+export interface ChatMessage {
+  id: string;
+  userId: string;
+  userName: string;
+  text: string;
+  at: string;
+}
+
 export interface PurchaseRequest extends ScContent {
   id: string;
   /** SC-2026-0001 */
@@ -199,6 +208,7 @@ export interface PurchaseRequest extends ScContent {
   attachments: Attachment[];
   changes: FieldChange[];
   timeline: TimelineEntry[];
+  messages: ChatMessage[];
   returnReason?: string;
   rejectReason?: string;
   paidAt?: string;

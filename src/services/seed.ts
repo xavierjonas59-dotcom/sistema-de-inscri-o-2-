@@ -162,6 +162,7 @@ export async function buildSeed(now: Date): Promise<Database> {
       attachments: [],
       changes: [],
       timeline: [t(req, 'Criou a solicitação', 8)],
+      messages: [],
     };
     if (s.status === 'RASCUNHO') return sc;
     sc.submittedAt = at(s.month, s.day, 9);
