@@ -204,3 +204,29 @@ describe('fluxo completo', () => {
     expect((await svc.reject(silvio, sc.id, 'Desnecessário')).status).toBe('REPROVADA');
   });
 });
+
+describe('acesso e e-mail', () => {
+  it('esqueci a senha avisa o admin só se o e-mail existir', async () => {
+    await svc.requestPasswordReset('ninguem@x.com');
+    expect((await svc.listNotifications(admin)).length).toBe(0);
+    await svc.requestPasswordReset('SILVIO@amcomercial.com.br');
+    expect((await svc.listNotifications(admin)).some((n) => n.text.includes('Silvio Crispim'))).toBe(true);
+  });
+  it('troca de senha confere a atual e o tamanho', async () => {
+    await expect(svc.changePassword(func, 'x', 'novasenha')).rejects.toThrow('Senha atual incorreta');
+    await expect(svc.changePassword(func, PW, '123')).rejects.toThrow('6');
+    await svc.changePassword(func, PW, 'novasenha');
+    await expect(svc.login(func.email, PW)).rejects.toThrow();
+    expect((await svc.login(func.email, 'novasenha')).id).toBe(func.id);
+  });
+  it('pedido de autorização por e-mail fica na linha do tempo', async () => {
+    const sc = await newSc();
+    expect(await svc.approverEmails(func, sc.id)).toEqual(expect.arrayContaining(['silvio@amcomercial.com.br', 'victor@amcomercial.com.br']));
+    await expect(svc.logEmailRequest(func, sc.id, ['invalido'], [])).rejects.toThrow('E-mail inválido');
+    const r = await svc.logEmailRequest(func, sc.id, ['silvio@amcomercial.com.br'], ['ana@amcomercial.com.br']);
+    expect(r.timeline.at(-1)?.action).toBe('Pediu autorização por e-mail');
+    await expect(svc.logEmailRequest(stwart, sc.id, ['a@b.com'], [])).rejects.toThrow();
+    await svc.managerApprove(silvio, sc.id, PW, CTX, ana.id);
+    expect(await svc.approverEmails(func, sc.id)).toEqual(['ana@amcomercial.com.br']);
+  });
+});

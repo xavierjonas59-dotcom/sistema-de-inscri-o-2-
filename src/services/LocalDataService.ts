@@ -299,6 +299,24 @@ export class LocalDataService implements DataService {
     return strip(u);
   }
 
+  async requestPasswordReset(email: string) {
+    const db = await this.load();
+    const u = db.users.find((x) => x.active && x.email.toLowerCase() === email.trim().toLowerCase());
+    if (!u) return;
+    this.notify(db, this.usersBy(db, (x) => x.role === 'ADMIN'), `${u.name} (${u.email}) pediu uma nova senha.`);
+    await this.persist();
+  }
+
+  async changePassword(actor: User, current: string, next: string) {
+    const db = await this.auth(actor);
+    const u = db.users.find((x) => x.id === actor.id)!;
+    if (u.passwordHash !== (await hashPassword(current))) throw new BusinessError('Senha atual incorreta.');
+    if (next.length < 6) throw new BusinessError('A nova senha deve ter ao menos 6 caracteres.');
+    if (next === current) throw new BusinessError('A nova senha deve ser diferente da atual.');
+    u.passwordHash = await hashPassword(next);
+    await this.persist();
+  }
+
   async getUser(id: string) {
     const db = await this.load();
     const u = db.users.find((x) => x.id === id && x.active);
@@ -645,6 +663,29 @@ export class LocalDataService implements DataService {
     sc.timeline.push(this.entry(actor, 'Marcou como paga', `Pagamento em ${paidAt.split('-').reverse().join('/')}`));
     const managers = this.usersBy(db, (u) => u.role === 'GESTOR' && u.sectorId === sc.sectorId);
     this.notify(db, [sc.requesterId, ...managers], `${sc.number} foi paga.`, sc.id, actor.id);
+    await this.persist();
+    return sc;
+  }
+
+  async approverEmails(actor: User, id: string) {
+    const db = await this.auth(actor);
+    const sc = this.find(db, actor, id);
+    if (sc.status === 'AGUARDANDO_DIRETORIA')
+      return db.users.filter((u) => u.id === sc.assignedDirectorId && u.active).map((u) => u.email);
+    if (sc.status === 'AGUARDANDO_GESTOR')
+      return db.users.filter((u) => u.active && (u.role === 'GESTOR' || u.role === 'DIRETORIA') && u.sectorId === sc.sectorId).map((u) => u.email);
+    return [];
+  }
+
+  async logEmailRequest(actor: User, id: string, to: string[], cc: string[]) {
+    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR', 'DIRETORIA']);
+    const sc = this.find(db, actor, id);
+    if (sc.requesterId !== actor.id && !this.isSectorManager(actor, sc)) throw new ForbiddenError();
+    this.expectStatus(sc, 'AGUARDANDO_GESTOR', 'AGUARDANDO_DIRETORIA');
+    if (!to.length) throw new BusinessError('Informe ao menos um destinatário.');
+    const bad = [...to, ...cc].find((e) => !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e));
+    if (bad) throw new BusinessError(`E-mail inválido: ${bad}`);
+    sc.timeline.push(this.entry(actor, 'Pediu autorização por e-mail', `Para: ${to.join(', ')}${cc.length ? `; Cc: ${cc.join(', ')}` : ''}`));
     await this.persist();
     return sc;
   }

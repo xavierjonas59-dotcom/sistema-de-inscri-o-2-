@@ -32,6 +32,9 @@ export type NewFile = Pick<Attachment, 'name' | 'mimeType' | 'size' | 'url'>;
  */
 export interface DataService {
   login(email: string, password: string): Promise<User>;
+  /** "Esqueci a senha": sem login; avisa os Admins se o e-mail existir. Nunca revela se existe. */
+  requestPasswordReset(email: string): Promise<void>;
+  changePassword(actor: User, current: string, next: string): Promise<void>;
   getUser(id: string): Promise<User | null>;
 
   // Cadastros de apoio (leitura para todos os autenticados)
@@ -66,6 +69,10 @@ export interface DataService {
   removeAttachment(actor: User, id: string, attachmentId: string): Promise<PurchaseRequest>;
   sendToFinance(actor: User, id: string): Promise<PurchaseRequest>;
   markPaid(actor: User, id: string, paidAt: string, proof: NewFile): Promise<PurchaseRequest>;
+  /** E-mails de quem precisa aprovar a SC agora (para o pedido de autorização por e-mail). */
+  approverEmails(actor: User, id: string): Promise<string[]>;
+  /** Registra na linha do tempo que o pedido de autorização foi enviado por e-mail. */
+  logEmailRequest(actor: User, id: string, to: string[], cc: string[]): Promise<PurchaseRequest>;
   /** Página pública de validação (QR code): não exige login. */
   validate(number: string): Promise<ValidationResult | null>;
 
