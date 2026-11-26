@@ -123,7 +123,7 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
         <ol className="mb-4 flex flex-wrap gap-x-1 gap-y-2 text-xs">
           {FLOW.map((f, i) => (
             <li key={f.label} className="flex items-center gap-1">
-              <span className={cx('rounded-full px-2.5 py-1', i < flowIndex ? 'bg-info-soft text-brand' : i === flowIndex ? 'bg-brand font-semibold text-white' : 'bg-muted text-muted-foreground')}>{f.label}</span>
+              <span className={cx('rounded-full px-2.5 py-1', i < flowIndex ? 'bg-info-soft text-brand' : i === flowIndex ? 'bg-primary font-semibold text-primary-foreground' : 'bg-muted text-muted-foreground')}>{f.label}</span>
               {i < FLOW.length - 1 && <span className="text-muted-foreground">›</span>}
             </li>
           ))}

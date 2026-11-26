@@ -22,11 +22,11 @@ const sc = { '/sc': () => <ScList />, '/sc/ver': ScDetail };
 
 /** Rotas por perfil: o que não está na tabela do perfil não existe para ele (e o serviço também recusa). */
 const routes: Record<Role, Record<string, Page>> = {
-  FUNCIONARIO: { '/': SectorDashboard, ...sc, '/sc/nova': ScForm, '/sc/editar': ScForm },
+  FUNCIONARIO: { '/': SectorDashboard, ...sc, '/sc/nova': ScForm, '/sc/editar': ScForm, '/perfil': Profile },
   GESTOR: { '/': SectorDashboard, ...sc, '/sc/nova': ScForm, '/sc/editar': ScForm, '/transferencias': Transfers, '/usuarios': Users, '/perfil': Profile },
   DIRETORIA: { '/': DirectorDashboard, '/aprovacoes': () => <ScList approvals />, ...sc, '/sc/nova': ScForm, '/sc/editar': ScForm, '/transferencias': Transfers, '/perfil': Profile },
-  FINANCEIRO: { '/': Payables, '/sc/ver': ScDetail },
-  ADMIN: { '/': SectorsAdmin, '/usuarios': Users, '/cadastros': CodesAdmin, '/fornecedores': SuppliersAdmin },
+  FINANCEIRO: { '/': Payables, '/sc/ver': ScDetail, '/perfil': Profile },
+  ADMIN: { '/': SectorsAdmin, '/usuarios': Users, '/cadastros': CodesAdmin, '/fornecedores': SuppliersAdmin, '/perfil': Profile },
 };
 
 function Router() {

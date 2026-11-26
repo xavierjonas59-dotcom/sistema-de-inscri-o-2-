@@ -7,6 +7,7 @@ import { ROLE_LABEL, SC_STATUS, scTotal } from '@/domain/sc';
 import type { Role } from '@/domain/types';
 import { api } from '@/services/api';
 import { Icon, type IconName } from '@/components/ui/icons';
+import { ThemeSwitch } from '@/components/ui/ThemeSwitch';
 import { cx } from '@/components/ui/primitives';
 
 interface NavItem {
@@ -65,7 +66,7 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
           { path: '/transferencias', label: 'Transferência de limite', icon: 'transfer' },
         ],
       },
-      { title: 'Organização', items: [{ path: '/usuarios', label: 'Usuários do setor', icon: 'users' }, { path: '/perfil', label: 'Minha assinatura', icon: 'signature' }] },
+      { title: 'Organização', items: [{ path: '/usuarios', label: 'Usuários do setor', icon: 'users' }] },
     ],
     DIRETORIA: [
       { items: [{ path: '/', label: 'Início', icon: 'home' }] },
@@ -78,7 +79,6 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
           { path: '/transferencias', label: 'Transferência de limite', icon: 'transfer' },
         ],
       },
-      { title: 'Organização', items: [{ path: '/perfil', label: 'Minha assinatura', icon: 'signature' }] },
     ],
     FINANCEIRO: [{ title: 'Financeiro', items: [{ path: '/', label: 'Contas a Pagar', icon: 'wallet', badge: counts?.fin }] }],
     ADMIN: [
@@ -97,7 +97,7 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
   const all = groups.flatMap((g) => g.items.map((i) => ({ ...i, group: g.title })));
   const active = all.filter((i) => (i.path === '/' ? path === '/' : path === i.path || path.startsWith(i.path + '/'))).sort((a, b) => b.path.length - a.path.length)[0];
   const crumb =
-    path === '/sc/ver' ? ['Solicitações', 'Solicitação'] : path === '/sc/editar' ? ['Solicitações', 'Editar solicitação'] : active?.group ? [active.group, active.label] : [active?.label ?? 'Início'];
+    path === '/perfil' ? ['Meu perfil'] : path === '/sc/ver' ? ['Solicitações', 'Solicitação'] : path === '/sc/editar' ? ['Solicitações', 'Editar solicitação'] : active?.group ? [active.group, active.label] : [active?.label ?? 'Início'];
 
   const workspace = user.sectorId ? { title: sectorName ?? '', sub: 'Setor' } : { title: 'AM Comercial', sub: user.role === 'DIRETORIA' ? 'Diretoria' : ROLE_LABEL[user.role] };
 
@@ -136,7 +136,7 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
                     >
                       <Icon name={it.icon} size={19} className={on ? 'text-brand' : 'text-foreground/70'} />
                       <span className="flex-1 truncate">{it.label}</span>
-                      {!!it.badge && <span className="tabular min-w-[22px] rounded-full bg-brand px-1.5 text-center text-xs font-semibold leading-5 text-white">{it.badge}</span>}
+                      {!!it.badge && <span className="tabular min-w-[22px] rounded-full bg-primary px-1.5 text-center text-xs font-semibold leading-5 text-primary-foreground">{it.badge}</span>}
                     </a>
                   </li>
                 );
@@ -145,16 +145,7 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
           </div>
         ))}
       </div>
-      <div className="flex items-center gap-3 border-t px-4 py-3.5">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-info-soft text-[13px] font-semibold text-brand">{initials(user.name)}</span>
-        <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-medium">{user.name}</div>
-          <div className="truncate text-[13px] text-muted-foreground">{user.role === 'DIRETORIA' ? user.cargo : ROLE_LABEL[user.role]}</div>
-        </div>
-        <button onClick={logout} className="rounded p-2 text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground" title="Sair" aria-label="Sair">
-          <Icon name="logout" size={17} />
-        </button>
-      </div>
+      <ProfileMenu onNavigate={() => setOpen(false)} />
     </nav>
   );
 
@@ -325,6 +316,70 @@ function Notifications() {
           </ul>
         </div>
       )}
+    </div>
+  );
+}
+
+/** Rodapé do menu: a pessoa. Ao clicar, abre o painel com perfil, avisos, segurança, tema e sair (como no Alto). */
+function ProfileMenu({ onNavigate }: { onNavigate: () => void }) {
+  const user = useUser();
+  const { logout } = useSession();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: MouseEvent) => ref.current && !ref.current.contains(e.target as Node) && setOpen(false);
+    const esc = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    document.addEventListener('mousedown', close);
+    document.addEventListener('keydown', esc);
+    return () => {
+      document.removeEventListener('mousedown', close);
+      document.removeEventListener('keydown', esc);
+    };
+  }, [open]);
+  const go = (aba: string) => {
+    setOpen(false);
+    onNavigate();
+    navigate(`/perfil?aba=${aba}`);
+  };
+  const item = 'flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-[15px] hover:bg-foreground/[0.05]';
+  return (
+    <div className="relative border-t p-3" ref={ref}>
+      {open && (
+        <div role="menu" className="absolute bottom-full left-3 right-3 z-40 mb-2 rounded-lg border bg-card p-1.5 shadow-pop sm:right-auto sm:w-72">
+          <div className="flex items-center gap-3 px-3 py-2.5">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-info-soft text-[13px] font-semibold text-brand">{initials(user.name)}</span>
+            <div className="min-w-0">
+              <div className="truncate text-[15px] font-semibold">{user.name}</div>
+              <div className="truncate text-[13px] text-muted-foreground">{user.email}</div>
+            </div>
+          </div>
+          <div className="my-1 border-t" />
+          <button role="menuitem" className={item} onClick={() => go('dados')}><Icon name="user" size={18} className="text-foreground/70" />Dados do perfil</button>
+          <button role="menuitem" className={item} onClick={() => go('avisos')}><Icon name="mail" size={18} className="text-foreground/70" />Avisos por e-mail</button>
+          <button role="menuitem" className={item} onClick={() => go('seguranca')}><Icon name="shield" size={18} className="text-foreground/70" />Segurança e verificação</button>
+          <div className="my-1 border-t" />
+          <div className="flex items-center justify-between px-3 py-1.5 text-[15px]">
+            Tema
+            <ThemeSwitch />
+          </div>
+          <div className="my-1 border-t" />
+          <button role="menuitem" className={item} onClick={logout}><Icon name="logout" size={18} className="text-foreground/70" />Sair</button>
+        </div>
+      )}
+      <button
+        onClick={() => setOpen(!open)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        className="flex w-full items-center gap-3 rounded-md px-1.5 py-1.5 text-left hover:bg-foreground/[0.05]"
+      >
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-info-soft text-[13px] font-semibold text-brand">{initials(user.name)}</span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-sm font-medium">{user.name}</span>
+          <span className="block truncate text-[13px] text-muted-foreground">{user.role === 'DIRETORIA' ? user.cargo : ROLE_LABEL[user.role]}</span>
+        </span>
+        <Icon name="chevronsUpDown" size={16} className="text-muted-foreground" />
+      </button>
     </div>
   );
 }
