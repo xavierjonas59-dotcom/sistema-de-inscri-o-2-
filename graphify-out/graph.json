@@ -1,21 +1,21 @@
 {
-  "generated_at": "2026-11-26T13:31:48.661339+00:00",
+  "generated_at": "2026-11-26T13:39:13.839345+00:00",
   "files": [
     {
-      "path": "package-lock.json",
-      "bytes": 155722
-    },
-    {
-      "path": "vite.config.ts",
-      "bytes": 287
+      "path": "index.html",
+      "bytes": 508
     },
     {
       "path": "package.json",
       "bytes": 850
     },
     {
-      "path": "index.html",
-      "bytes": 508
+      "path": "package-lock.json",
+      "bytes": 155722
+    },
+    {
+      "path": "vite.config.ts",
+      "bytes": 407
     },
     {
       "path": "README.md",
@@ -30,8 +30,12 @@
       "bytes": 631
     },
     {
-      "path": ".lovasiri/sync.json",
-      "bytes": 80
+      "path": "src/index.css",
+      "bytes": 2800
+    },
+    {
+      "path": "src/App.tsx",
+      "bytes": 2723
     },
     {
       "path": "src/main.tsx",
@@ -42,340 +46,16 @@
       "bytes": 38
     },
     {
-      "path": "src/index.css",
-      "bytes": 2800
-    },
-    {
-      "path": "src/App.tsx",
-      "bytes": 2723
-    },
-    {
       "path": "docs/ARQUITETURA.md",
       "bytes": 5166
     },
     {
-      "path": "docs/superpowers/specs/2026-11-26-inicio-graficos-busca-conversa-design.md",
-      "bytes": 2631
-    },
-    {
-      "path": "docs/superpowers/specs/2026-11-26-entrada-perfil-email-design.md",
-      "bytes": 4483
-    },
-    {
-      "path": "docs/superpowers/plans/2026-11-26-entrada-perfil-email.md",
-      "bytes": 8016
-    },
-    {
-      "path": "src/pages/Users.tsx",
-      "bytes": 6338
-    },
-    {
-      "path": "src/pages/Dashboards.tsx",
-      "bytes": 9045
-    },
-    {
-      "path": "src/pages/Transfers.tsx",
-      "bytes": 6427
-    },
-    {
-      "path": "src/pages/Profile.tsx",
-      "bytes": 9635
-    },
-    {
-      "path": "src/pages/Validate.tsx",
-      "bytes": 3750
-    },
-    {
-      "path": "src/pages/Payables.tsx",
-      "bytes": 2509
-    },
-    {
-      "path": "src/pages/Login.tsx",
-      "bytes": 6265
-    },
-    {
-      "path": "src/domain/format.ts",
-      "bytes": 1685
-    },
-    {
-      "path": "src/domain/holidays.ts",
-      "bytes": 2319
-    },
-    {
-      "path": "src/domain/emailRequest.test.ts",
-      "bytes": 1718
-    },
-    {
-      "path": "src/domain/budget.ts",
-      "bytes": 2771
-    },
-    {
-      "path": "src/domain/sc.ts",
-      "bytes": 9135
-    },
-    {
-      "path": "src/domain/labels.ts",
-      "bytes": 935
-    },
-    {
-      "path": "src/domain/holidays.test.ts",
-      "bytes": 978
-    },
-    {
-      "path": "src/domain/budget.test.ts",
-      "bytes": 908
-    },
-    {
-      "path": "src/domain/types.ts",
-      "bytes": 5969
-    },
-    {
-      "path": "src/domain/emailRequest.ts",
-      "bytes": 1703
-    },
-    {
-      "path": "src/lib/supabase.ts",
-      "bytes": 829
-    },
-    {
-      "path": "src/pdf/scPdf.ts",
-      "bytes": 19379
-    },
-    {
-      "path": "src/pdf/scPdf.test.ts",
-      "bytes": 2880
-    },
-    {
-      "path": "src/pdf/scTemplate.json",
-      "bytes": 36033
-    },
-    {
-      "path": "src/services/LocalDataService.ts",
-      "bytes": 48756
-    },
-    {
-      "path": "src/services/api.ts",
-      "bytes": 2078
-    },
-    {
-      "path": "src/services/DataService.ts",
-      "bytes": 7949
-    },
-    {
-      "path": "src/services/seed.ts",
-      "bytes": 14571
-    },
-    {
-      "path": "src/services/LocalDataService.test.ts",
-      "bytes": 17243
-    },
-    {
-      "path": "src/services/testUtils.ts",
-      "bytes": 279
-    },
-    {
-      "path": "src/app/session.tsx",
-      "bytes": 3590
-    },
-    {
-      "path": "src/app/files.ts",
-      "bytes": 1890
-    },
-    {
-      "path": "src/app/theme.ts",
-      "bytes": 1502
-    },
-    {
-      "path": "src/components/charts/MonthCalendar.tsx",
-      "bytes": 4843
-    },
-    {
-      "path": "src/components/charts/SpendingDetailModal.tsx",
-      "bytes": 5902
-    },
-    {
-      "path": "src/components/charts/SpendingCharts.tsx",
-      "bytes": 8724
-    },
-    {
-      "path": "src/components/layout/AppShell.tsx",
-      "bytes": 20002
-    },
-    {
-      "path": "src/components/layout/CommandPalette.tsx",
-      "bytes": 6212
-    },
-    {
-      "path": "src/components/ui/icons.tsx",
-      "bytes": 4195
-    },
-    {
-      "path": "src/components/ui/ThemeSwitch.tsx",
-      "bytes": 1360
-    },
-    {
-      "path": "src/components/ui/overlay.tsx",
-      "bytes": 3188
-    },
-    {
-      "path": "src/components/ui/primitives.tsx",
-      "bytes": 10823
-    },
-    {
-      "path": "src/pages/admin/AdminPages.tsx",
-      "bytes": 10781
-    },
-    {
-      "path": "src/pages/shared/lookups.ts",
-      "bytes": 1504
-    },
-    {
-      "path": "src/pages/shared/signature.tsx",
-      "bytes": 4650
-    },
-    {
-      "path": "src/pages/sc/ScChat.tsx",
-      "bytes": 3795
-    },
-    {
-      "path": "src/pages/sc/ScTable.tsx",
-      "bytes": 2551
-    },
-    {
-      "path": "src/pages/sc/SupplierPicker.tsx",
-      "bytes": 2997
-    },
-    {
-      "path": "src/pages/sc/SignModal.tsx",
-      "bytes": 4692
-    },
-    {
-      "path": "src/pages/sc/EmailRequestModal.tsx",
-      "bytes": 3589
-    },
-    {
-      "path": "src/pages/sc/ScList.tsx",
-      "bytes": 4452
-    },
-    {
-      "path": "src/pages/sc/ScDetail.tsx",
-      "bytes": 27638
-    },
-    {
-      "path": "src/pages/sc/ScForm.tsx",
-      "bytes": 19174
-    },
-    {
-      "path": ".claude/skills/master-engineering-protocol/SKILL.md",
-      "bytes": 28303
-    },
-    {
-      "path": ".claude/skills/ui-ux-pro-max/SKILL.md",
-      "bytes": 9157
-    },
-    {
-      "path": ".claude/skills/verification-before-completion/SKILL.md",
-      "bytes": 3646
-    },
-    {
-      "path": ".claude/skills/using-superpowers/SKILL.md",
-      "bytes": 3063
-    },
-    {
-      "path": ".claude/skills/frontend-design/SKILL.md",
-      "bytes": 9390
-    },
-    {
-      "path": ".claude/skills/executing-plans/SKILL.md",
-      "bytes": 2305
-    },
-    {
-      "path": ".claude/skills/brainstorming/visual-companion.md",
-      "bytes": 13298
-    },
-    {
-      "path": ".claude/skills/brainstorming/spec-document-reviewer-prompt.md",
-      "bytes": 1747
-    },
-    {
-      "path": ".claude/skills/brainstorming/SKILL.md",
-      "bytes": 10047
-    },
-    {
-      "path": ".claude/skills/test-driven-development/writing-good-tests.md",
-      "bytes": 8268
-    },
-    {
-      "path": ".claude/skills/test-driven-development/SKILL.md",
-      "bytes": 9015
-    },
-    {
-      "path": ".claude/skills/writing-skills/testing-skills-with-subagents.md",
-      "bytes": 12558
-    },
-    {
-      "path": ".claude/skills/writing-skills/anthropic-best-practices.md",
-      "bytes": 46197
-    },
-    {
-      "path": ".claude/skills/writing-skills/persuasion-principles.md",
-      "bytes": 5901
-    },
-    {
-      "path": ".claude/skills/writing-skills/render-graphs.js",
-      "bytes": 4857
-    },
-    {
-      "path": ".claude/skills/writing-skills/SKILL.md",
-      "bytes": 26360
-    },
-    {
-      "path": ".claude/skills/requesting-code-review/code-reviewer.md",
-      "bytes": 5213
-    },
-    {
-      "path": ".claude/skills/requesting-code-review/SKILL.md",
-      "bytes": 2956
-    },
-    {
-      "path": ".claude/skills/web-design-guidelines/SKILL.md",
-      "bytes": 1231
-    },
-    {
-      "path": ".claude/skills/desenvolvedor-de-projetos/SKILL.md",
-      "bytes": 7885
-    },
-    {
-      "path": ".claude/skills/systematic-debugging/condition-based-waiting.md",
-      "bytes": 3516
-    },
-    {
-      "path": ".claude/skills/systematic-debugging/test-pressure-2.md",
-      "bytes": 2283
-    },
-    {
-      "path": ".claude/skills/systematic-debugging/CREATION-LOG.md",
-      "bytes": 4257
-    },
-    {
-      "path": ".claude/skills/systematic-debugging/defense-in-depth.md",
-      "bytes": 3650
-    },
-    {
-      "path": ".claude/skills/systematic-debugging/condition-based-waiting-example.ts",
-      "bytes": 5054
-    },
-    {
-      "path": ".claude/skills/systematic-debugging/test-pressure-1.md",
-      "bytes": 1900
+      "path": ".lovasiri/sync.json",
+      "bytes": 80
     },
     {
       "path": ".claude/skills/systematic-debugging/test-pressure-3.md",
       "bytes": 2692
-    },
-    {
-      "path": ".claude/skills/systematic-debugging/test-academic.md",
-      "bytes": 653
     },
     {
       "path": ".claude/skills/systematic-debugging/SKILL.md",
@@ -386,96 +66,176 @@
       "bytes": 5316
     },
     {
-      "path": ".claude/skills/grill-me/SKILL.md",
-      "bytes": 1060
+      "path": ".claude/skills/systematic-debugging/condition-based-waiting-example.ts",
+      "bytes": 5054
     },
     {
-      "path": ".claude/skills/writing-plans/plan-document-reviewer-prompt.md",
-      "bytes": 1713
+      "path": ".claude/skills/systematic-debugging/condition-based-waiting.md",
+      "bytes": 3516
     },
     {
-      "path": ".claude/skills/writing-plans/SKILL.md",
-      "bytes": 6907
+      "path": ".claude/skills/systematic-debugging/test-academic.md",
+      "bytes": 653
     },
     {
-      "path": ".claude/skills/dispatching-parallel-agents/SKILL.md",
-      "bytes": 6078
+      "path": ".claude/skills/systematic-debugging/test-pressure-1.md",
+      "bytes": 1900
     },
     {
-      "path": ".claude/skills/find-skills/SKILL.md",
-      "bytes": 5446
+      "path": ".claude/skills/systematic-debugging/defense-in-depth.md",
+      "bytes": 3650
+    },
+    {
+      "path": ".claude/skills/systematic-debugging/test-pressure-2.md",
+      "bytes": 2283
+    },
+    {
+      "path": ".claude/skills/systematic-debugging/CREATION-LOG.md",
+      "bytes": 4257
     },
     {
       "path": ".claude/skills/agent-browser/SKILL.md",
       "bytes": 34042
     },
     {
-      "path": ".claude/skills/design-system/SKILL.md",
-      "bytes": 19467
+      "path": ".claude/skills/finishing-a-development-branch/SKILL.md",
+      "bytes": 7022
     },
     {
-      "path": ".claude/skills/subagent-driven-development/task-reviewer-prompt.md",
-      "bytes": 7816
-    },
-    {
-      "path": ".claude/skills/subagent-driven-development/implementer-prompt.md",
-      "bytes": 5717
-    },
-    {
-      "path": ".claude/skills/subagent-driven-development/re-review-prompt.md",
-      "bytes": 4300
-    },
-    {
-      "path": ".claude/skills/subagent-driven-development/SKILL.md",
-      "bytes": 28077
-    },
-    {
-      "path": ".claude/skills/using-git-worktrees/SKILL.md",
-      "bytes": 6813
+      "path": ".claude/skills/web-design-guidelines/SKILL.md",
+      "bytes": 1231
     },
     {
       "path": ".claude/skills/receiving-code-review/SKILL.md",
       "bytes": 6203
     },
     {
-      "path": ".claude/skills/finishing-a-development-branch/SKILL.md",
-      "bytes": 7022
+      "path": ".claude/skills/using-superpowers/SKILL.md",
+      "bytes": 3063
+    },
+    {
+      "path": ".claude/skills/brainstorming/SKILL.md",
+      "bytes": 10047
+    },
+    {
+      "path": ".claude/skills/brainstorming/spec-document-reviewer-prompt.md",
+      "bytes": 1747
+    },
+    {
+      "path": ".claude/skills/brainstorming/visual-companion.md",
+      "bytes": 13298
+    },
+    {
+      "path": ".claude/skills/dispatching-parallel-agents/SKILL.md",
+      "bytes": 6078
+    },
+    {
+      "path": ".claude/skills/master-engineering-protocol/SKILL.md",
+      "bytes": 28303
     },
     {
       "path": ".claude/skills/extract/SKILL.md",
       "bytes": 13597
     },
     {
+      "path": ".claude/skills/subagent-driven-development/task-reviewer-prompt.md",
+      "bytes": 7816
+    },
+    {
+      "path": ".claude/skills/subagent-driven-development/SKILL.md",
+      "bytes": 28077
+    },
+    {
+      "path": ".claude/skills/subagent-driven-development/re-review-prompt.md",
+      "bytes": 4300
+    },
+    {
+      "path": ".claude/skills/subagent-driven-development/implementer-prompt.md",
+      "bytes": 5717
+    },
+    {
+      "path": ".claude/skills/ui-ux-pro-max/SKILL.md",
+      "bytes": 9157
+    },
+    {
+      "path": ".claude/skills/grill-me/SKILL.md",
+      "bytes": 1060
+    },
+    {
+      "path": ".claude/skills/design-system/SKILL.md",
+      "bytes": 19467
+    },
+    {
+      "path": ".claude/skills/using-git-worktrees/SKILL.md",
+      "bytes": 6813
+    },
+    {
+      "path": ".claude/skills/requesting-code-review/SKILL.md",
+      "bytes": 2956
+    },
+    {
+      "path": ".claude/skills/requesting-code-review/code-reviewer.md",
+      "bytes": 5213
+    },
+    {
       "path": ".claude/skills/prompt-diagnostico-corrrecao/SKILL.md",
       "bytes": 24392
     },
     {
-      "path": ".claude/skills/agent-browser/references/authentication.md",
-      "bytes": 8432
+      "path": ".claude/skills/executing-plans/SKILL.md",
+      "bytes": 2305
     },
     {
-      "path": ".claude/skills/agent-browser/references/proxy-support.md",
-      "bytes": 4971
+      "path": ".claude/skills/test-driven-development/SKILL.md",
+      "bytes": 9015
     },
     {
-      "path": ".claude/skills/agent-browser/references/session-management.md",
-      "bytes": 4337
+      "path": ".claude/skills/test-driven-development/writing-good-tests.md",
+      "bytes": 8268
     },
     {
-      "path": ".claude/skills/agent-browser/references/video-recording.md",
-      "bytes": 3569
+      "path": ".claude/skills/frontend-design/SKILL.md",
+      "bytes": 9390
     },
     {
-      "path": ".claude/skills/agent-browser/references/profiling.md",
-      "bytes": 3405
+      "path": ".claude/skills/find-skills/SKILL.md",
+      "bytes": 5446
     },
     {
-      "path": ".claude/skills/agent-browser/references/snapshot-refs.md",
-      "bytes": 5377
+      "path": ".claude/skills/verification-before-completion/SKILL.md",
+      "bytes": 3646
     },
     {
-      "path": ".claude/skills/agent-browser/references/commands.md",
-      "bytes": 11484
+      "path": ".claude/skills/writing-skills/SKILL.md",
+      "bytes": 26360
+    },
+    {
+      "path": ".claude/skills/writing-skills/render-graphs.js",
+      "bytes": 4857
+    },
+    {
+      "path": ".claude/skills/writing-skills/persuasion-principles.md",
+      "bytes": 5901
+    },
+    {
+      "path": ".claude/skills/writing-skills/anthropic-best-practices.md",
+      "bytes": 46197
+    },
+    {
+      "path": ".claude/skills/writing-skills/testing-skills-with-subagents.md",
+      "bytes": 12558
+    },
+    {
+      "path": ".claude/skills/writing-plans/SKILL.md",
+      "bytes": 6907
+    },
+    {
+      "path": ".claude/skills/writing-plans/plan-document-reviewer-prompt.md",
+      "bytes": 1713
+    },
+    {
+      "path": ".claude/skills/desenvolvedor-de-projetos/SKILL.md",
+      "bytes": 7885
     },
     {
       "path": ".claude/skills/writing-skills/examples/CLAUDE_MD_TESTING.md",
@@ -494,16 +254,256 @@
       "bytes": 1242
     },
     {
-      "path": ".claude/skills/using-superpowers/references/antigravity-tools.md",
-      "bytes": 1495
-    },
-    {
       "path": ".claude/skills/using-superpowers/references/codex-tools.md",
       "bytes": 1774
     },
     {
+      "path": ".claude/skills/using-superpowers/references/antigravity-tools.md",
+      "bytes": 1495
+    },
+    {
       "path": ".claude/skills/using-superpowers/references/gemini-tools.md",
       "bytes": 4598
+    },
+    {
+      "path": ".claude/skills/agent-browser/references/session-management.md",
+      "bytes": 4337
+    },
+    {
+      "path": ".claude/skills/agent-browser/references/authentication.md",
+      "bytes": 8432
+    },
+    {
+      "path": ".claude/skills/agent-browser/references/proxy-support.md",
+      "bytes": 4971
+    },
+    {
+      "path": ".claude/skills/agent-browser/references/commands.md",
+      "bytes": 11484
+    },
+    {
+      "path": ".claude/skills/agent-browser/references/video-recording.md",
+      "bytes": 3569
+    },
+    {
+      "path": ".claude/skills/agent-browser/references/profiling.md",
+      "bytes": 3405
+    },
+    {
+      "path": ".claude/skills/agent-browser/references/snapshot-refs.md",
+      "bytes": 5377
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-26-inicio-graficos-busca-conversa-design.md",
+      "bytes": 2631
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-26-entrada-perfil-email-design.md",
+      "bytes": 4483
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-26-entrada-perfil-email.md",
+      "bytes": 8016
+    },
+    {
+      "path": "src/app/theme.ts",
+      "bytes": 1502
+    },
+    {
+      "path": "src/app/files.ts",
+      "bytes": 1890
+    },
+    {
+      "path": "src/app/session.tsx",
+      "bytes": 3590
+    },
+    {
+      "path": "src/pages/Profile.tsx",
+      "bytes": 9635
+    },
+    {
+      "path": "src/pages/Validate.tsx",
+      "bytes": 3750
+    },
+    {
+      "path": "src/pages/Login.tsx",
+      "bytes": 6265
+    },
+    {
+      "path": "src/pages/Transfers.tsx",
+      "bytes": 6427
+    },
+    {
+      "path": "src/pages/Users.tsx",
+      "bytes": 6338
+    },
+    {
+      "path": "src/pages/Dashboards.tsx",
+      "bytes": 9045
+    },
+    {
+      "path": "src/pages/Payables.tsx",
+      "bytes": 2509
+    },
+    {
+      "path": "src/pdf/scTemplate.json",
+      "bytes": 36033
+    },
+    {
+      "path": "src/pdf/scPdf.ts",
+      "bytes": 19379
+    },
+    {
+      "path": "src/pdf/scPdf.test.ts",
+      "bytes": 2880
+    },
+    {
+      "path": "src/lib/supabase.ts",
+      "bytes": 829
+    },
+    {
+      "path": "src/domain/budget.test.ts",
+      "bytes": 908
+    },
+    {
+      "path": "src/domain/budget.ts",
+      "bytes": 2771
+    },
+    {
+      "path": "src/domain/format.ts",
+      "bytes": 1685
+    },
+    {
+      "path": "src/domain/sc.ts",
+      "bytes": 9135
+    },
+    {
+      "path": "src/domain/labels.ts",
+      "bytes": 935
+    },
+    {
+      "path": "src/domain/holidays.ts",
+      "bytes": 2319
+    },
+    {
+      "path": "src/domain/types.ts",
+      "bytes": 5969
+    },
+    {
+      "path": "src/domain/emailRequest.test.ts",
+      "bytes": 1718
+    },
+    {
+      "path": "src/domain/emailRequest.ts",
+      "bytes": 1703
+    },
+    {
+      "path": "src/domain/holidays.test.ts",
+      "bytes": 978
+    },
+    {
+      "path": "src/services/LocalDataService.test.ts",
+      "bytes": 17243
+    },
+    {
+      "path": "src/services/seed.ts",
+      "bytes": 14571
+    },
+    {
+      "path": "src/services/DataService.ts",
+      "bytes": 7949
+    },
+    {
+      "path": "src/services/testUtils.ts",
+      "bytes": 279
+    },
+    {
+      "path": "src/services/api.ts",
+      "bytes": 2078
+    },
+    {
+      "path": "src/services/LocalDataService.ts",
+      "bytes": 48756
+    },
+    {
+      "path": "src/components/charts/SpendingCharts.tsx",
+      "bytes": 8724
+    },
+    {
+      "path": "src/components/charts/SpendingDetailModal.tsx",
+      "bytes": 5902
+    },
+    {
+      "path": "src/components/charts/MonthCalendar.tsx",
+      "bytes": 4843
+    },
+    {
+      "path": "src/components/layout/CommandPalette.tsx",
+      "bytes": 6212
+    },
+    {
+      "path": "src/components/layout/AppShell.tsx",
+      "bytes": 20002
+    },
+    {
+      "path": "src/components/ui/primitives.tsx",
+      "bytes": 10823
+    },
+    {
+      "path": "src/components/ui/icons.tsx",
+      "bytes": 4195
+    },
+    {
+      "path": "src/components/ui/ThemeSwitch.tsx",
+      "bytes": 1360
+    },
+    {
+      "path": "src/components/ui/overlay.tsx",
+      "bytes": 3188
+    },
+    {
+      "path": "src/pages/shared/lookups.ts",
+      "bytes": 1504
+    },
+    {
+      "path": "src/pages/shared/signature.tsx",
+      "bytes": 4650
+    },
+    {
+      "path": "src/pages/admin/AdminPages.tsx",
+      "bytes": 10781
+    },
+    {
+      "path": "src/pages/sc/SupplierPicker.tsx",
+      "bytes": 2997
+    },
+    {
+      "path": "src/pages/sc/SignModal.tsx",
+      "bytes": 4692
+    },
+    {
+      "path": "src/pages/sc/ScForm.tsx",
+      "bytes": 19174
+    },
+    {
+      "path": "src/pages/sc/ScChat.tsx",
+      "bytes": 3795
+    },
+    {
+      "path": "src/pages/sc/EmailRequestModal.tsx",
+      "bytes": 3589
+    },
+    {
+      "path": "src/pages/sc/ScDetail.tsx",
+      "bytes": 27638
+    },
+    {
+      "path": "src/pages/sc/ScTable.tsx",
+      "bytes": 2551
+    },
+    {
+      "path": "src/pages/sc/ScList.tsx",
+      "bytes": 4452
     }
   ],
   "dependencies": [
@@ -518,22 +518,6 @@
     {
       "source": "vite.config.ts",
       "target": "node:path"
-    },
-    {
-      "source": "src/main.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/main.tsx",
-      "target": "react-dom/client"
-    },
-    {
-      "source": "src/main.tsx",
-      "target": "./App"
-    },
-    {
-      "source": "src/main.tsx",
-      "target": "./app/theme"
     },
     {
       "source": "src/App.tsx",
@@ -602,6 +586,206 @@
     {
       "source": "src/App.tsx",
       "target": "@/pages/Validate"
+    },
+    {
+      "source": "src/main.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/main.tsx",
+      "target": "react-dom/client"
+    },
+    {
+      "source": "src/main.tsx",
+      "target": "./App"
+    },
+    {
+      "source": "src/main.tsx",
+      "target": "./app/theme"
+    },
+    {
+      "source": ".claude/skills/systematic-debugging/condition-based-waiting-example.ts",
+      "target": "~/threads/thread-manager"
+    },
+    {
+      "source": ".claude/skills/systematic-debugging/condition-based-waiting-example.ts",
+      "target": "~/threads/types"
+    },
+    {
+      "source": ".claude/skills/extract/SKILL.md",
+      "target": "playwright"
+    },
+    {
+      "source": ".claude/skills/extract/SKILL.md",
+      "target": "fs"
+    },
+    {
+      "source": ".claude/skills/writing-skills/render-graphs.js",
+      "target": "fs"
+    },
+    {
+      "source": ".claude/skills/writing-skills/render-graphs.js",
+      "target": "path"
+    },
+    {
+      "source": ".claude/skills/writing-skills/render-graphs.js",
+      "target": "child_process"
+    },
+    {
+      "source": "src/app/theme.ts",
+      "target": "react"
+    },
+    {
+      "source": "src/app/files.ts",
+      "target": "@/services/DataService"
+    },
+    {
+      "source": "src/app/session.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/app/session.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/app/session.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/app/session.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/Profile.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/Profile.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/pages/Profile.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/pages/Profile.tsx",
+      "target": "@/domain/sc"
+    },
+    {
+      "source": "src/pages/Profile.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/Profile.tsx",
+      "target": "@/components/ui/overlay"
+    },
+    {
+      "source": "src/pages/Profile.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/Profile.tsx",
+      "target": "./shared/lookups"
+    },
+    {
+      "source": "src/pages/Profile.tsx",
+      "target": "./shared/signature"
+    },
+    {
+      "source": "src/pages/Validate.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/Validate.tsx",
+      "target": "@/assets/logo-am-comercial.jpg"
+    },
+    {
+      "source": "src/pages/Validate.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/pages/Validate.tsx",
+      "target": "@/domain/sc"
+    },
+    {
+      "source": "src/pages/Validate.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/Validate.tsx",
+      "target": "@/services/DataService"
+    },
+    {
+      "source": "src/pages/Validate.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/Login.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/Login.tsx",
+      "target": "@/assets/logo-planilha-azul.png"
+    },
+    {
+      "source": "src/pages/Login.tsx",
+      "target": "@/assets/logo-planilha-claro.png"
+    },
+    {
+      "source": "src/pages/Login.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/pages/Login.tsx",
+      "target": "@/components/ui/icons"
+    },
+    {
+      "source": "src/pages/Login.tsx",
+      "target": "@/components/ui/ThemeSwitch"
+    },
+    {
+      "source": "src/pages/Login.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/Login.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/Transfers.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/Transfers.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/pages/Transfers.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/pages/Transfers.tsx",
+      "target": "@/domain/labels"
+    },
+    {
+      "source": "src/pages/Transfers.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/pages/Transfers.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/Transfers.tsx",
+      "target": "@/components/ui/overlay"
+    },
+    {
+      "source": "src/pages/Transfers.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/Transfers.tsx",
+      "target": "./shared/lookups"
     },
     {
       "source": "src/pages/Users.tsx",
@@ -692,106 +876,6 @@
       "target": "./sc/ScTable"
     },
     {
-      "source": "src/pages/Transfers.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/pages/Transfers.tsx",
-      "target": "@/app/session"
-    },
-    {
-      "source": "src/pages/Transfers.tsx",
-      "target": "@/domain/format"
-    },
-    {
-      "source": "src/pages/Transfers.tsx",
-      "target": "@/domain/labels"
-    },
-    {
-      "source": "src/pages/Transfers.tsx",
-      "target": "@/domain/types"
-    },
-    {
-      "source": "src/pages/Transfers.tsx",
-      "target": "@/services/api"
-    },
-    {
-      "source": "src/pages/Transfers.tsx",
-      "target": "@/components/ui/overlay"
-    },
-    {
-      "source": "src/pages/Transfers.tsx",
-      "target": "@/components/ui/primitives"
-    },
-    {
-      "source": "src/pages/Transfers.tsx",
-      "target": "./shared/lookups"
-    },
-    {
-      "source": "src/pages/Profile.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/pages/Profile.tsx",
-      "target": "@/app/session"
-    },
-    {
-      "source": "src/pages/Profile.tsx",
-      "target": "@/domain/format"
-    },
-    {
-      "source": "src/pages/Profile.tsx",
-      "target": "@/domain/sc"
-    },
-    {
-      "source": "src/pages/Profile.tsx",
-      "target": "@/services/api"
-    },
-    {
-      "source": "src/pages/Profile.tsx",
-      "target": "@/components/ui/overlay"
-    },
-    {
-      "source": "src/pages/Profile.tsx",
-      "target": "@/components/ui/primitives"
-    },
-    {
-      "source": "src/pages/Profile.tsx",
-      "target": "./shared/lookups"
-    },
-    {
-      "source": "src/pages/Profile.tsx",
-      "target": "./shared/signature"
-    },
-    {
-      "source": "src/pages/Validate.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/pages/Validate.tsx",
-      "target": "@/assets/logo-am-comercial.jpg"
-    },
-    {
-      "source": "src/pages/Validate.tsx",
-      "target": "@/domain/format"
-    },
-    {
-      "source": "src/pages/Validate.tsx",
-      "target": "@/domain/sc"
-    },
-    {
-      "source": "src/pages/Validate.tsx",
-      "target": "@/services/api"
-    },
-    {
-      "source": "src/pages/Validate.tsx",
-      "target": "@/services/DataService"
-    },
-    {
-      "source": "src/pages/Validate.tsx",
-      "target": "@/components/ui/primitives"
-    },
-    {
       "source": "src/pages/Payables.tsx",
       "target": "react"
     },
@@ -822,118 +906,6 @@
     {
       "source": "src/pages/Payables.tsx",
       "target": "./sc/ScTable"
-    },
-    {
-      "source": "src/pages/Login.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/pages/Login.tsx",
-      "target": "@/assets/logo-planilha-azul.png"
-    },
-    {
-      "source": "src/pages/Login.tsx",
-      "target": "@/assets/logo-planilha-claro.png"
-    },
-    {
-      "source": "src/pages/Login.tsx",
-      "target": "@/app/session"
-    },
-    {
-      "source": "src/pages/Login.tsx",
-      "target": "@/components/ui/icons"
-    },
-    {
-      "source": "src/pages/Login.tsx",
-      "target": "@/components/ui/ThemeSwitch"
-    },
-    {
-      "source": "src/pages/Login.tsx",
-      "target": "@/components/ui/primitives"
-    },
-    {
-      "source": "src/pages/Login.tsx",
-      "target": "@/services/api"
-    },
-    {
-      "source": "src/domain/format.ts",
-      "target": "./types"
-    },
-    {
-      "source": "src/domain/emailRequest.test.ts",
-      "target": "vitest"
-    },
-    {
-      "source": "src/domain/emailRequest.test.ts",
-      "target": "./sc"
-    },
-    {
-      "source": "src/domain/emailRequest.test.ts",
-      "target": "./types"
-    },
-    {
-      "source": "src/domain/emailRequest.test.ts",
-      "target": "./emailRequest"
-    },
-    {
-      "source": "src/domain/budget.ts",
-      "target": "./sc"
-    },
-    {
-      "source": "src/domain/budget.ts",
-      "target": "./types"
-    },
-    {
-      "source": "src/domain/sc.ts",
-      "target": "./format"
-    },
-    {
-      "source": "src/domain/sc.ts",
-      "target": "./types"
-    },
-    {
-      "source": "src/domain/labels.ts",
-      "target": "./types"
-    },
-    {
-      "source": "src/domain/holidays.test.ts",
-      "target": "vitest"
-    },
-    {
-      "source": "src/domain/holidays.test.ts",
-      "target": "./holidays"
-    },
-    {
-      "source": "src/domain/budget.test.ts",
-      "target": "vitest"
-    },
-    {
-      "source": "src/domain/budget.test.ts",
-      "target": "./budget"
-    },
-    {
-      "source": "src/domain/budget.test.ts",
-      "target": "./format"
-    },
-    {
-      "source": "src/domain/budget.test.ts",
-      "target": "./sc"
-    },
-    {
-      "source": "src/domain/emailRequest.ts",
-      "target": "./format"
-    },
-    {
-      "source": "src/domain/emailRequest.ts",
-      "target": "./sc"
-    },
-    {
-      "source": "src/domain/emailRequest.ts",
-      "target": "./types"
-    },
-    {
-      "source": "src/lib/supabase.ts",
-      "target": "@supabase/supabase-js"
     },
     {
       "source": "src/pdf/scPdf.ts",
@@ -996,60 +968,84 @@
       "target": "@/services/seed"
     },
     {
-      "source": "src/services/LocalDataService.ts",
-      "target": "@/domain/budget"
+      "source": "src/lib/supabase.ts",
+      "target": "@supabase/supabase-js"
     },
     {
-      "source": "src/services/LocalDataService.ts",
-      "target": "@/domain/format"
+      "source": "src/domain/budget.test.ts",
+      "target": "vitest"
     },
     {
-      "source": "src/services/LocalDataService.ts",
-      "target": "@/domain/sc"
+      "source": "src/domain/budget.test.ts",
+      "target": "./budget"
     },
     {
-      "source": "src/services/LocalDataService.ts",
-      "target": "@/domain/types"
+      "source": "src/domain/budget.test.ts",
+      "target": "./format"
     },
     {
-      "source": "src/services/LocalDataService.ts",
-      "target": "./DataService"
+      "source": "src/domain/budget.test.ts",
+      "target": "./sc"
     },
     {
-      "source": "src/services/LocalDataService.ts",
-      "target": "./seed"
+      "source": "src/domain/budget.ts",
+      "target": "./sc"
     },
     {
-      "source": "src/services/api.ts",
-      "target": "react"
+      "source": "src/domain/budget.ts",
+      "target": "./types"
     },
     {
-      "source": "src/services/api.ts",
-      "target": "./DataService"
+      "source": "src/domain/format.ts",
+      "target": "./types"
     },
     {
-      "source": "src/services/api.ts",
-      "target": "./LocalDataService"
+      "source": "src/domain/sc.ts",
+      "target": "./format"
     },
     {
-      "source": "src/services/DataService.ts",
-      "target": "@/domain/types"
+      "source": "src/domain/sc.ts",
+      "target": "./types"
     },
     {
-      "source": "src/services/seed.ts",
-      "target": "@/domain/format"
+      "source": "src/domain/labels.ts",
+      "target": "./types"
     },
     {
-      "source": "src/services/seed.ts",
-      "target": "@/domain/sc"
+      "source": "src/domain/emailRequest.test.ts",
+      "target": "vitest"
     },
     {
-      "source": "src/services/seed.ts",
-      "target": "@/domain/types"
+      "source": "src/domain/emailRequest.test.ts",
+      "target": "./sc"
     },
     {
-      "source": "src/services/seed.ts",
-      "target": "./LocalDataService"
+      "source": "src/domain/emailRequest.test.ts",
+      "target": "./types"
+    },
+    {
+      "source": "src/domain/emailRequest.test.ts",
+      "target": "./emailRequest"
+    },
+    {
+      "source": "src/domain/emailRequest.ts",
+      "target": "./format"
+    },
+    {
+      "source": "src/domain/emailRequest.ts",
+      "target": "./sc"
+    },
+    {
+      "source": "src/domain/emailRequest.ts",
+      "target": "./types"
+    },
+    {
+      "source": "src/domain/holidays.test.ts",
+      "target": "vitest"
+    },
+    {
+      "source": "src/domain/holidays.test.ts",
+      "target": "./holidays"
     },
     {
       "source": "src/services/LocalDataService.test.ts",
@@ -1080,51 +1076,79 @@
       "target": "./seed"
     },
     {
+      "source": "src/services/seed.ts",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/services/seed.ts",
+      "target": "@/domain/sc"
+    },
+    {
+      "source": "src/services/seed.ts",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/services/seed.ts",
+      "target": "./LocalDataService"
+    },
+    {
+      "source": "src/services/DataService.ts",
+      "target": "@/domain/types"
+    },
+    {
       "source": "src/services/testUtils.ts",
       "target": "./LocalDataService"
     },
     {
-      "source": "src/app/session.tsx",
+      "source": "src/services/api.ts",
       "target": "react"
     },
     {
-      "source": "src/app/session.tsx",
+      "source": "src/services/api.ts",
+      "target": "./DataService"
+    },
+    {
+      "source": "src/services/api.ts",
+      "target": "./LocalDataService"
+    },
+    {
+      "source": "src/services/LocalDataService.ts",
+      "target": "@/domain/budget"
+    },
+    {
+      "source": "src/services/LocalDataService.ts",
       "target": "@/domain/format"
     },
     {
-      "source": "src/app/session.tsx",
+      "source": "src/services/LocalDataService.ts",
+      "target": "@/domain/sc"
+    },
+    {
+      "source": "src/services/LocalDataService.ts",
       "target": "@/domain/types"
     },
     {
-      "source": "src/app/session.tsx",
-      "target": "@/services/api"
+      "source": "src/services/LocalDataService.ts",
+      "target": "./DataService"
     },
     {
-      "source": "src/app/files.ts",
-      "target": "@/services/DataService"
+      "source": "src/services/LocalDataService.ts",
+      "target": "./seed"
     },
     {
-      "source": "src/app/theme.ts",
+      "source": "src/components/charts/SpendingCharts.tsx",
       "target": "react"
     },
     {
-      "source": "src/components/charts/MonthCalendar.tsx",
+      "source": "src/components/charts/SpendingCharts.tsx",
       "target": "@/domain/format"
     },
     {
-      "source": "src/components/charts/MonthCalendar.tsx",
-      "target": "@/domain/holidays"
-    },
-    {
-      "source": "src/components/charts/MonthCalendar.tsx",
+      "source": "src/components/charts/SpendingCharts.tsx",
       "target": "@/domain/types"
     },
     {
-      "source": "src/components/charts/MonthCalendar.tsx",
-      "target": "@/components/ui/icons"
-    },
-    {
-      "source": "src/components/charts/MonthCalendar.tsx",
+      "source": "src/components/charts/SpendingCharts.tsx",
       "target": "@/components/ui/primitives"
     },
     {
@@ -1164,19 +1188,55 @@
       "target": "@/pages/shared/lookups"
     },
     {
-      "source": "src/components/charts/SpendingCharts.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/charts/SpendingCharts.tsx",
+      "source": "src/components/charts/MonthCalendar.tsx",
       "target": "@/domain/format"
     },
     {
-      "source": "src/components/charts/SpendingCharts.tsx",
+      "source": "src/components/charts/MonthCalendar.tsx",
+      "target": "@/domain/holidays"
+    },
+    {
+      "source": "src/components/charts/MonthCalendar.tsx",
       "target": "@/domain/types"
     },
     {
-      "source": "src/components/charts/SpendingCharts.tsx",
+      "source": "src/components/charts/MonthCalendar.tsx",
+      "target": "@/components/ui/icons"
+    },
+    {
+      "source": "src/components/charts/MonthCalendar.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
+      "target": "react-dom"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
+      "target": "@/domain/sc"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
+      "target": "@/components/ui/icons"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
       "target": "@/components/ui/primitives"
     },
     {
@@ -1232,36 +1292,20 @@
       "target": "@/components/charts/MonthCalendar"
     },
     {
-      "source": "src/components/layout/CommandPalette.tsx",
+      "source": "src/components/ui/primitives.tsx",
       "target": "react"
     },
     {
-      "source": "src/components/layout/CommandPalette.tsx",
-      "target": "react-dom"
+      "source": "src/components/ui/primitives.tsx",
+      "target": "@/domain/labels"
     },
     {
-      "source": "src/components/layout/CommandPalette.tsx",
-      "target": "@/app/session"
+      "source": "src/components/ui/primitives.tsx",
+      "target": "@/domain/types"
     },
     {
-      "source": "src/components/layout/CommandPalette.tsx",
-      "target": "@/domain/format"
-    },
-    {
-      "source": "src/components/layout/CommandPalette.tsx",
-      "target": "@/domain/sc"
-    },
-    {
-      "source": "src/components/layout/CommandPalette.tsx",
-      "target": "@/services/api"
-    },
-    {
-      "source": "src/components/layout/CommandPalette.tsx",
-      "target": "@/components/ui/icons"
-    },
-    {
-      "source": "src/components/layout/CommandPalette.tsx",
-      "target": "@/components/ui/primitives"
+      "source": "src/components/ui/primitives.tsx",
+      "target": "./icons"
     },
     {
       "source": "src/components/ui/icons.tsx",
@@ -1292,54 +1336,6 @@
       "target": "./primitives"
     },
     {
-      "source": "src/components/ui/primitives.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/primitives.tsx",
-      "target": "@/domain/labels"
-    },
-    {
-      "source": "src/components/ui/primitives.tsx",
-      "target": "@/domain/types"
-    },
-    {
-      "source": "src/components/ui/primitives.tsx",
-      "target": "./icons"
-    },
-    {
-      "source": "src/pages/admin/AdminPages.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/pages/admin/AdminPages.tsx",
-      "target": "@/app/session"
-    },
-    {
-      "source": "src/pages/admin/AdminPages.tsx",
-      "target": "@/domain/format"
-    },
-    {
-      "source": "src/pages/admin/AdminPages.tsx",
-      "target": "@/domain/types"
-    },
-    {
-      "source": "src/pages/admin/AdminPages.tsx",
-      "target": "@/services/api"
-    },
-    {
-      "source": "src/pages/admin/AdminPages.tsx",
-      "target": "@/components/ui/overlay"
-    },
-    {
-      "source": "src/pages/admin/AdminPages.tsx",
-      "target": "@/components/ui/primitives"
-    },
-    {
-      "source": "src/pages/admin/AdminPages.tsx",
-      "target": "../shared/lookups"
-    },
-    {
       "source": "src/pages/shared/lookups.ts",
       "target": "react"
     },
@@ -1364,63 +1360,35 @@
       "target": "react"
     },
     {
-      "source": "src/pages/sc/ScChat.tsx",
+      "source": "src/pages/admin/AdminPages.tsx",
       "target": "react"
     },
     {
-      "source": "src/pages/sc/ScChat.tsx",
+      "source": "src/pages/admin/AdminPages.tsx",
       "target": "@/app/session"
     },
     {
-      "source": "src/pages/sc/ScChat.tsx",
+      "source": "src/pages/admin/AdminPages.tsx",
       "target": "@/domain/format"
     },
     {
-      "source": "src/pages/sc/ScChat.tsx",
+      "source": "src/pages/admin/AdminPages.tsx",
       "target": "@/domain/types"
     },
     {
-      "source": "src/pages/sc/ScChat.tsx",
+      "source": "src/pages/admin/AdminPages.tsx",
       "target": "@/services/api"
     },
     {
-      "source": "src/pages/sc/ScChat.tsx",
-      "target": "@/components/ui/icons"
-    },
-    {
-      "source": "src/pages/sc/ScChat.tsx",
+      "source": "src/pages/admin/AdminPages.tsx",
       "target": "@/components/ui/overlay"
     },
     {
-      "source": "src/pages/sc/ScChat.tsx",
+      "source": "src/pages/admin/AdminPages.tsx",
       "target": "@/components/ui/primitives"
     },
     {
-      "source": "src/pages/sc/ScChat.tsx",
-      "target": "../shared/lookups"
-    },
-    {
-      "source": "src/pages/sc/ScTable.tsx",
-      "target": "@/app/session"
-    },
-    {
-      "source": "src/pages/sc/ScTable.tsx",
-      "target": "@/domain/format"
-    },
-    {
-      "source": "src/pages/sc/ScTable.tsx",
-      "target": "@/domain/sc"
-    },
-    {
-      "source": "src/pages/sc/ScTable.tsx",
-      "target": "@/domain/types"
-    },
-    {
-      "source": "src/pages/sc/ScTable.tsx",
-      "target": "@/components/ui/primitives"
-    },
-    {
-      "source": "src/pages/sc/ScTable.tsx",
+      "source": "src/pages/admin/AdminPages.tsx",
       "target": "../shared/lookups"
     },
     {
@@ -1484,6 +1452,90 @@
       "target": "../shared/signature"
     },
     {
+      "source": "src/pages/sc/ScForm.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/sc/ScForm.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/pages/sc/ScForm.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/pages/sc/ScForm.tsx",
+      "target": "@/domain/sc"
+    },
+    {
+      "source": "src/pages/sc/ScForm.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/pages/sc/ScForm.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/sc/ScForm.tsx",
+      "target": "@/components/ui/icons"
+    },
+    {
+      "source": "src/pages/sc/ScForm.tsx",
+      "target": "@/components/ui/overlay"
+    },
+    {
+      "source": "src/pages/sc/ScForm.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/sc/ScForm.tsx",
+      "target": "../shared/lookups"
+    },
+    {
+      "source": "src/pages/sc/ScForm.tsx",
+      "target": "./SignModal"
+    },
+    {
+      "source": "src/pages/sc/ScForm.tsx",
+      "target": "./SupplierPicker"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "@/components/ui/icons"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "@/components/ui/overlay"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "../shared/lookups"
+    },
+    {
       "source": "src/pages/sc/EmailRequestModal.tsx",
       "target": "react"
     },
@@ -1514,46 +1566,6 @@
     {
       "source": "src/pages/sc/EmailRequestModal.tsx",
       "target": "../shared/lookups"
-    },
-    {
-      "source": "src/pages/sc/ScList.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/pages/sc/ScList.tsx",
-      "target": "@/app/session"
-    },
-    {
-      "source": "src/pages/sc/ScList.tsx",
-      "target": "@/domain/format"
-    },
-    {
-      "source": "src/pages/sc/ScList.tsx",
-      "target": "@/domain/sc"
-    },
-    {
-      "source": "src/pages/sc/ScList.tsx",
-      "target": "@/domain/types"
-    },
-    {
-      "source": "src/pages/sc/ScList.tsx",
-      "target": "@/services/api"
-    },
-    {
-      "source": "src/pages/sc/ScList.tsx",
-      "target": "@/components/ui/primitives"
-    },
-    {
-      "source": "src/pages/sc/ScList.tsx",
-      "target": "@/app/session"
-    },
-    {
-      "source": "src/pages/sc/ScList.tsx",
-      "target": "../shared/lookups"
-    },
-    {
-      "source": "src/pages/sc/ScList.tsx",
-      "target": "./ScTable"
     },
     {
       "source": "src/pages/sc/ScDetail.tsx",
@@ -1624,80 +1636,68 @@
       "target": "./SignModal"
     },
     {
-      "source": "src/pages/sc/ScForm.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/pages/sc/ScForm.tsx",
+      "source": "src/pages/sc/ScTable.tsx",
       "target": "@/app/session"
     },
     {
-      "source": "src/pages/sc/ScForm.tsx",
+      "source": "src/pages/sc/ScTable.tsx",
       "target": "@/domain/format"
     },
     {
-      "source": "src/pages/sc/ScForm.tsx",
+      "source": "src/pages/sc/ScTable.tsx",
       "target": "@/domain/sc"
     },
     {
-      "source": "src/pages/sc/ScForm.tsx",
+      "source": "src/pages/sc/ScTable.tsx",
       "target": "@/domain/types"
     },
     {
-      "source": "src/pages/sc/ScForm.tsx",
-      "target": "@/services/api"
-    },
-    {
-      "source": "src/pages/sc/ScForm.tsx",
-      "target": "@/components/ui/icons"
-    },
-    {
-      "source": "src/pages/sc/ScForm.tsx",
-      "target": "@/components/ui/overlay"
-    },
-    {
-      "source": "src/pages/sc/ScForm.tsx",
+      "source": "src/pages/sc/ScTable.tsx",
       "target": "@/components/ui/primitives"
     },
     {
-      "source": "src/pages/sc/ScForm.tsx",
+      "source": "src/pages/sc/ScTable.tsx",
       "target": "../shared/lookups"
     },
     {
-      "source": "src/pages/sc/ScForm.tsx",
-      "target": "./SignModal"
+      "source": "src/pages/sc/ScList.tsx",
+      "target": "react"
     },
     {
-      "source": "src/pages/sc/ScForm.tsx",
-      "target": "./SupplierPicker"
+      "source": "src/pages/sc/ScList.tsx",
+      "target": "@/app/session"
     },
     {
-      "source": ".claude/skills/writing-skills/render-graphs.js",
-      "target": "fs"
+      "source": "src/pages/sc/ScList.tsx",
+      "target": "@/domain/format"
     },
     {
-      "source": ".claude/skills/writing-skills/render-graphs.js",
-      "target": "path"
+      "source": "src/pages/sc/ScList.tsx",
+      "target": "@/domain/sc"
     },
     {
-      "source": ".claude/skills/writing-skills/render-graphs.js",
-      "target": "child_process"
+      "source": "src/pages/sc/ScList.tsx",
+      "target": "@/domain/types"
     },
     {
-      "source": ".claude/skills/systematic-debugging/condition-based-waiting-example.ts",
-      "target": "~/threads/thread-manager"
+      "source": "src/pages/sc/ScList.tsx",
+      "target": "@/services/api"
     },
     {
-      "source": ".claude/skills/systematic-debugging/condition-based-waiting-example.ts",
-      "target": "~/threads/types"
+      "source": "src/pages/sc/ScList.tsx",
+      "target": "@/components/ui/primitives"
     },
     {
-      "source": ".claude/skills/extract/SKILL.md",
-      "target": "playwright"
+      "source": "src/pages/sc/ScList.tsx",
+      "target": "@/app/session"
     },
     {
-      "source": ".claude/skills/extract/SKILL.md",
-      "target": "fs"
+      "source": "src/pages/sc/ScList.tsx",
+      "target": "../shared/lookups"
+    },
+    {
+      "source": "src/pages/sc/ScList.tsx",
+      "target": "./ScTable"
     }
   ]
 }
