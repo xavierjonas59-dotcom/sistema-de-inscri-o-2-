@@ -9,6 +9,7 @@ import { api } from '@/services/api';
 import { Icon, type IconName } from '@/components/ui/icons';
 import { ThemeSwitch } from '@/components/ui/ThemeSwitch';
 import { cx } from '@/components/ui/primitives';
+import { CommandPalette, type Screen } from './CommandPalette';
 
 interface NavItem {
   path: string;
@@ -96,6 +97,11 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
   };
   const groups = nav[user.role];
   const all = groups.flatMap((g) => g.items.map((i) => ({ ...i, group: g.title })));
+  const screens: Screen[] = [
+    ...all.map((i) => ({ path: i.path, label: i.label, icon: i.icon, group: i.group ?? 'Início' })),
+    { path: '/perfil?aba=dados', label: 'Meu perfil', icon: 'user', group: 'Conta' },
+    { path: '/perfil?aba=seguranca', label: 'Trocar senha', icon: 'shield', group: 'Conta' },
+  ];
   const active = all.filter((i) => (i.path === '/' ? path === '/' : path === i.path || path.startsWith(i.path + '/'))).sort((a, b) => b.path.length - a.path.length)[0];
   const crumb =
     path === '/perfil' ? ['Meu perfil'] : path === '/sc/ver' ? ['Solicitações', 'Solicitação'] : path === '/sc/editar' ? ['Solicitações', 'Editar solicitação'] : active?.group ? [active.group, active.label] : [active?.label ?? 'Início'];
@@ -174,7 +180,7 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
           ))}
         </ol>
         <div className="ml-auto flex items-center gap-2">
-          {user.role !== 'ADMIN' && <Search />}
+          <CommandPalette screens={screens} />
           {showMonth && (
             <div className="flex h-9 items-center rounded-md bg-muted" aria-label="Competência">
               <button className="grid h-9 w-8 place-items-center rounded-l-md hover:bg-foreground/[0.05]" onClick={() => setMonth(shiftMonth(month, -1))} aria-label="Mês anterior">
@@ -190,76 +196,6 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
         </div>
       </header>
       <main className="print-full mx-auto max-w-6xl px-4 py-8 sm:px-8">{children}</main>
-    </div>
-  );
-}
-
-/** Busca rápida de SC por número, fornecedor ou solicitante. Ctrl K (ou ⌘K) foca o campo. */
-function Search() {
-  const user = useUser();
-  const [q, setQ] = useState('');
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLInputElement>(null);
-  const { data: all = [] } = useQuery(() => api.listRequests(user), [user.id]);
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        ref.current?.focus();
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, []);
-  const term = q.trim().toLowerCase();
-  const hits = term
-    ? all.filter((r) => [r.number, r.supplierName, r.requesterName, ...r.items.map((i) => i.description)].some((t) => t.toLowerCase().includes(term))).slice(0, 7)
-    : [];
-  const go = (id: string) => {
-    setQ('');
-    setOpen(false);
-    ref.current?.blur();
-    navigate(`/sc/ver?id=${id}`);
-  };
-  return (
-    <div className="relative hidden md:block">
-      <label className="flex h-9 w-64 items-center gap-2 rounded-md bg-muted px-3 text-sm text-muted-foreground focus-within:bg-card focus-within:ring-2 focus-within:ring-primary/20">
-        <Icon name="search" size={16} />
-        <input
-          ref={ref}
-          value={q}
-          onChange={(e) => {
-            setQ(e.target.value);
-            setOpen(true);
-          }}
-          onFocus={() => setOpen(true)}
-          onBlur={() => setTimeout(() => setOpen(false), 150)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && hits[0]) go(hits[0].id);
-            if (e.key === 'Escape') ref.current?.blur();
-          }}
-          placeholder="Buscar SC"
-          aria-label="Buscar solicitação por número, fornecedor ou solicitante"
-          className="min-w-0 flex-1 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
-        />
-        <kbd className="rounded-full border bg-card px-2 font-sans text-[11px] leading-5 text-muted-foreground">Ctrl K</kbd>
-      </label>
-      {open && term && (
-        <ul className="absolute right-0 top-full z-30 mt-1.5 w-96 overflow-hidden rounded-md border bg-card py-1 shadow-pop">
-          {hits.map((r) => (
-            <li key={r.id}>
-              <button className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm hover:bg-background" onMouseDown={(e) => e.preventDefault()} onClick={() => go(r.id)}>
-                <span className="min-w-0 flex-1">
-                  <span className="font-medium">{r.number}</span> <span className="text-muted-foreground">{r.supplierName}</span>
-                  <span className="block truncate text-[13px] text-muted-foreground">{SC_STATUS[r.status].label}</span>
-                </span>
-                <span className="tabular font-semibold">{money(scTotal(r))}</span>
-              </button>
-            </li>
-          ))}
-          {!hits.length && <li className="px-3 py-3 text-sm text-muted-foreground">Nenhuma SC encontrada.</li>}
-        </ul>
-      )}
     </div>
   );
 }
