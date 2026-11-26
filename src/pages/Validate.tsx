@@ -28,9 +28,9 @@ export default function Validate({ query }: { query: URLSearchParams }) {
         <Input aria-label="Número da SC" value={number} onChange={(e) => setNumber(e.target.value)} placeholder="SC-2026-0001" />
         <Button type="submit">Validar</Button>
       </form>
-      {result === null && <p className="mt-4 rounded border border-[#e3b4b4] bg-[#fbeeee] px-3 py-2 text-sm text-[#7d1f1f]">Solicitação não encontrada.</p>}
+      {result === null && <p className="mt-4 rounded border border-danger-line bg-danger-soft px-3 py-2 text-sm text-danger">Solicitação não encontrada.</p>}
       {result && (
-        <div className="mt-4 rounded border bg-white">
+        <div className="mt-4 rounded border bg-card">
           <div className="flex items-center justify-between border-b px-4 py-3">
             <span className="font-semibold">{result.number}</span>
             <Badge tone={SC_STATUS[result.status].tone}>{SC_STATUS[result.status].label}</Badge>

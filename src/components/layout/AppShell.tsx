@@ -106,8 +106,8 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
         <img src={logo} alt="AM Comercial" className="h-9" />
       </div>
       <div className="px-3">
-        <div className="flex items-center gap-3 rounded-md border bg-white px-3 py-2.5 shadow-soft">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[9px] bg-[#ECEDF8] text-[13px] font-semibold text-brand">{initials(workspace.title)}</span>
+        <div className="flex items-center gap-3 rounded-md border bg-card px-3 py-2.5 shadow-soft">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[9px] bg-info-soft text-[13px] font-semibold text-brand">{initials(workspace.title)}</span>
           <div className="min-w-0">
             <div className="truncate text-sm font-semibold">{workspace.title}</div>
             <div className="truncate text-[13px] text-muted-foreground">{workspace.sub}</div>
@@ -117,7 +117,7 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
       <div className="mt-4 flex-1 space-y-4 overflow-y-auto px-3">
         {groups.map((g, gi) => (
           <div key={gi}>
-            {g.title && <div className="px-3 pb-1.5 text-[13px] text-[#6A6A6F]">{g.title}</div>}
+            {g.title && <div className="px-3 pb-1.5 text-[13px] text-muted-foreground">{g.title}</div>}
             <ul className="space-y-0.5">
               {g.items.map((it) => {
                 const on = active?.path === it.path;
@@ -129,7 +129,7 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
                       onClick={() => setOpen(false)}
                       className={cx(
                         'flex h-10 items-center gap-3 rounded-md border px-3 text-[15px] transition-colors',
-                        on ? 'border-border bg-white shadow-soft' : 'border-transparent text-foreground/90 hover:bg-black/[0.035]',
+                        on ? 'border-border bg-card shadow-soft' : 'border-transparent text-foreground/90 hover:bg-foreground/[0.05]',
                       )}
                     >
                       <Icon name={it.icon} size={19} className={on ? 'text-brand' : 'text-foreground/70'} />
@@ -144,12 +144,12 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
         ))}
       </div>
       <div className="flex items-center gap-3 border-t px-4 py-3.5">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#ECEDF8] text-[13px] font-semibold text-brand">{initials(user.name)}</span>
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-info-soft text-[13px] font-semibold text-brand">{initials(user.name)}</span>
         <div className="min-w-0 flex-1">
           <div className="truncate text-sm font-medium">{user.name}</div>
           <div className="truncate text-[13px] text-muted-foreground">{user.role === 'DIRETORIA' ? user.cargo : ROLE_LABEL[user.role]}</div>
         </div>
-        <button onClick={logout} className="rounded p-2 text-muted-foreground hover:bg-black/[0.04] hover:text-foreground" title="Sair" aria-label="Sair">
+        <button onClick={logout} className="rounded p-2 text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground" title="Sair" aria-label="Sair">
           <Icon name="logout" size={17} />
         </button>
       </div>
@@ -160,15 +160,15 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
 
   return (
     <div className="min-h-screen lg:pl-64">
-      <aside className="no-print fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-[#E2E2E5] bg-sidebar lg:block">{sidebar}</aside>
+      <aside className="no-print fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-border bg-sidebar lg:block">{sidebar}</aside>
       {open && (
         <div className="no-print fixed inset-0 z-40 lg:hidden" onClick={() => setOpen(false)}>
           <div className="absolute inset-0 bg-black/30" />
           <aside className="absolute inset-y-0 left-0 w-72 border-r bg-sidebar" onClick={(e) => e.stopPropagation()}>{sidebar}</aside>
         </div>
       )}
-      <header className="no-print sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-[#E6E6E6] bg-[#FCFCFD]/95 px-4 backdrop-blur sm:px-8">
-        <button className="rounded p-2 hover:bg-black/[0.04] lg:hidden" onClick={() => setOpen(true)} aria-label="Abrir menu">
+      <header className="no-print sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-border bg-topbar/95 px-4 backdrop-blur sm:px-8">
+        <button className="rounded p-2 hover:bg-foreground/[0.05] lg:hidden" onClick={() => setOpen(true)} aria-label="Abrir menu">
           <Icon name="menu" />
         </button>
         <ol className="hidden min-w-0 items-center gap-2 text-sm sm:flex" aria-label="Você está em">
@@ -182,12 +182,12 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
         <div className="ml-auto flex items-center gap-2">
           {user.role !== 'ADMIN' && <Search />}
           {showMonth && (
-            <div className="flex h-9 items-center rounded-md bg-[#F1F1F2]" aria-label="Competência">
-              <button className="grid h-9 w-8 place-items-center rounded-l-md hover:bg-black/[0.04]" onClick={() => setMonth(shiftMonth(month, -1))} aria-label="Mês anterior">
+            <div className="flex h-9 items-center rounded-md bg-muted" aria-label="Competência">
+              <button className="grid h-9 w-8 place-items-center rounded-l-md hover:bg-foreground/[0.05]" onClick={() => setMonth(shiftMonth(month, -1))} aria-label="Mês anterior">
                 <Icon name="chevronLeft" size={15} />
               </button>
               <span className="min-w-[124px] text-center text-sm">{monthLabel(month)}</span>
-              <button className="grid h-9 w-8 place-items-center rounded-r-md hover:bg-black/[0.04]" onClick={() => setMonth(shiftMonth(month, 1))} aria-label="Próximo mês">
+              <button className="grid h-9 w-8 place-items-center rounded-r-md hover:bg-foreground/[0.05]" onClick={() => setMonth(shiftMonth(month, 1))} aria-label="Próximo mês">
                 <Icon name="chevronRight" size={15} />
               </button>
             </div>
@@ -229,7 +229,7 @@ function Search() {
   };
   return (
     <div className="relative hidden md:block">
-      <label className="flex h-9 w-64 items-center gap-2 rounded-md bg-[#F1F1F2] px-3 text-sm text-muted-foreground focus-within:bg-white focus-within:ring-2 focus-within:ring-primary/20">
+      <label className="flex h-9 w-64 items-center gap-2 rounded-md bg-muted px-3 text-sm text-muted-foreground focus-within:bg-card focus-within:ring-2 focus-within:ring-primary/20">
         <Icon name="search" size={16} />
         <input
           ref={ref}
@@ -248,13 +248,13 @@ function Search() {
           aria-label="Buscar solicitação por número, fornecedor ou solicitante"
           className="min-w-0 flex-1 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
         />
-        <kbd className="rounded-full border bg-white px-2 font-sans text-[11px] leading-5 text-muted-foreground">Ctrl K</kbd>
+        <kbd className="rounded-full border bg-card px-2 font-sans text-[11px] leading-5 text-muted-foreground">Ctrl K</kbd>
       </label>
       {open && term && (
-        <ul className="absolute right-0 top-full z-30 mt-1.5 w-96 overflow-hidden rounded-md border bg-white py-1 shadow-pop">
+        <ul className="absolute right-0 top-full z-30 mt-1.5 w-96 overflow-hidden rounded-md border bg-card py-1 shadow-pop">
           {hits.map((r) => (
             <li key={r.id}>
-              <button className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm hover:bg-[#F5F5F7]" onMouseDown={(e) => e.preventDefault()} onClick={() => go(r.id)}>
+              <button className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm hover:bg-background" onMouseDown={(e) => e.preventDefault()} onClick={() => go(r.id)}>
                 <span className="min-w-0 flex-1">
                   <span className="font-medium">{r.number}</span> <span className="text-muted-foreground">{r.supplierName}</span>
                   <span className="block truncate text-[13px] text-muted-foreground">{SC_STATUS[r.status].label}</span>
@@ -284,14 +284,14 @@ function Notifications() {
   }, [open]);
   return (
     <div className="relative" ref={ref}>
-      <button onClick={() => setOpen(!open)} className="relative grid h-9 w-9 place-items-center rounded-md hover:bg-black/[0.04]" aria-label={`Notificações (${unread.length} não lidas)`}>
+      <button onClick={() => setOpen(!open)} className="relative grid h-9 w-9 place-items-center rounded-md hover:bg-foreground/[0.05]" aria-label={`Notificações (${unread.length} não lidas)`}>
         <Icon name="bell" size={19} />
         {unread.length > 0 && (
           <span className="tabular absolute right-0.5 top-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-[#D32F2F] px-1 text-[11px] font-semibold text-white">{unread.length}</span>
         )}
       </button>
       {open && (
-        <div className="absolute right-0 top-full z-30 mt-1.5 w-[min(380px,calc(100vw-2rem))] overflow-hidden rounded-md border bg-white shadow-pop">
+        <div className="absolute right-0 top-full z-30 mt-1.5 w-[min(380px,calc(100vw-2rem))] overflow-hidden rounded-md border bg-card shadow-pop">
           <div className="flex items-center justify-between border-b px-4 py-3">
             <span className="text-sm font-semibold">Notificações</span>
             {unread.length > 0 && (
@@ -305,7 +305,7 @@ function Notifications() {
             {items.map((n) => (
               <li key={n.id}>
                 <button
-                  className="flex w-full gap-3 border-b px-4 py-3 text-left text-sm last:border-0 hover:bg-[#F5F5F7]"
+                  className="flex w-full gap-3 border-b px-4 py-3 text-left text-sm last:border-0 hover:bg-background"
                   onClick={() => {
                     api.markNotificationsRead(user, [n.id]);
                     setOpen(false);

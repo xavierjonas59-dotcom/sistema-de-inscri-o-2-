@@ -100,7 +100,7 @@ export function SignModal({
             <DrawPad onChange={setDrawn} />
           </div>
         ) : (
-          <div className="rounded border bg-[#fafafa] px-4 pt-3 text-center">
+          <div className="rounded border bg-card px-4 pt-3 text-center">
             <img src={user.signature!.dataUrl} alt="Sua assinatura" className="mx-auto h-14 object-contain" />
             <div className="mx-auto mt-1 w-56 border-t border-foreground/60" />
             <div className="py-2 text-xs">
@@ -116,7 +116,7 @@ export function SignModal({
         <Field label="Confirme a sua senha">
           <Input id="sign-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && ready && confirm()} />
         </Field>
-        {error && <p className="rounded bg-[#fbeeee] px-3 py-2 text-sm text-[#a12626]">{error}</p>}
+        {error && <p className="rounded bg-danger-soft px-3 py-2 text-sm text-danger">{error}</p>}
       </div>
     </Modal>
   );

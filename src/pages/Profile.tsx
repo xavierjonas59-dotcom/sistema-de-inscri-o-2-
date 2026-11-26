@@ -10,7 +10,7 @@ import { DrawPad, photoToSignature } from './shared/signature';
 
 function SignaturePreview({ src, name, cargo }: { src: string | null; name: string; cargo: string }) {
   return (
-    <div className="rounded border bg-white">
+    <div className="rounded border bg-card">
       <div className="bg-sheet px-3 py-1 text-center text-[11px] font-semibold uppercase tracking-wide text-white">Autorização de pagamento</div>
       <div className="flex flex-col items-center px-4 pb-3 pt-4 text-center text-xs">
         <div className="flex h-16 items-end">{src ? <img src={src} alt="Prévia da assinatura" className="max-h-16 max-w-[260px] object-contain" /> : <span className="text-muted-foreground">Sem assinatura</span>}</div>
@@ -88,7 +88,7 @@ export default function Profile() {
             <h2 className="text-sm font-semibold">{draft ? 'Prévia da nova assinatura' : 'Como sai no documento'}</h2>
             <SignaturePreview src={draft ?? user.signature?.dataUrl ?? null} name={user.name} cargo={user.cargo} />
             {user.signature && !draft && <p className="text-xs text-muted-foreground">Atualizada em {dateTime(user.signature.updatedAt)}.</p>}
-            <div className={cx('rounded border bg-white p-3 text-xs text-muted-foreground')}>
+            <div className={cx('rounded border bg-card p-3 text-xs text-muted-foreground')}>
               Cada aplicação registra data, hora, IP, usuário e um código (hash) do conteúdo da SC. Se a SC for alterada depois, a assinatura deixa de valer e precisa ser refeita.
               A assinatura com certificado (gov.br, ZapSign, Clicksign ou D4Sign) fica para a fase 2.
             </div>

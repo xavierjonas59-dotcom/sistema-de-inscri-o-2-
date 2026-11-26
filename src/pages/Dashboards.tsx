@@ -118,7 +118,7 @@ export function DirectorDashboard() {
                   <Td right>{money(b.limit)}</Td>
                   <Td right>{money(b.reserved)}</Td>
                   <Td right>{money(b.consumed)}</Td>
-                  <Td right className={b.available < 0 ? 'text-[#a12626]' : ''}>{money(b.available)}</Td>
+                  <Td right className={b.available < 0 ? 'text-danger' : ''}>{money(b.available)}</Td>
                   <Td className="w-40">
                     <div className="mb-1 flex justify-between text-xs"><span className="tabular">{pct(b.usage)}</span>{b.alert !== 'ok' && <AlertBadge level={b.alert} />}</div>
                     <BudgetBar consumed={b.consumed} reserved={b.reserved} limit={b.limit} alert={b.alert} />

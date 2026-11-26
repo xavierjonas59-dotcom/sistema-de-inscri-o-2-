@@ -120,7 +120,7 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
         <ol className="mb-4 flex flex-wrap gap-x-1 gap-y-2 text-xs">
           {FLOW.map((f, i) => (
             <li key={f.label} className="flex items-center gap-1">
-              <span className={cx('rounded-full px-2.5 py-1', i < flowIndex ? 'bg-[#eceefa] text-brand' : i === flowIndex ? 'bg-brand font-semibold text-white' : 'bg-muted text-muted-foreground')}>{f.label}</span>
+              <span className={cx('rounded-full px-2.5 py-1', i < flowIndex ? 'bg-info-soft text-brand' : i === flowIndex ? 'bg-brand font-semibold text-white' : 'bg-muted text-muted-foreground')}>{f.label}</span>
               {i < FLOW.length - 1 && <span className="text-muted-foreground">›</span>}
             </li>
           ))}
@@ -138,7 +138,7 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
       )}
       {sc.paidAt && <Notice tone="good">Paga em {sc.paidAt.split('-').reverse().join('/')}.</Notice>}
 
-      {actions.length > 0 && <div className="no-print mb-4 flex flex-wrap justify-end gap-2 rounded border bg-white p-3">{actions}</div>}
+      {actions.length > 0 && <div className="no-print mb-4 flex flex-wrap justify-end gap-2 rounded border bg-card p-3">{actions}</div>}
 
       <div className="grid gap-4 xl:grid-cols-[1fr_320px]">
         <div className="min-w-0 space-y-4">
@@ -151,7 +151,7 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
           <CardHeader title="Linha do tempo" />
           <ol className="space-y-3 p-4">
             {[...sc.timeline].reverse().map((t, i) => (
-              <li key={i} className="border-l-2 border-[#d5d7ee] pl-3">
+              <li key={i} className="border-l-2 border-info-line pl-3">
                 <div className="text-sm font-medium">{t.action}</div>
                 <div className="text-xs text-muted-foreground">{t.userName}, {dateTime(t.at)}</div>
                 {t.note && <div className="mt-0.5 text-xs text-muted-foreground">{t.note}</div>}
@@ -193,7 +193,7 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
 }
 
 function Notice({ tone, children }: { tone: 'critical' | 'info' | 'good'; children: React.ReactNode }) {
-  const cls = { critical: 'border-[#e3b4b4] bg-[#fbeeee] text-[#7d1f1f]', info: 'border-[#cfd1ec] bg-[#f3f4fb] text-brand', good: 'border-[#bfdcc8] bg-[#e9f4ec] text-[#1f6f3a]' }[tone];
+  const cls = { critical: 'border-danger-line bg-danger-soft text-danger', info: 'border-info-line bg-info-soft text-brand', good: 'border-ok-line bg-ok-soft text-ok' }[tone];
   return <div className={cx('mb-3 rounded border px-4 py-2.5 text-sm', cls)}>{children}</div>;
 }
 
@@ -279,7 +279,7 @@ function Signatures({ sc, hash }: { sc: PurchaseRequest; hash: string }) {
       <div className="flex flex-col border-t sm:border-l sm:border-t-0 first:border-0">
         <Band tall>{title}</Band>
         <div className="flex flex-1 flex-col items-center justify-end px-2 pb-2 pt-3 text-center text-xs">
-          {s && valid && <img src={s.imageDataUrl} alt={`Assinatura de ${s.name}`} className="h-12 max-w-full object-contain" />}
+          {s && valid && <img src={s.imageDataUrl} alt={`Assinatura de ${s.name}`} className="h-12 max-w-full object-contain dark:rounded dark:bg-white dark:px-1.5 dark:py-0.5" />}
           <div className="mt-1 w-4/5 border-t border-foreground/50" />
           {s ? (
             <>
@@ -288,7 +288,7 @@ function Signatures({ sc, hash }: { sc: PurchaseRequest; hash: string }) {
               {valid ? (
                 <div className="text-muted-foreground">Assinado eletronicamente em {dateTime(s.signedAt)}<br />Cód. {s.code}</div>
               ) : (
-                <div className="font-semibold text-[#a12626]">Assinatura invalidada: conteúdo alterado</div>
+                <div className="font-semibold text-danger">Assinatura invalidada: conteúdo alterado</div>
               )}
             </>
           ) : (
@@ -333,7 +333,7 @@ function Changes({ sc }: { sc: PurchaseRequest }) {
           {[...sc.changes].sort((a, b) => b.at.localeCompare(a.at)).map((c, i) => (
             <tr key={i}>
               <Td className="font-medium">{c.field}</Td>
-              <Td className="text-muted-foreground line-through decoration-[#a12626]/50">{c.before}</Td>
+              <Td className="text-muted-foreground line-through decoration-danger/50">{c.before}</Td>
               <Td>{c.after}</Td>
               <Td>{c.userName}</Td>
               <Td className="whitespace-nowrap text-muted-foreground">{dateTime(c.at)}</Td>
@@ -385,7 +385,7 @@ function Attachments({ sc, canEdit }: { sc: PurchaseRequest; canEdit: boolean })
               <button className="min-w-0 flex-1 truncate text-left text-primary hover:underline" onClick={() => saveDataUrl(a.url, a.name)}>{a.name}</button>
               <span className="text-xs text-muted-foreground">Enviado por {a.uploadedByName} em {dateTime(a.uploadedAt)}</span>
               {canEdit && (a.kind === 'ORCAMENTO' ? quotePhase : docsPhase) && (
-                <button className="text-muted-foreground hover:text-[#a12626]" aria-label={`Remover ${a.name}`} onClick={() => api.removeAttachment(user, sc.id, a.id).catch((e) => toast('error', errMsg(e)))}>
+                <button className="text-muted-foreground hover:text-danger" aria-label={`Remover ${a.name}`} onClick={() => api.removeAttachment(user, sc.id, a.id).catch((e) => toast('error', errMsg(e)))}>
                   <Icon name="trash" size={15} />
                 </button>
               )}
@@ -402,11 +402,11 @@ function Attachments({ sc, canEdit }: { sc: PurchaseRequest; canEdit: boolean })
               {kinds.map((k) => <option key={k} value={k}>{ATTACHMENT_LABEL[k][0].toUpperCase() + ATTACHMENT_LABEL[k].slice(1)}</option>)}
             </Select>
           </Field>
-          <label className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded border border-input bg-white px-3 text-sm font-medium hover:bg-muted">
+          <label className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded border border-input bg-card px-3 text-sm font-medium hover:bg-muted">
             <Icon name="upload" size={15} /> Escolher arquivo
             <input type="file" className="sr-only" accept={ALLOWED_ATTACHMENT_TYPES.join(',')} onChange={(e) => { upload(e.target.files?.[0]); e.target.value = ''; }} />
           </label>
-          {docsPhase && !hasNf && <span className="text-xs text-[#8a5a00]">A nota fiscal é obrigatória para enviar ao financeiro.</span>}
+          {docsPhase && !hasNf && <span className="text-xs text-warn">A nota fiscal é obrigatória para enviar ao financeiro.</span>}
           {kind === 'PDF_ASSINADO' && <span className="text-xs text-muted-foreground">Preparado para a fase 2: PDF baixado, assinado no gov.br e anexado de volta.</span>}
         </div>
       )}

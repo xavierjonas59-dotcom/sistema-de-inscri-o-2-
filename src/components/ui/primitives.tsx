@@ -8,9 +8,9 @@ export const cx = (...c: (string | false | null | undefined)[]) => c.filter(Bool
 type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'success';
 const variants: Record<Variant, string> = {
   primary: 'bg-primary text-primary-foreground shadow-soft hover:bg-primary/90',
-  secondary: 'bg-white text-foreground border shadow-soft hover:bg-[#FAFAFB]',
+  secondary: 'bg-card text-foreground border shadow-soft hover:bg-muted',
   ghost: 'text-primary hover:bg-primary/[0.06]',
-  danger: 'bg-white text-[#C62828] border shadow-soft hover:bg-[#FDF3F3]',
+  danger: 'bg-card text-danger border shadow-soft hover:bg-danger-soft',
   success: 'bg-[#1f6f3a] text-white hover:bg-[#1a5f31]',
 };
 
@@ -56,12 +56,12 @@ export function CardHeader({ title, subtitle, action }: { title: ReactNode; subt
 }
 
 const toneText: Record<Tone, string> = {
-  neutral: 'text-[#5F5F64] bg-[#F1F1F2]',
-  info: 'text-[#282C8D] bg-[#ECEDF8]',
-  good: 'text-[#17694F] bg-[#E3F4EC]',
-  warning: 'text-[#8A5A00] bg-[#FBF1DC]',
-  serious: 'text-[#9A4A14] bg-[#FBEDE2]',
-  critical: 'text-[#C62828] bg-[#FCEBEB]',
+  neutral: 'text-muted-foreground bg-muted',
+  info: 'text-brand bg-info-soft',
+  good: 'text-ok bg-ok-soft',
+  warning: 'text-warn bg-warn-soft',
+  serious: 'text-serious bg-serious-soft',
+  critical: 'text-danger bg-danger-soft',
 };
 
 /** Etiqueta de status em formato de pílula, com fundo suave. */
@@ -95,7 +95,7 @@ export function BudgetBar({
   const p = (reserved / base) * 100;
   return (
     <div>
-      <div className="relative h-2 w-full overflow-hidden rounded-full bg-[#EDEDF0]" role="img" aria-label={`Uso do limite: ${ALERT[alert].label}`}>
+      <div className="relative h-2 w-full overflow-hidden rounded-full bg-track" role="img" aria-label={`Uso do limite: ${ALERT[alert].label}`}>
         <div className={cx('absolute inset-y-0 left-0', alertBar[alert])} style={{ width: `${a}%` }} />
         <div className={cx('absolute inset-y-0 opacity-35', alertBar[alert])} style={{ left: `calc(${a}% + ${a > 0 ? 2 : 0}px)`, width: `${p}%` }} />
         <div className="absolute inset-y-0 w-px bg-foreground/40" style={{ left: `${(0.8 * limit * 100) / base}%` }} title="80% do limite" />
@@ -154,7 +154,7 @@ export function Ledger({
         {op('=')}
         <div className="col-span-2 border-t pt-3 sm:col-span-1 sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0">
           <div className="text-[13px] text-muted-foreground">Disponível</div>
-          <div className={cx('tabular text-[30px] font-semibold leading-tight tracking-[-0.02em]', available < 0 ? 'text-[#a12626]' : 'text-brand')}>{fmt(available)}</div>
+          <div className={cx('tabular text-[30px] font-semibold leading-tight tracking-[-0.02em]', available < 0 ? 'text-danger' : 'text-brand')}>{fmt(available)}</div>
         </div>
       </div>
       {children && <div className="mt-4">{children}</div>}
@@ -189,13 +189,13 @@ export function Field({ label, hint, error, children, className }: { label: stri
       <span className="mb-1.5 block text-[13px] font-medium text-foreground/80">{label}</span>
       {children}
       {hint && !error && <span className="mt-1 block text-xs text-muted-foreground">{hint}</span>}
-      {error && <span className="mt-1 block text-xs text-[#a12626]">{error}</span>}
+      {error && <span className="mt-1 block text-xs text-danger">{error}</span>}
     </label>
   );
 }
 
 const inputBase =
-  'rounded border bg-white px-3 text-sm shadow-soft placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none';
+  'rounded border bg-card px-3 text-sm shadow-soft placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none';
 
 export const Input = (p: InputHTMLAttributes<HTMLInputElement>) => <input {...p} className={cx(inputBase, 'h-10 w-full', p.className)} />;
 export const Textarea = (p: TextareaHTMLAttributes<HTMLTextAreaElement>) => <textarea rows={3} {...p} className={cx(inputBase, 'w-full py-2', p.className)} />;
@@ -206,7 +206,7 @@ export const Select = (p: SelectHTMLAttributes<HTMLSelectElement>) => (
 /** Filtro segmentado: trilho cinza com a opção escolhida em um chip branco (estilo Alto). */
 export function Tabs<T extends string>({ value, onChange, items }: { value: T; onChange: (v: T) => void; items: { value: T; label: string; count?: number }[] }) {
   return (
-    <div className="inline-flex max-w-full flex-wrap gap-0.5 rounded-md bg-[#EBEBED] p-1" role="tablist">
+    <div className="inline-flex max-w-full flex-wrap gap-0.5 rounded-md bg-track p-1" role="tablist">
       {items.map((it) => {
         const on = value === it.value;
         return (
@@ -217,7 +217,7 @@ export function Tabs<T extends string>({ value, onChange, items }: { value: T; o
             onClick={() => onChange(it.value)}
             className={cx(
               'inline-flex h-8 items-center gap-2 rounded px-3 text-sm font-medium transition-colors',
-              on ? 'bg-white text-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground',
+              on ? 'bg-card text-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground',
             )}
           >
             {it.label}

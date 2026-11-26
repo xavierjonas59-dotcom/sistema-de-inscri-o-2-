@@ -129,17 +129,17 @@ function Editor({ existing }: { existing: PurchaseRequest | null }) {
         }
       />
       {existing?.returnReason && existing.status === 'DEVOLVIDA' && (
-        <div className="mb-4 rounded border border-[#e3b4b4] bg-[#fbeeee] px-4 py-3 text-sm text-[#7d1f1f]">
+        <div className="mb-4 rounded border border-danger-line bg-danger-soft px-4 py-3 text-sm text-danger">
           <strong>Devolvida para ajuste:</strong> {existing.returnReason}
         </div>
       )}
       {managerMode && existing?.status === 'AGUARDANDO_DIRETORIA' && (
-        <div className="mb-4 rounded border border-[#ecd9a8] bg-[#fbf3e1] px-4 py-3 text-sm text-[#6b4700]">
+        <div className="mb-4 rounded border border-warn-line bg-warn-soft px-4 py-3 text-sm text-warn">
           Esta SC já está com a Diretoria. Se você alterar algo, a sua Autorização de Compra perde a validade e a SC volta para a sua aprovação.
         </div>
       )}
       {errors.length > 0 && (
-        <div className="mb-4 rounded border border-[#e3b4b4] bg-[#fbeeee] px-4 py-3 text-sm text-[#7d1f1f]">
+        <div className="mb-4 rounded border border-danger-line bg-danger-soft px-4 py-3 text-sm text-danger">
           <strong>Corrija antes de enviar:</strong>
           <ul className="mt-1 list-disc pl-5">{errors.map((e) => <li key={e}>{e}</li>)}</ul>
         </div>
@@ -208,7 +208,7 @@ function Editor({ existing }: { existing: PurchaseRequest | null }) {
                       set('apportionment', c.apportionment.map((x, j) => (j === i ? { ...x, percent: Number.isFinite(v) ? Math.round(v * 100) / 100 : 0 } : x)));
                     }}
                   />
-                  <button className="px-1 text-muted-foreground hover:text-[#a12626]" aria-label="Remover linha" onClick={() => set('apportionment', c.apportionment.filter((_, j) => j !== i))}>
+                  <button className="px-1 text-muted-foreground hover:text-danger" aria-label="Remover linha" onClick={() => set('apportionment', c.apportionment.filter((_, j) => j !== i))}>
                     <Icon name="x" size={15} />
                   </button>
                 </div>
@@ -290,7 +290,7 @@ function Editor({ existing }: { existing: PurchaseRequest | null }) {
                     <td className="px-3 py-1.5 text-right font-medium tabular">{money(itemTotal(it))}</td>
                     <td className="pr-2">
                       {c.items.length > 1 && (
-                        <button className="text-muted-foreground hover:text-[#a12626]" aria-label="Remover item" onClick={() => set('items', c.items.filter((_, j) => j !== i))}>
+                        <button className="text-muted-foreground hover:text-danger" aria-label="Remover item" onClick={() => set('items', c.items.filter((_, j) => j !== i))}>
                           <Icon name="x" size={15} />
                         </button>
                       )}
@@ -331,8 +331,8 @@ function Editor({ existing }: { existing: PurchaseRequest | null }) {
         <div className="text-sm text-muted-foreground">
           {budget && (
             <>
-              Saldo disponível do setor: <strong className={cx('tabular', budget.available < total ? 'text-[#a12626]' : 'text-foreground')}>{money(budget.available)}</strong>
-              {budget.available < total && <span className="text-[#a12626]">, faltam {money(total - Math.max(0, budget.available))}</span>}
+              Saldo disponível do setor: <strong className={cx('tabular', budget.available < total ? 'text-danger' : 'text-foreground')}>{money(budget.available)}</strong>
+              {budget.available < total && <span className="text-danger">, faltam {money(total - Math.max(0, budget.available))}</span>}
             </>
           )}
         </div>

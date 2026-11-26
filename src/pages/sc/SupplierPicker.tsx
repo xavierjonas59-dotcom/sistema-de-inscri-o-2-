@@ -41,7 +41,7 @@ export function SupplierPicker({ value, onSelect }: { value: string; onSelect: (
         onBlur={() => (blurTimer.current = window.setTimeout(() => setOpen(false), 150))}
       />
       {open && (
-        <ul className="absolute z-20 mt-1 max-h-64 w-full overflow-y-auto rounded border bg-white text-sm shadow-md" onMouseDown={() => clearTimeout(blurTimer.current)}>
+        <ul className="absolute z-20 mt-1 max-h-64 w-full overflow-y-auto rounded border bg-card text-sm shadow-md" onMouseDown={() => clearTimeout(blurTimer.current)}>
           {matches.map((s) => (
             <li key={s.id}>
               <button type="button" className="flex w-full justify-between gap-3 px-3 py-2 text-left hover:bg-muted" onMouseDown={(e) => e.preventDefault()} onClick={() => pick(s)}>
