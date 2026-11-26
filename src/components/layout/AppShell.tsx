@@ -35,6 +35,7 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
   const user = useUser();
   const { logout, month, setMonth } = useSession();
   const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useCollapsed();
 
   const { data: counts } = useQuery(async () => {
     if (user.role === 'GESTOR') return { gestor: (await api.listRequests(user, { status: 'AGUARDANDO_GESTOR' })).length };
@@ -108,25 +109,41 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
 
   const workspace = user.sectorId ? { title: sectorName ?? '', sub: 'Setor' } : { title: 'AM Comercial', sub: user.role === 'DIRETORIA' ? 'Diretoria' : ROLE_LABEL[user.role] };
 
-  const sidebar = (
+  /** mini = menu recolhido (só ícones). No celular o menu abre sempre completo. */
+  const sidebar = (mini: boolean) => (
     <nav className="flex h-full flex-col" aria-label="Menu principal">
-      <div className="flex h-16 items-center justify-center">
-        <img src={logo} alt="AM Comercial" className="h-9 dark:hidden" />
-        <img src={logoDark} alt="AM Comercial" className="hidden h-9 dark:block" />
+      <div className={cx('flex h-16 items-center', mini ? 'justify-center' : 'justify-between pl-6 pr-3')}>
+        {!mini && (
+          <>
+            <img src={logo} alt="AM Comercial" className="h-9 dark:hidden" />
+            <img src={logoDark} alt="AM Comercial" className="hidden h-9 dark:block" />
+          </>
+        )}
+        <button
+          type="button"
+          onClick={() => setCollapsed(!collapsed)}
+          className="hidden h-9 w-9 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground lg:grid"
+          aria-label={mini ? 'Expandir menu' : 'Recolher menu'}
+          title={mini ? 'Expandir menu' : 'Recolher menu'}
+        >
+          <Icon name="sidebar" size={19} />
+        </button>
       </div>
       <div className="px-3">
-        <div className="flex items-center gap-3 rounded-md border bg-card px-3 py-2.5 shadow-soft">
+        <div className={cx('flex items-center gap-3 rounded-md border bg-card shadow-soft', mini ? 'justify-center p-1.5' : 'px-3 py-2.5')} title={mini ? `${workspace.title} (${workspace.sub})` : undefined}>
           <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[9px] bg-info-soft text-[13px] font-semibold text-brand">{initials(workspace.title)}</span>
-          <div className="min-w-0">
-            <div className="truncate text-sm font-semibold">{workspace.title}</div>
-            <div className="truncate text-[13px] text-muted-foreground">{workspace.sub}</div>
-          </div>
+          {!mini && (
+            <div className="min-w-0">
+              <div className="truncate text-sm font-semibold">{workspace.title}</div>
+              <div className="truncate text-[13px] text-muted-foreground">{workspace.sub}</div>
+            </div>
+          )}
         </div>
       </div>
       <div className="mt-4 flex-1 space-y-4 overflow-y-auto px-3">
         {groups.map((g, gi) => (
           <div key={gi}>
-            {g.title && <div className="px-3 pb-1.5 text-[13px] text-muted-foreground">{g.title}</div>}
+            {g.title && (mini ? gi > 0 && <div className="mx-2 mb-2 border-t" /> : <div className="px-3 pb-1.5 text-[13px] text-muted-foreground">{g.title}</div>)}
             <ul className="space-y-0.5">
               {g.items.map((it) => {
                 const on = active?.path === it.path;
@@ -136,14 +153,18 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
                       href={`#${it.path}`}
                       aria-current={on ? 'page' : undefined}
                       onClick={() => setOpen(false)}
+                      title={mini ? it.label : undefined}
+                      aria-label={mini ? it.label : undefined}
                       className={cx(
-                        'flex h-10 items-center gap-3 rounded-md border px-3 text-[15px] transition-colors',
+                        'relative flex h-10 items-center gap-3 rounded-md border text-[15px] transition-colors',
+                        mini ? 'justify-center' : 'px-3',
                         on ? 'border-border bg-card shadow-soft' : 'border-transparent text-foreground/90 hover:bg-foreground/[0.05]',
                       )}
                     >
                       <Icon name={it.icon} size={19} className={on ? 'text-brand' : 'text-foreground/70'} />
-                      <span className="flex-1 truncate">{it.label}</span>
-                      {!!it.badge && <span className="tabular min-w-[22px] rounded-full bg-primary px-1.5 text-center text-xs font-semibold leading-5 text-primary-foreground">{it.badge}</span>}
+                      {!mini && <span className="flex-1 truncate">{it.label}</span>}
+                      {!!it.badge && mini && <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-primary" />}
+                      {!!it.badge && !mini && <span className="tabular min-w-[22px] rounded-full bg-primary px-1.5 text-center text-xs font-semibold leading-5 text-primary-foreground">{it.badge}</span>}
                     </a>
                   </li>
                 );
@@ -152,19 +173,19 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
           </div>
         ))}
       </div>
-      <ProfileMenu onNavigate={() => setOpen(false)} />
+      <ProfileMenu onNavigate={() => setOpen(false)} mini={mini} />
     </nav>
   );
 
   const showMonth = user.role !== 'FINANCEIRO';
 
   return (
-    <div className="min-h-screen lg:pl-64">
-      <aside className="no-print fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-border bg-sidebar lg:block">{sidebar}</aside>
+    <div className={cx('min-h-screen transition-[padding]', collapsed ? 'lg:pl-[76px]' : 'lg:pl-64')}>
+      <aside className={cx('no-print fixed inset-y-0 left-0 z-30 hidden border-r border-border bg-sidebar transition-[width] lg:block', collapsed ? 'w-[76px]' : 'w-64')}>{sidebar(collapsed)}</aside>
       {open && (
         <div className="no-print fixed inset-0 z-40 lg:hidden" onClick={() => setOpen(false)}>
           <div className="absolute inset-0 bg-black/30" />
-          <aside className="absolute inset-y-0 left-0 w-72 border-r bg-sidebar" onClick={(e) => e.stopPropagation()}>{sidebar}</aside>
+          <aside className="absolute inset-y-0 left-0 w-72 border-r bg-sidebar" onClick={(e) => e.stopPropagation()}>{sidebar(false)}</aside>
         </div>
       )}
       <header className="no-print sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-border bg-topbar/95 px-4 backdrop-blur sm:px-8">
@@ -258,7 +279,7 @@ function Notifications() {
 }
 
 /** Rodapé do menu: a pessoa. Ao clicar, abre o painel com perfil, avisos, segurança, tema e sair (como no Alto). */
-function ProfileMenu({ onNavigate }: { onNavigate: () => void }) {
+function ProfileMenu({ onNavigate, mini }: { onNavigate: () => void; mini: boolean }) {
   const user = useUser();
   const { logout } = useSession();
   const [open, setOpen] = useState(false);
@@ -283,7 +304,7 @@ function ProfileMenu({ onNavigate }: { onNavigate: () => void }) {
   return (
     <div className="relative border-t p-3" ref={ref}>
       {open && (
-        <div role="menu" className="absolute bottom-full left-3 right-3 z-40 mb-2 rounded-lg border bg-card p-1.5 shadow-pop sm:right-auto sm:w-72">
+        <div role="menu" className="absolute bottom-full left-3 z-40 mb-2 w-72 max-w-[calc(100vw-1.5rem)] rounded-lg border bg-card p-1.5 shadow-pop">
           <div className="flex items-center gap-3 px-3 py-2.5">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-info-soft text-[13px] font-semibold text-brand">{initials(user.name)}</span>
             <div className="min-w-0">
@@ -308,15 +329,36 @@ function ProfileMenu({ onNavigate }: { onNavigate: () => void }) {
         onClick={() => setOpen(!open)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="flex w-full items-center gap-3 rounded-md px-1.5 py-1.5 text-left hover:bg-foreground/[0.05]"
+        className={cx('flex w-full items-center gap-3 rounded-md py-1.5 text-left hover:bg-foreground/[0.05]', mini ? 'justify-center' : 'px-1.5')}
+        title={mini ? user.name : undefined}
       >
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-info-soft text-[13px] font-semibold text-brand">{initials(user.name)}</span>
-        <span className="min-w-0 flex-1">
+        {!mini && <span className="min-w-0 flex-1">
           <span className="block truncate text-sm font-medium">{user.name}</span>
           <span className="block truncate text-[13px] text-muted-foreground">{user.role === 'DIRETORIA' ? user.cargo : ROLE_LABEL[user.role]}</span>
-        </span>
-        <Icon name="chevronsUpDown" size={16} className="text-muted-foreground" />
+        </span>}
+        {!mini && <Icon name="chevronsUpDown" size={16} className="text-muted-foreground" />}
       </button>
     </div>
   );
+}
+
+/** Menu recolhido ou não, lembrado neste navegador. */
+function useCollapsed(): [boolean, (v: boolean) => void] {
+  const [v, setV] = useState(() => {
+    try {
+      return localStorage.getItem('amc:sidebar') === 'mini';
+    } catch {
+      return false;
+    }
+  });
+  const set = (next: boolean) => {
+    setV(next);
+    try {
+      localStorage.setItem('amc:sidebar', next ? 'mini' : 'full');
+    } catch {
+      /* sem armazenamento */
+    }
+  };
+  return [v, set];
 }
