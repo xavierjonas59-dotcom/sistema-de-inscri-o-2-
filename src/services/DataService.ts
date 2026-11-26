@@ -70,6 +70,8 @@ export interface DataService {
   spendingByMonth(actor: User, sectorId: string | null, months: number): Promise<{ month: Month; consumed: number; reserved: number }[]>;
   /** Consumido no mês por natureza, do maior para o menor. */
   spendingByNature(actor: User, sectorId: string | null, month: Month): Promise<{ natureId: string | null; consumed: number }[]>;
+  /** Cada SC que entrou no consumido do mês, com os itens. `canOpen` diz se a pessoa pode abrir a SC. */
+  spendingDetails(actor: User, sectorId: string | null, month: Month): Promise<SpendingDetail[]>;
   returnForAdjustment(actor: User, id: string, reason: string): Promise<PurchaseRequest>;
   reject(actor: User, id: string, reason: string): Promise<PurchaseRequest>;
   directorApprove(actor: User, id: string, password: string, ctx: RequestContext): Promise<PurchaseRequest>;
@@ -162,4 +164,19 @@ export class ForbiddenError extends BusinessError {
     super(message);
     this.name = 'ForbiddenError';
   }
+}
+
+/** Linha do detalhe de gastos do mês (uma SC aprovada pela diretoria). */
+export interface SpendingDetail {
+  id: string;
+  number: string;
+  date: string;
+  sectorId: string;
+  requesterName: string;
+  supplierName: string;
+  natureId: string | null;
+  status: PurchaseRequest['status'];
+  total: number;
+  items: { description: string; quantity: number; total: number }[];
+  canOpen: boolean;
 }

@@ -253,6 +253,20 @@ describe('início: gastos por mês e por natureza', () => {
     expect([...after].sort((a, b) => b.consumed - a.consumed)).toEqual(after);
     expect((await svc.spendingByMonth(manoel, 'sec-log', 1))[0].consumed).toBe(after.reduce((s, x) => s + x.consumed, 0));
   });
+  it('detalhe do mês: cada SC aprovada com os itens; soma igual ao gráfico; abre só o que a pessoa pode ver', async () => {
+    const sc = await newSc(100_000);
+    await svc.managerApprove(silvio, sc.id, PW, CTX, manoel.id);
+    await svc.directorApprove(manoel, sc.id, PW, CTX);
+    const rows = await svc.spendingDetails(manoel, null, MONTH);
+    const company = (await svc.spendingByMonth(manoel, null, 1))[0].consumed;
+    expect(rows.reduce((s, r) => s + r.total, 0)).toBe(company);
+    const mine = (await svc.spendingDetails(func, 'sec-com', MONTH)).find((r) => r.id === sc.id)!;
+    expect(mine.items[0].total).toBe(100_000);
+    expect(mine.canOpen).toBe(true);
+    const funcRows = await svc.spendingDetails(func, null, MONTH);
+    expect(funcRows.every((r) => r.sectorId === 'sec-log')).toBe(true);
+    expect((await svc.spendingDetails(admin, null, MONTH)).every((r) => !r.canOpen)).toBe(true);
+  });
 });
 
 describe('conversa na SC', () => {

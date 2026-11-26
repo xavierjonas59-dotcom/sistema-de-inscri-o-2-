@@ -42,6 +42,8 @@ entre com um e-mail abaixo e a senha inicial `amc123` (também usada para assina
 - **Esqueci a senha:** avisa o Admin no sininho; a tela responde sempre de forma neutra.
 - **Tema claro / automático / escuro:** na tela de entrada e no painel do perfil (clique no seu nome no rodapé do menu).
 - **Notificar por e-mail:** na SC aguardando aprovação, abre o Outlook com Para, Cc, assunto e o link da SC.
+- **Início com detalhe dos gastos:** clicar num mês do gráfico, numa natureza ou num dia do calendário abre cada SC aprovada, com os itens, o valor e o link para a solicitação.
+- **Calendário:** no Início e no mês do topo, com os feriados nacionais (inclusive Carnaval, Sexta-feira Santa e Corpus Christi, calculados para cada ano).
   Ao entrar pelo link, o sistema volta direto para a SC.
 
 ## Como testar cada perfil

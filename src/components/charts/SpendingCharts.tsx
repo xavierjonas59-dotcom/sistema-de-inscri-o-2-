@@ -83,7 +83,7 @@ export function MonthlyChart({ data, selected, onSelect }: { data: { month: Mont
       </div>
       <div className="relative flex gap-3">
         {/* eixo */}
-        <div className="tabular flex h-52 w-14 shrink-0 flex-col justify-between pb-6 text-right text-[11px] text-muted-foreground" aria-hidden="true">
+        <div className="tabular flex h-80 w-14 shrink-0 flex-col justify-between pb-6 text-right text-[11px] text-muted-foreground" aria-hidden="true">
           <span className="-translate-y-1/2">{compact(top)}</span>
           <span>{compact(top / 2)}</span>
           <span className="translate-y-1/2">R$ 0</span>
@@ -94,7 +94,7 @@ export function MonthlyChart({ data, selected, onSelect }: { data: { month: Mont
             <div className="absolute inset-x-0 top-1/2 border-t border-dashed" />
             <div className="absolute inset-x-0 bottom-0 border-t" />
           </div>
-          <ol className="relative flex h-52 items-end gap-1.5 sm:gap-2.5">
+          <ol className="relative flex h-80 items-end gap-1.5 sm:gap-2.5">
             {data.map((d) => {
               const on = d.month === selected;
               const show = hover === d.month;
@@ -133,25 +133,32 @@ export function MonthlyChart({ data, selected, onSelect }: { data: { month: Mont
   );
 }
 
-/** Gastos por natureza no mês: barras horizontais do maior para o menor. */
-export function NatureChart({ data, name }: { data: { natureId: string | null; consumed: number }[]; name: (id: string | null) => string }) {
+/** Gastos por natureza no mês: barras horizontais do maior para o menor. Clicar abre o detalhe da natureza. */
+export function NatureChart({ data, name, onPick }: { data: { natureId: string | null; consumed: number }[]; name: (id: string | null) => string; onPick?: (id: string | null) => void }) {
   const total = data.reduce((s, d) => s + d.consumed, 0);
   const max = data[0]?.consumed ?? 0;
   if (!data.length) return <EmptyState title="Nenhum gasto aprovado neste mês." />;
   return (
-    <ul className="space-y-4">
+    <ul className="-mx-2 grid gap-x-8 gap-y-1 md:grid-cols-2">
       {data.map((d) => (
         <li key={d.natureId ?? 'sem'}>
-          <div className="mb-1.5 flex items-baseline justify-between gap-3 text-sm">
-            <span className="min-w-0 truncate">{name(d.natureId)}</span>
-            <span className="tabular shrink-0">
-              <strong className="font-semibold">{money(d.consumed)}</strong>
-              <span className="ml-2 text-[13px] text-muted-foreground">{pct(d.consumed / total)}</span>
-            </span>
-          </div>
-          <div className="h-2 rounded-full bg-track">
-            <div className="h-2 rounded-full bg-brand" style={{ width: `${Math.max(2, (d.consumed / max) * 100)}%` }} />
-          </div>
+          <button
+            type="button"
+            onClick={onPick ? () => onPick(d.natureId) : undefined}
+            disabled={!onPick}
+            className="block w-full rounded-md px-2 py-1.5 text-left hover:bg-foreground/[0.04] disabled:hover:bg-transparent"
+          >
+            <div className="mb-1.5 flex items-baseline justify-between gap-3 text-sm">
+              <span className="min-w-0 truncate">{name(d.natureId)}</span>
+              <span className="tabular shrink-0">
+                <strong className="font-semibold">{money(d.consumed)}</strong>
+                <span className="ml-2 text-[13px] text-muted-foreground">{pct(d.consumed / total)}</span>
+              </span>
+            </div>
+            <div className="h-2 rounded-full bg-track">
+              <div className="h-2 rounded-full bg-brand" style={{ width: `${Math.max(2, (d.consumed / max) * 100)}%` }} />
+            </div>
+          </button>
         </li>
       ))}
     </ul>

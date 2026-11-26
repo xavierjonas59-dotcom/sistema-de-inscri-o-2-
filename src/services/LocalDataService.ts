@@ -7,6 +7,7 @@ import {
   diffContent,
   pickContent,
   scNumber,
+  itemTotal,
   scTotal,
   sha256,
   validateContent,
@@ -39,6 +40,7 @@ import {
   type NewFile,
   type RequestContext,
   type RequestFilter,
+  type SpendingDetail,
   type UserInput,
   type ValidationResult,
 } from './DataService';
@@ -644,6 +646,27 @@ export class LocalDataService implements DataService {
       totals.set(r.natureId, (totals.get(r.natureId) ?? 0) + scTotal(r));
     }
     return [...totals].map(([natureId, consumed]) => ({ natureId, consumed })).sort((a, b) => b.consumed - a.consumed);
+  }
+
+  async spendingDetails(actor: User, sectorId: string | null, month: Month): Promise<SpendingDetail[]> {
+    const db = await this.auth(actor, ['FUNCIONARIO', 'GESTOR', 'DIRETORIA', 'ADMIN']);
+    const scope = this.spendingScope(actor, sectorId);
+    return db.requests
+      .filter((r) => (!scope || r.sectorId === scope) && r.month === month && CONSUMED_STATUSES.includes(r.status))
+      .sort((a, b) => a.date.localeCompare(b.date) || a.number.localeCompare(b.number))
+      .map((r) => ({
+        id: r.id,
+        number: r.number,
+        date: r.date,
+        sectorId: r.sectorId,
+        requesterName: r.requesterName,
+        supplierName: r.supplierName,
+        natureId: r.natureId,
+        status: r.status,
+        total: scTotal(r),
+        items: r.items.filter((i) => i.description.trim()).map((i) => ({ description: i.description, quantity: i.quantity, total: itemTotal(i) })),
+        canOpen: this.canView(actor, r),
+      }));
   }
 
   async cancel(actor: User, id: string) {

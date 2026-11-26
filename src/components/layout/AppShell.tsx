@@ -10,6 +10,7 @@ import { Icon, type IconName } from '@/components/ui/icons';
 import { ThemeSwitch } from '@/components/ui/ThemeSwitch';
 import { cx } from '@/components/ui/primitives';
 import { CommandPalette, type Screen } from './CommandPalette';
+import { MonthCalendar } from '@/components/charts/MonthCalendar';
 
 interface NavItem {
   path: string;
@@ -207,7 +208,7 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
               <button className="grid h-9 w-8 place-items-center rounded-l-md hover:bg-foreground/[0.05]" onClick={() => setMonth(shiftMonth(month, -1))} aria-label="Mês anterior">
                 <Icon name="chevronLeft" size={15} />
               </button>
-              <span className="min-w-[124px] text-center text-sm">{monthLabel(month)}</span>
+              <MonthPopover />
               <button className="grid h-9 w-8 place-items-center rounded-r-md hover:bg-foreground/[0.05]" onClick={() => setMonth(shiftMonth(month, 1))} aria-label="Próximo mês">
                 <Icon name="chevronRight" size={15} />
               </button>
@@ -217,6 +218,43 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
         </div>
       </header>
       <main className="print-full mx-auto max-w-6xl px-4 py-8 sm:px-8">{children}</main>
+    </div>
+  );
+}
+
+/** O mês do topo: clicar abre um calendário comum, com os feriados nacionais. */
+function MonthPopover() {
+  const { month, setMonth } = useSession();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: MouseEvent) => !ref.current?.contains(e.target as Node) && setOpen(false);
+    const esc = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    document.addEventListener('mousedown', close);
+    window.addEventListener('keydown', esc);
+    return () => {
+      document.removeEventListener('mousedown', close);
+      window.removeEventListener('keydown', esc);
+    };
+  }, [open]);
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-label={`Mês: ${monthLabel(month)}. Abrir calendário`}
+        className="flex h-9 min-w-[124px] items-center justify-center gap-1.5 px-1 text-sm hover:text-primary"
+      >
+        <Icon name="calendar" size={15} className="text-muted-foreground" />
+        {monthLabel(month)}
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full z-40 mt-2 w-[320px] rounded-lg border bg-card p-4 shadow-pop sm:left-1/2 sm:right-auto sm:-translate-x-1/2" role="dialog" aria-label="Calendário">
+          <MonthCalendar month={month} onMonth={setMonth} compact />
+        </div>
+      )}
     </div>
   );
 }

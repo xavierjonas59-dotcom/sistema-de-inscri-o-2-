@@ -5,6 +5,8 @@ import { money, monthLabel, pct } from '@/domain/format';
 import { scSummary } from '@/domain/sc';
 import { api } from '@/services/api';
 import { BalanceCard, MonthlyChart, NatureChart } from '@/components/charts/SpendingCharts';
+import { MonthCalendar } from '@/components/charts/MonthCalendar';
+import { SpendingDetailModal, type DetailFilter } from '@/components/charts/SpendingDetailModal';
 import { AlertBadge, BudgetBar, Button, Card, CardHeader, PageHeader, Select, Table, Td, Th } from '@/components/ui/primitives';
 import { useLookups } from './shared/lookups';
 import { ScTable } from './sc/ScTable';
@@ -24,6 +26,10 @@ export default function Home() {
   const { data: budgets = [] } = useQuery(async () => (wide ? api.getAllBudgets(user, month) : [await api.getBudget(user, user.sectorId!, month)]), [month]);
   const { data: monthly = [] } = useQuery(() => api.spendingByMonth(user, sectorId, 12), [sectorId]);
   const { data: natures = [] } = useQuery(() => api.spendingByNature(user, sectorId, month), [sectorId, month]);
+  const { data: details = [] } = useQuery(() => api.spendingDetails(user, sectorId, month), [sectorId, month]);
+  const [detail, setDetail] = useState<DetailFilter | null>(null);
+  const spentByDay = new Map<string, number>();
+  for (const r of details) spentByDay.set(r.date, (spentByDay.get(r.date) ?? 0) + r.total);
   const scoped = sectorId ? budgets.filter((b) => b.sectorId === sectorId) : budgets;
   const g = scoped.reduce(
     (s, b) => ({ limit: s.limit + b.limit, reserved: s.reserved + b.reserved, consumed: s.consumed + b.consumed, available: s.available + b.available }),
@@ -53,18 +59,36 @@ export default function Home() {
       )}
       <div className="mt-5 grid gap-5 xl:grid-cols-5">
         <Card className="xl:col-span-3">
-          <CardHeader title="Gastos por mês" subtitle="Aprovado pela diretoria nos últimos 12 meses. Clique num mês para ver os detalhes dele." />
+          <CardHeader title="Gastos por mês" subtitle="Aprovado pela diretoria nos últimos 12 meses. Clique num mês para ver o que foi gasto." />
           <div className="px-5 py-5">
-            <MonthlyChart data={monthly} selected={month} onSelect={setMonth} />
+            <MonthlyChart
+              data={monthly}
+              selected={month}
+              onSelect={(m) => {
+                setMonth(m);
+                setDetail({});
+              }}
+            />
           </div>
         </Card>
         <Card className="xl:col-span-2">
-          <CardHeader title="Gastos por natureza" subtitle={monthLabel(month)} />
+          <CardHeader title="Calendário" subtitle="Feriados nacionais e dias com gastos" />
           <div className="px-5 py-5">
-            <NatureChart data={natures} name={lk.nature} />
+            <MonthCalendar month={month} onMonth={setMonth} spent={spentByDay} onDay={(day) => setDetail({ day })} />
+          </div>
+        </Card>
+        <Card className="xl:col-span-5">
+          <CardHeader
+            title="Gastos por natureza"
+            subtitle={`${monthLabel(month)}. Clique numa natureza para ver as solicitações.`}
+            action={details.length > 0 && <Button size="sm" variant="secondary" onClick={() => setDetail({})}>Ver gastos do mês</Button>}
+          />
+          <div className="px-5 py-4">
+            <NatureChart data={natures} name={lk.nature} onPick={(natureId) => setDetail({ natureId })} />
           </div>
         </Card>
       </div>
+      <SpendingDetailModal month={month} sectorId={sectorId} filter={detail} onFilter={setDetail} onClose={() => setDetail(null)} />
       <div className="mt-5 space-y-5">
         <ActionLists />
         {wide && !filter && budgets.length > 0 && <SectorTable budgets={budgets} onPick={setFilter} />}
