@@ -12,6 +12,7 @@ import { Modal, useToast } from '@/components/ui/overlay';
 import { Button, Card, CardHeader, EmptyState, Field, Input, Select, Table, Td, Textarea, Th, cx } from '@/components/ui/primitives';
 import { errMsg, useLookups } from '../shared/lookups';
 import { ScStatusTag } from './ScTable';
+import { EmailRequestModal } from './EmailRequestModal';
 import { SignModal, limitLabel } from './SignModal';
 
 export default function ScDetail({ query }: { query: URLSearchParams }) {
@@ -27,7 +28,7 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
   const user = useUser();
   const toast = useToast();
   const lk = useLookups();
-  const [modal, setModal] = useState<null | 'return' | 'reject' | 'signCompra' | 'signPagamento' | 'paid' | 'forward'>(null);
+  const [modal, setModal] = useState<null | 'return' | 'reject' | 'signCompra' | 'signPagamento' | 'paid' | 'forward' | 'email'>(null);
   const [hash, setHash] = useState('');
   const [busy, setBusy] = useState(false);
   useEffect(() => {
@@ -88,6 +89,8 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
       </Button>,
     );
   if (user.role === 'FINANCEIRO' && s === 'ENVIADA_FINANCEIRO') actions.push(<Button key="paid" onClick={() => setModal('paid')}>Marcar como paga</Button>);
+  if ((isRequester || isManager) && (s === 'AGUARDANDO_GESTOR' || s === 'AGUARDANDO_DIRETORIA'))
+    actions.unshift(<Button key="mail" variant="secondary" icon="mail" onClick={() => setModal('email')}>Pedir autorização por e-mail</Button>);
   if ((isRequester || isManager) && CANCELLABLE.includes(s))
     actions.unshift(
       <Button key="cancel" variant="ghost" disabled={busy} onClick={() => run(() => api.cancel(user, sc.id), `${sc.number} cancelada.`)}>Cancelar SC</Button>,
@@ -188,6 +191,7 @@ function Detail({ sc }: { sc: PurchaseRequest }) {
       />
       <ForwardModal open={modal === 'forward'} sc={sc} onClose={() => setModal(null)} />
       <PaidModal open={modal === 'paid'} sc={sc} onClose={() => setModal(null)} />
+      <EmailRequestModal open={modal === 'email'} sc={sc} sectorName={lk.sector(sc.sectorId)} onClose={() => setModal(null)} />
     </>
   );
 }
