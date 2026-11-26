@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T13:05:23.822920+00:00",
+  "generated_at": "2026-11-26T13:31:48.661339+00:00",
   "files": [
     {
       "path": "package-lock.json",
@@ -19,7 +19,7 @@
     },
     {
       "path": "README.md",
-      "bytes": 3876
+      "bytes": 4218
     },
     {
       "path": "skills-lock.json",
@@ -71,7 +71,7 @@
     },
     {
       "path": "src/pages/Dashboards.tsx",
-      "bytes": 7701
+      "bytes": 9045
     },
     {
       "path": "src/pages/Transfers.tsx",
@@ -98,6 +98,10 @@
       "bytes": 1685
     },
     {
+      "path": "src/domain/holidays.ts",
+      "bytes": 2319
+    },
+    {
       "path": "src/domain/emailRequest.test.ts",
       "bytes": 1718
     },
@@ -112,6 +116,10 @@
     {
       "path": "src/domain/labels.ts",
       "bytes": 935
+    },
+    {
+      "path": "src/domain/holidays.test.ts",
+      "bytes": 978
     },
     {
       "path": "src/domain/budget.test.ts",
@@ -143,7 +151,7 @@
     },
     {
       "path": "src/services/LocalDataService.ts",
-      "bytes": 47762
+      "bytes": 48756
     },
     {
       "path": "src/services/api.ts",
@@ -151,7 +159,7 @@
     },
     {
       "path": "src/services/DataService.ts",
-      "bytes": 7344
+      "bytes": 7949
     },
     {
       "path": "src/services/seed.ts",
@@ -159,7 +167,7 @@
     },
     {
       "path": "src/services/LocalDataService.test.ts",
-      "bytes": 16326
+      "bytes": 17243
     },
     {
       "path": "src/services/testUtils.ts",
@@ -178,12 +186,20 @@
       "bytes": 1502
     },
     {
+      "path": "src/components/charts/MonthCalendar.tsx",
+      "bytes": 4843
+    },
+    {
+      "path": "src/components/charts/SpendingDetailModal.tsx",
+      "bytes": 5902
+    },
+    {
       "path": "src/components/charts/SpendingCharts.tsx",
-      "bytes": 8289
+      "bytes": 8724
     },
     {
       "path": "src/components/layout/AppShell.tsx",
-      "bytes": 18506
+      "bytes": 20002
     },
     {
       "path": "src/components/layout/CommandPalette.tsx",
@@ -191,7 +207,7 @@
     },
     {
       "path": "src/components/ui/icons.tsx",
-      "bytes": 4089
+      "bytes": 4195
     },
     {
       "path": "src/components/ui/ThemeSwitch.tsx",
@@ -657,6 +673,14 @@
     },
     {
       "source": "src/pages/Dashboards.tsx",
+      "target": "@/components/charts/MonthCalendar"
+    },
+    {
+      "source": "src/pages/Dashboards.tsx",
+      "target": "@/components/charts/SpendingDetailModal"
+    },
+    {
+      "source": "src/pages/Dashboards.tsx",
       "target": "@/components/ui/primitives"
     },
     {
@@ -872,6 +896,14 @@
       "target": "./types"
     },
     {
+      "source": "src/domain/holidays.test.ts",
+      "target": "vitest"
+    },
+    {
+      "source": "src/domain/holidays.test.ts",
+      "target": "./holidays"
+    },
+    {
       "source": "src/domain/budget.test.ts",
       "target": "vitest"
     },
@@ -1076,6 +1108,62 @@
       "target": "react"
     },
     {
+      "source": "src/components/charts/MonthCalendar.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/components/charts/MonthCalendar.tsx",
+      "target": "@/domain/holidays"
+    },
+    {
+      "source": "src/components/charts/MonthCalendar.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/components/charts/MonthCalendar.tsx",
+      "target": "@/components/ui/icons"
+    },
+    {
+      "source": "src/components/charts/MonthCalendar.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/components/charts/SpendingDetailModal.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/components/charts/SpendingDetailModal.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/components/charts/SpendingDetailModal.tsx",
+      "target": "@/domain/sc"
+    },
+    {
+      "source": "src/components/charts/SpendingDetailModal.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/components/charts/SpendingDetailModal.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/components/charts/SpendingDetailModal.tsx",
+      "target": "@/services/DataService"
+    },
+    {
+      "source": "src/components/charts/SpendingDetailModal.tsx",
+      "target": "@/components/ui/overlay"
+    },
+    {
+      "source": "src/components/charts/SpendingDetailModal.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/components/charts/SpendingDetailModal.tsx",
+      "target": "@/pages/shared/lookups"
+    },
+    {
       "source": "src/components/charts/SpendingCharts.tsx",
       "target": "react"
     },
@@ -1138,6 +1226,10 @@
     {
       "source": "src/components/layout/AppShell.tsx",
       "target": "./CommandPalette"
+    },
+    {
+      "source": "src/components/layout/AppShell.tsx",
+      "target": "@/components/charts/MonthCalendar"
     },
     {
       "source": "src/components/layout/CommandPalette.tsx",
