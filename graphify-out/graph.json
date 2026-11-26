@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T12:21:28.105522+00:00",
+  "generated_at": "2026-11-26T13:05:23.822920+00:00",
   "files": [
     {
       "path": "package-lock.json",
@@ -19,7 +19,7 @@
     },
     {
       "path": "README.md",
-      "bytes": 3886
+      "bytes": 3876
     },
     {
       "path": "skills-lock.json",
@@ -47,11 +47,15 @@
     },
     {
       "path": "src/App.tsx",
-      "bytes": 2774
+      "bytes": 2723
     },
     {
       "path": "docs/ARQUITETURA.md",
       "bytes": 5166
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-26-inicio-graficos-busca-conversa-design.md",
+      "bytes": 2631
     },
     {
       "path": "docs/superpowers/specs/2026-11-26-entrada-perfil-email-design.md",
@@ -63,11 +67,11 @@
     },
     {
       "path": "src/pages/Users.tsx",
-      "bytes": 6327
+      "bytes": 6338
     },
     {
       "path": "src/pages/Dashboards.tsx",
-      "bytes": 7857
+      "bytes": 7701
     },
     {
       "path": "src/pages/Transfers.tsx",
@@ -75,7 +79,7 @@
     },
     {
       "path": "src/pages/Profile.tsx",
-      "bytes": 9873
+      "bytes": 9635
     },
     {
       "path": "src/pages/Validate.tsx",
@@ -87,7 +91,7 @@
     },
     {
       "path": "src/pages/Login.tsx",
-      "bytes": 6404
+      "bytes": 6265
     },
     {
       "path": "src/domain/format.ts",
@@ -115,7 +119,7 @@
     },
     {
       "path": "src/domain/types.ts",
-      "bytes": 5747
+      "bytes": 5969
     },
     {
       "path": "src/domain/emailRequest.ts",
@@ -139,7 +143,7 @@
     },
     {
       "path": "src/services/LocalDataService.ts",
-      "bytes": 44679
+      "bytes": 47762
     },
     {
       "path": "src/services/api.ts",
@@ -147,15 +151,15 @@
     },
     {
       "path": "src/services/DataService.ts",
-      "bytes": 6661
+      "bytes": 7344
     },
     {
       "path": "src/services/seed.ts",
-      "bytes": 12845
+      "bytes": 14571
     },
     {
       "path": "src/services/LocalDataService.test.ts",
-      "bytes": 13546
+      "bytes": 16326
     },
     {
       "path": "src/services/testUtils.ts",
@@ -174,12 +178,20 @@
       "bytes": 1502
     },
     {
+      "path": "src/components/charts/SpendingCharts.tsx",
+      "bytes": 8289
+    },
+    {
       "path": "src/components/layout/AppShell.tsx",
-      "bytes": 19221
+      "bytes": 18506
+    },
+    {
+      "path": "src/components/layout/CommandPalette.tsx",
+      "bytes": 6212
     },
     {
       "path": "src/components/ui/icons.tsx",
-      "bytes": 4039
+      "bytes": 4089
     },
     {
       "path": "src/components/ui/ThemeSwitch.tsx",
@@ -194,10 +206,6 @@
       "bytes": 10823
     },
     {
-      "path": "src/pages/login/ScIllustration.tsx",
-      "bytes": 6686
-    },
-    {
       "path": "src/pages/admin/AdminPages.tsx",
       "bytes": 10781
     },
@@ -210,6 +218,10 @@
       "bytes": 4650
     },
     {
+      "path": "src/pages/sc/ScChat.tsx",
+      "bytes": 3795
+    },
+    {
       "path": "src/pages/sc/ScTable.tsx",
       "bytes": 2551
     },
@@ -219,11 +231,11 @@
     },
     {
       "path": "src/pages/sc/SignModal.tsx",
-      "bytes": 5145
+      "bytes": 4692
     },
     {
       "path": "src/pages/sc/EmailRequestModal.tsx",
-      "bytes": 3599
+      "bytes": 3589
     },
     {
       "path": "src/pages/sc/ScList.tsx",
@@ -231,7 +243,7 @@
     },
     {
       "path": "src/pages/sc/ScDetail.tsx",
-      "bytes": 27607
+      "bytes": 27638
     },
     {
       "path": "src/pages/sc/ScForm.tsx",
@@ -617,6 +629,10 @@
     },
     {
       "source": "src/pages/Dashboards.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/Dashboards.tsx",
       "target": "@/app/session"
     },
     {
@@ -633,11 +649,11 @@
     },
     {
       "source": "src/pages/Dashboards.tsx",
-      "target": "@/domain/types"
+      "target": "@/services/api"
     },
     {
       "source": "src/pages/Dashboards.tsx",
-      "target": "@/services/api"
+      "target": "@/components/charts/SpendingCharts"
     },
     {
       "source": "src/pages/Dashboards.tsx",
@@ -789,7 +805,7 @@
     },
     {
       "source": "src/pages/Login.tsx",
-      "target": "@/assets/logo-planilha.jpg"
+      "target": "@/assets/logo-planilha-azul.png"
     },
     {
       "source": "src/pages/Login.tsx",
@@ -814,10 +830,6 @@
     {
       "source": "src/pages/Login.tsx",
       "target": "@/services/api"
-    },
-    {
-      "source": "src/pages/Login.tsx",
-      "target": "./login/ScIllustration"
     },
     {
       "source": "src/domain/format.ts",
@@ -1064,12 +1076,28 @@
       "target": "react"
     },
     {
+      "source": "src/components/charts/SpendingCharts.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/charts/SpendingCharts.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/components/charts/SpendingCharts.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/components/charts/SpendingCharts.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
       "source": "src/components/layout/AppShell.tsx",
       "target": "react"
     },
     {
       "source": "src/components/layout/AppShell.tsx",
-      "target": "@/assets/logo-planilha.jpg"
+      "target": "@/assets/logo-planilha-azul.png"
     },
     {
       "source": "src/components/layout/AppShell.tsx",
@@ -1105,6 +1133,42 @@
     },
     {
       "source": "src/components/layout/AppShell.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/components/layout/AppShell.tsx",
+      "target": "./CommandPalette"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
+      "target": "react-dom"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
+      "target": "@/domain/sc"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
+      "target": "@/components/ui/icons"
+    },
+    {
+      "source": "src/components/layout/CommandPalette.tsx",
       "target": "@/components/ui/primitives"
     },
     {
@@ -1206,6 +1270,42 @@
     {
       "source": "src/pages/shared/signature.tsx",
       "target": "react"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "@/app/session"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "@/domain/format"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "@/domain/types"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "@/services/api"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "@/components/ui/icons"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "@/components/ui/overlay"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "@/components/ui/primitives"
+    },
+    {
+      "source": "src/pages/sc/ScChat.tsx",
+      "target": "../shared/lookups"
     },
     {
       "source": "src/pages/sc/ScTable.tsx",
@@ -1422,6 +1522,10 @@
     {
       "source": "src/pages/sc/ScDetail.tsx",
       "target": "./EmailRequestModal"
+    },
+    {
+      "source": "src/pages/sc/ScDetail.tsx",
+      "target": "./ScChat"
     },
     {
       "source": "src/pages/sc/ScDetail.tsx",
