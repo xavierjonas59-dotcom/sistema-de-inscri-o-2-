@@ -815,6 +815,8 @@ export class LocalDataService implements DataService {
     if (!n) throw new BusinessError('Natureza não encontrada.');
     if (accountId && !db.accounts.some((a) => a.id === accountId)) throw new BusinessError('Conta contábil não encontrada.');
     n.accountId = accountId;
+    // Ligou a uma conta: a natureza passa a aparecer na SC.
+    if (accountId) n.active = true;
     await this.persist();
     return n;
   }

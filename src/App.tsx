@@ -5,6 +5,7 @@ import { ToastProvider } from '@/components/ui/overlay';
 import { EmptyState } from '@/components/ui/primitives';
 import type { Role } from '@/domain/types';
 import { CodesAdmin, SectorsAdmin, SuppliersAdmin } from '@/pages/admin/AdminPages';
+import Contabil from '@/pages/Contabil';
 import Home from '@/pages/Dashboards';
 import Login from '@/pages/Login';
 import Payables from '@/pages/Payables';
@@ -23,10 +24,10 @@ const sc = { '/sc': () => <ScList />, '/sc/ver': ScDetail };
 /** Rotas por perfil: o que não está na tabela do perfil não existe para ele (e o serviço também recusa). */
 const routes: Record<Role, Record<string, Page>> = {
   FUNCIONARIO: { '/': Home, ...sc, '/sc/nova': ScForm, '/sc/editar': ScForm, '/perfil': Profile },
-  GESTOR: { '/': Home, ...sc, '/sc/nova': ScForm, '/sc/editar': ScForm, '/transferencias': Transfers, '/usuarios': Users, '/perfil': Profile },
-  DIRETORIA: { '/': Home, '/aprovacoes': () => <ScList approvals />, ...sc, '/sc/nova': ScForm, '/sc/editar': ScForm, '/transferencias': Transfers, '/perfil': Profile },
+  GESTOR: { '/': Home, ...sc, '/sc/nova': ScForm, '/sc/editar': ScForm, '/transferencias': Transfers, '/usuarios': Users, '/contabil': Contabil, '/perfil': Profile },
+  DIRETORIA: { '/': Home, '/aprovacoes': () => <ScList approvals />, ...sc, '/sc/nova': ScForm, '/sc/editar': ScForm, '/transferencias': Transfers, '/contabil': Contabil, '/perfil': Profile },
   FINANCEIRO: { '/': Payables, '/sc/ver': ScDetail, '/perfil': Profile },
-  ADMIN: { '/': Home, '/setores': SectorsAdmin, '/usuarios': Users, '/cadastros': CodesAdmin, '/fornecedores': SuppliersAdmin, '/perfil': Profile },
+  ADMIN: { '/': Home, '/contabil': Contabil, '/setores': SectorsAdmin, '/usuarios': Users, '/cadastros': CodesAdmin, '/fornecedores': SuppliersAdmin, '/perfil': Profile },
 };
 
 function Router() {

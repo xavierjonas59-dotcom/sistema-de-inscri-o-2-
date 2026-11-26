@@ -7,6 +7,8 @@ import { api } from '@/services/api';
 import { BalanceCard, MonthlyChart, NatureChart } from '@/components/charts/SpendingCharts';
 import { MonthCalendar } from '@/components/charts/MonthCalendar';
 import { SpendingDetailModal, type DetailFilter } from '@/components/charts/SpendingDetailModal';
+import { Modal } from '@/components/ui/overlay';
+import { AccountsTable } from './Contabil';
 import { AlertBadge, BudgetBar, Button, Card, CardHeader, PageHeader, Select, Table, Td, Th } from '@/components/ui/primitives';
 import { useLookups } from './shared/lookups';
 import { ScTable } from './sc/ScTable';
@@ -28,6 +30,9 @@ export default function Home() {
   const { data: natures = [] } = useQuery(() => api.spendingByNature(user, sectorId, month), [sectorId, month]);
   const { data: details = [] } = useQuery(() => api.spendingDetails(user, sectorId, month), [sectorId, month]);
   const [detail, setDetail] = useState<DetailFilter | null>(null);
+  // Orçamento por conta contábil: gestor (o próprio setor), diretoria e admin. Funcionário não vê.
+  const seesAccounts = user.role !== 'FUNCIONARIO';
+  const [accountsOpen, setAccountsOpen] = useState(false);
   const spentByDay = new Map<string, number>();
   for (const r of details) spentByDay.set(r.date, (spentByDay.get(r.date) ?? 0) + r.total);
   const scoped = sectorId ? budgets.filter((b) => b.sectorId === sectorId) : budgets;
@@ -55,7 +60,7 @@ export default function Home() {
         }
       />
       {scoped.length > 0 && (
-        <BalanceCard month={month} {...g} alert={alertLevel(g.limit ? (g.consumed + g.reserved) / g.limit : 0)} />
+        <BalanceCard month={month} {...g} alert={alertLevel(g.limit ? (g.consumed + g.reserved) / g.limit : 0)} onOpen={seesAccounts ? () => setAccountsOpen(true) : undefined} />
       )}
       <div className="mt-5 grid gap-5 xl:grid-cols-5">
         <Card className="xl:col-span-3">
@@ -88,6 +93,7 @@ export default function Home() {
           </div>
         </Card>
       </div>
+      {seesAccounts && <AccountsModal open={accountsOpen} onClose={() => setAccountsOpen(false)} sectorId={sectorId} title={scopeName} />}
       <SpendingDetailModal month={month} sectorId={sectorId} filter={detail} onFilter={setDetail} onClose={() => setDetail(null)} />
       <div className="mt-5 space-y-5">
         <ActionLists />
@@ -173,5 +179,47 @@ function SectorTable({ budgets, onPick }: { budgets: { sectorId: string; limit: 
         </tbody>
       </Table>
     </Card>
+  );
+}
+
+/** Ao clicar no saldo: quanto cada conta contábil ainda pode gastar no mês. */
+function AccountsModal({ open, onClose, sectorId, title }: { open: boolean; onClose: () => void; sectorId: string | null; title: string }) {
+  const user = useUser();
+  const { month } = useSession();
+  const { data: v } = useQuery(() => (open ? api.getAccountBudget(user, sectorId, month) : Promise.resolve(undefined)), [open, sectorId, month]);
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      wide
+      title={`Orçamento por conta contábil · ${monthLabel(month).toLowerCase()}`}
+      description={title}
+      footer={
+        <>
+          <Button variant="secondary" onClick={onClose}>Fechar</Button>
+          <Button
+            onClick={() => {
+              onClose();
+              navigate(sectorId && user.role !== 'GESTOR' ? `/contabil?setor=${sectorId}` : '/contabil');
+            }}
+          >
+            Abrir no Contábil
+          </Button>
+        </>
+      }
+    >
+      {!v ? (
+        <p className="py-6 text-center text-sm text-muted-foreground">Carregando…</p>
+      ) : (
+        <>
+          <div className="mb-4 grid grid-cols-3 gap-3 text-sm">
+            <div><div className="text-[13px] text-muted-foreground">Orçado em contas</div><div className="tabular text-lg font-semibold">{money(v.distributed)}</div></div>
+            <div><div className="text-[13px] text-muted-foreground">Gasto</div><div className="tabular text-lg font-semibold">{money(v.consumed + v.reserved)}</div></div>
+            <div><div className="text-[13px] text-muted-foreground">Não distribuído</div><div className="tabular text-lg font-semibold">{money(v.undistributed)}</div></div>
+          </div>
+          <div className="-mx-6 border-t"><AccountsTable v={v} compact /></div>
+        </>
+      )}
+    </Modal>
   );
 }

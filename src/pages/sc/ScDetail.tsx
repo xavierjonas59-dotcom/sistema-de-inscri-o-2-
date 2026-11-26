@@ -244,7 +244,10 @@ function ScView({ sc }: { sc: PurchaseRequest }) {
       <Band>Dados da nota fiscal</Band>
       <div className="p-3">{sc.invoiceInfo || '—'}</div>
       <Band>Natureza da compra</Band>
-      <div className="p-3">{lk.nature(sc.natureId)}</div>
+      <div className="p-3">
+        {lk.nature(sc.natureId)}
+        {lk.accountOf(sc.natureId) && <div className="mt-0.5 text-[13px] text-muted-foreground">Conta contábil: {lk.accountOf(sc.natureId)}</div>}
+      </div>
       <Table min={620}>
         <thead>
           <tr className="[&>th]:bg-sheet [&>th]:text-white">

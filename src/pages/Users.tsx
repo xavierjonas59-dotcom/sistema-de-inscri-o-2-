@@ -58,7 +58,7 @@ export default function Users() {
                 <Td>{u.sectorId ? lk.sector(u.sectorId) : '—'}</Td>
                 <Td>
                   {u.cargo || '—'}
-                  {isAdmin && u.role === 'DIRETORIA' && <div className="text-xs text-muted-foreground">Libera {u.paymentLimit === null ? 'qualquer valor' : `até ${money(u.paymentLimit)}`}</div>}
+                  {isAdmin && u.role === 'DIRETORIA' && <div className="text-xs text-muted-foreground">Libera {u.paymentLimit === null ? 'qualquer valor' : `até ${money(u.paymentLimit)}`}{u.budgetEditor ? ' · define orçamentos' : ''}</div>}
                 </Td>
                 <Td>{u.active ? <Badge tone="good">Ativo</Badge> : <Badge tone="neutral">Inativo</Badge>}</Td>
                 <Td right>{canEdit(u) && u.id !== user.id && <Button size="sm" variant="ghost" onClick={() => open(u)}>Editar</Button>}</Td>
@@ -102,6 +102,12 @@ export default function Users() {
               <Field label="Limite para liberar pagamentos (R$)" hint="Deixe vazio para liberar qualquer valor.">
                 <Input id="u-limit" inputMode="decimal" value={limitText} onChange={(e) => setLimitText(e.target.value)} placeholder="Sem limite" />
               </Field>
+            )}
+            {isAdmin && form.role === 'DIRETORIA' && (
+              <label className="flex items-start gap-2 text-sm">
+                <input type="checkbox" className="mt-0.5" checked={!!form.budgetEditor} onChange={(e) => setForm({ ...form, budgetEditor: e.target.checked })} />
+                <span>Define limites dos setores e orçamento das contas (Contábil)</span>
+              </label>
             )}
             <Field label={form.id ? 'Nova senha (opcional)' : 'Senha inicial'} hint="Mínimo de 6 caracteres.">
               <Input id="u-pass" type="password" autoComplete="new-password" value={form.password ?? ''} onChange={(e) => setForm({ ...form, password: e.target.value })} />

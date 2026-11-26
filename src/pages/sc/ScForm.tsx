@@ -259,6 +259,7 @@ function Editor({ existing }: { existing: PurchaseRequest | null }) {
             <option value="">Selecione o código contábil…</option>
             {lk.natures.filter((n) => n.active || n.id === c.natureId).map((n) => <option key={n.id} value={n.id}>{n.code} - {n.name}</option>)}
           </Select>
+          {c.natureId && <p className="mt-1.5 text-[13px] text-muted-foreground">Conta contábil: {lk.accountOf(c.natureId) || 'não ligada (avise a diretoria)'}</p>}
         </Section>
 
         <section className="border-b">

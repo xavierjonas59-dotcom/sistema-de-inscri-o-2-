@@ -69,6 +69,7 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
           { path: '/transferencias', label: 'Transferência de limite', icon: 'transfer' },
         ],
       },
+      { title: 'Contábil', items: [{ path: '/contabil', label: 'Orçamento por conta', icon: 'calculator' }] },
       { title: 'Organização', items: [{ path: '/usuarios', label: 'Usuários do setor', icon: 'users' }] },
     ],
     DIRETORIA: [
@@ -82,10 +83,12 @@ export function AppShell({ path, children }: { path: string; children: ReactNode
           { path: '/transferencias', label: 'Transferência de limite', icon: 'transfer' },
         ],
       },
+      { title: 'Contábil', items: [{ path: '/contabil', label: 'Orçamento por conta', icon: 'calculator' }] },
     ],
     FINANCEIRO: [{ title: 'Financeiro', items: [{ path: '/', label: 'Contas a Pagar', icon: 'wallet', badge: counts?.fin }] }],
     ADMIN: [
       { items: [{ path: '/', label: 'Início', icon: 'home' }] },
+      { title: 'Contábil', items: [{ path: '/contabil', label: 'Orçamento por conta', icon: 'calculator' }] },
       {
         title: 'Organização',
         items: [

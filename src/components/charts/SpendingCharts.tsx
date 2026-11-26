@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { money, monthLabel, pct } from '@/domain/format';
 import type { AlertLevel, Month } from '@/domain/types';
+import { Icon } from '@/components/ui/icons';
 import { AlertBadge, EmptyState, cx } from '@/components/ui/primitives';
 
 const short = (m: Month) => {
@@ -29,7 +30,9 @@ export function BalanceCard({
   reserved,
   available,
   alert,
+  onOpen,
 }: {
+  onOpen?: () => void;
   month: Month;
   limit: number;
   consumed: number;
@@ -40,12 +43,24 @@ export function BalanceCard({
   const base = Math.max(limit, consumed + reserved, 1);
   const used = (consumed + reserved) / (limit || 1);
   return (
-    <section className="rounded-lg border bg-card px-6 py-6 sm:px-8" aria-label="Saldo do mês">
+    <section
+      className={cx('rounded-lg border bg-card px-6 py-6 sm:px-8', onOpen && 'cursor-pointer transition-colors hover:border-primary/40')}
+      aria-label="Saldo do mês"
+      onClick={onOpen}
+      role={onOpen ? 'button' : undefined}
+      tabIndex={onOpen ? 0 : undefined}
+      onKeyDown={onOpen ? (e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), onOpen()) : undefined}
+    >
       <div className="grid items-end gap-6 md:grid-cols-[minmax(0,auto)_1fr] md:gap-12">
         <div>
           <div className="text-sm text-muted-foreground">Disponível em {monthLabel(month).toLowerCase()}</div>
           <div className={cx('tabular mt-1 text-[44px] font-semibold leading-none tracking-[-0.03em]', available < 0 ? 'text-danger' : 'text-brand')}>{money(available)}</div>
           <div className="tabular mt-2 text-[15px] text-muted-foreground">de {money(limit)} do limite</div>
+          {onOpen && (
+            <div className="mt-3 inline-flex items-center gap-1 text-[13px] font-medium text-primary">
+              Ver por conta contábil <Icon name="chevronRight" size={14} />
+            </div>
+          )}
         </div>
         <div className="min-w-0">
           <div className="mb-2 flex items-center justify-between gap-3 text-[13px]">

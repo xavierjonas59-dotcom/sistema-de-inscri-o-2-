@@ -44,6 +44,7 @@ entre com um e-mail abaixo e a senha inicial `amc123` (também usada para assina
 - **Notificar por e-mail:** na SC aguardando aprovação, abre o Outlook com Para, Cc, assunto e o link da SC.
 - **Início com detalhe dos gastos:** clicar num mês do gráfico, numa natureza ou num dia do calendário abre cada SC aprovada, com os itens, o valor e o link para a solicitação.
 - **Calendário:** no Início e no mês do topo, com os feriados nacionais (inclusive Carnaval, Sexta-feira Santa e Corpus Christi, calculados para cada ano).
+- **Contábil:** a diretoria responsável (Antônio, Manoel e Ana) e o Admin definem o limite de cada setor e o orçamento de cada conta contábil, com a porcentagem calculada sobre o limite e a opção de repetir até dezembro. Gestores veem só o próprio setor. Cada natureza é ligada a uma conta (plano de contas CTBA020); a SC aprovada alimenta a conta e é **bloqueada** se passar do orçamento dela. No Início, clicar no saldo mostra o orçamento por conta.
   Ao entrar pelo link, o sistema volta direto para a SC.
 
 ## Como testar cada perfil
